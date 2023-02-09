@@ -1,0 +1,6 @@
+sentence = noun_phrase, verb_phrase;
+noun_phrase = article, noun;
+verb_phrase = verb, noun_phrase | verb;
+article = "a" | "an" | "the";
+noun = "dog" | "cat" | "boy" | "girl";
+verb = "run" | "walks" | "likes";
