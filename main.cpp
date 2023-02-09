@@ -20,7 +20,13 @@ int main(int argc, char* argv[]) {
     }
 
     tokeniser.setGrammar(grammar);
-    tokeniser.tokenise();
+    Token token;
+    token = tokeniser.getNextToken();
+    while (token.lexeme != "EOF"){
+        std::cout<<token.lexeme<<"  "<<token.type<<"  "<<token.lineNum<<std::endl;
+        token = tokeniser.getNextToken();
+    }
+    //tokeniser.tokenise();
 
     // Close the grammar file
     fileReader.close();
