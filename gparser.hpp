@@ -3,13 +3,14 @@
 
 #include <string>
 #include "tokeniser.hpp"
+#include "fileWriter.hpp"
 
 //Grammar Parser
 
 //define elements
 
 //parse functions
-void parseGrammar(Tokeniser &tokeniser);
+void parseGrammar(Tokeniser &tokeniser, FileWriter writer);
 void grammar();
 void rule();
 void expression();

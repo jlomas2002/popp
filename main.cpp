@@ -23,9 +23,9 @@ int main(int argc, char* argv[]) {
     fileReader.close();
 
     Tokeniser tokeniser(grammar);
-    FileWriter fileWriter()
+    FileWriter fileWriter("test.txt");
     parseGrammar(tokeniser, fileWriter);
-
+    
     /*
     Token token;
     token = tokeniser.getNextToken();

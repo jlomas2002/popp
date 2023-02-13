@@ -6,7 +6,7 @@ using namespace std;
 //make parser into class?
 Tokeniser t("");
 
-void parseGrammar(Tokeniser &tokeniser){
+void parseGrammar(Tokeniser &tokeniser, FileWriter writer){
     t = tokeniser;
     grammar();
 }
