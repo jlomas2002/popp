@@ -5,10 +5,6 @@
 #include <vector>
 #include <set>
 
-struct GrammarInfo { // holds info about grammar, e.g terminals, non terminals etc
-  std::vector<std::string> nonTerminals;
-};
-
 struct Token { //tokens in a ebnf grammar file
   std::string lexeme;
   int lineNum;
@@ -16,6 +12,10 @@ struct Token { //tokens in a ebnf grammar file
   std::string type;
 };
 
+struct startTerminals {
+  std::string nonTerminal;
+  std::vector<Token> terminals;
+};
 
 extern std::set<char> keySymbols;
 
@@ -24,14 +24,14 @@ public:
     Tokeniser(std::string grammar);
     ~Tokeniser();
     void tokenise();
-    GrammarInfo getGrammarInfo();
     Token peekNextToken();
     Token getNextToken(); //change to make a token struct?
 private:
+    void collectStartTerminals();
+    std::vector<startTerminals> nonTerminalInfo;
     std::string grammar;
     int index;
     int lineNum;
-    GrammarInfo grammarInfo;
 };
 
 #endif

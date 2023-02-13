@@ -17,6 +17,14 @@ FileWriter::~FileWriter(){
   ;
 }
 
+string FileWriter::indentString(){
+  string s;
+  for (int i=0; i<indent; i++){
+    s.append(" ");
+  }
+  return s;
+}
+
 void FileWriter::writeText(string text, string mode){
   ofstream pfile;
   if (firstWrite){
@@ -40,14 +48,16 @@ void FileWriter::writeText(string text, string mode){
   }
 
   else if (mode == "fh"){ //function header
-    pfile<<"void "<<text<<"(){\n";
+    pfile<<indentString()<<"void "<<text<<"(){\n";
+    indent += 4;
   }
 
-  else if (mode == "addBrackets"){
-
+  else if (mode == "ef"){ //end of function
+    indent = 4;
+    pfile<<"    }\n\n";
   }
 
   else if (mode == "nt"){ //non terminal
-    pfile<<text<<"();\n";  
+    pfile<<indentString()<<text<<"();\n";  
   }
 }

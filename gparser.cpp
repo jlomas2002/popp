@@ -33,6 +33,7 @@ void rule(){
     }
     tok = t.getNextToken();
     if(tok.lexeme == ";" && tok.type == "symbol"){
+        fw.writeText("", "ef");
         return;
     }
     else{

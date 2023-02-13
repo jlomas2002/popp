@@ -12,6 +12,14 @@ Tokeniser::Tokeniser(std::string grammar){
   Tokeniser::grammar.append(grammar);
   Tokeniser::index = 0;
   Tokeniser::lineNum = 1;
+  collectStartTerminals();
+  for (auto el: nonTerminalInfo){
+    cout<<el.nonTerminal<<" #";
+    for (auto t: el.terminals){
+      cout<<t.lexeme<<" ";
+    }
+    cout<<"\n";
+  }
 }
 
 Tokeniser::~Tokeniser(){
@@ -98,4 +106,29 @@ Token Tokeniser::getNextToken(){
     token.lineNum = lineNum;
     return token;
   }
+}
+
+//for each non terminal, this function calculates and stores all possible terminals that can begin it
+//assumes for now grammar is valid, any syntactic error are picked up by the parser
+void Tokeniser::collectStartTerminals(){
+  Token token;
+  Token prevToken;
+  token = getNextToken();
+  while (token.lexeme != "ENDOFGRAMMAR"){
+    startTerminals st;
+    if (token.type == "nonTerminal"){
+      st.nonTerminal = token.lexeme;
+    }
+    prevToken = getNextToken(); //should be =
+    while (token.type != "symbol" || token.lexeme != ";"){
+      token = getNextToken();
+      if (prevToken.type == "symbol" && (prevToken.lexeme == "=" || prevToken.lexeme == "|")){
+        st.terminals.push_back(token);
+      }
+      prevToken = token;
+    }
+    nonTerminalInfo.push_back(st);
+    token = getNextToken();
+  }
+  index = 0;
 }
