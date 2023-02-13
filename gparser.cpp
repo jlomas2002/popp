@@ -5,15 +5,18 @@ using namespace std;
 
 //make parser into class?
 Tokeniser t("");
+FileWriter fw("");
 
 void parseGrammar(Tokeniser &tokeniser, FileWriter writer){
     t = tokeniser;
+    fw = writer;
     grammar();
 }
 
 void grammar(){
     Token tok = t.peekNextToken();
     while ((tok.type == "nonTerminal")){
+        fw.writeText(tok.lexeme, "fh");
         t.getNextToken();
         rule();
         tok = t.peekNextToken();
@@ -62,7 +65,12 @@ void term(){
 void factor(){
     Token tok = t.getNextToken();
     if (tok.type == "terminal" || tok.type == "nonTerminal"){
-        ;//good
+        if (tok.type == "nonTerminal"){
+            fw.writeText(tok.lexeme, "nt");
+        }
+        else{
+            //add code for terminal
+        }
     }
     else if(tok.type == "symbol" && tok.lexeme == "{"){
         expression();

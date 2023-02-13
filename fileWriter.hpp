@@ -7,9 +7,12 @@ class FileWriter {
 public:
     FileWriter(std::string fileName);
     ~FileWriter();
+    void writeText(std::string text, std::string mode = "");
 private:
-    std::ofstream *pfile;
-
+    bool firstWrite;
+    int indent; //defines how many spaces to use as the current indentation level
+    string indentString;
+    std::string fileName;
 };
 
 #endif
