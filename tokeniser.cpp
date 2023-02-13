@@ -8,10 +8,14 @@ std::set<char> keySymbols = {'(', ')', '{', '}', '[', ']', ',', '|', '=', ';'};
 
 //todo
 //implement tokeniser
-void Tokeniser::setGrammar(std::string grammar){
+Tokeniser::Tokeniser(std::string grammar){
   Tokeniser::grammar.append(grammar);
   Tokeniser::index = 0;
   Tokeniser::lineNum = 1;
+}
+
+Tokeniser::~Tokeniser(){
+  ;
 }
 
 void Tokeniser::tokenise(){
@@ -27,6 +31,13 @@ Token Tokeniser::peekNextToken(){
 }
 
 Token Tokeniser::getNextToken(){
+  //check if other tokens exist / reached end of grammar
+  if (index >= grammar.length()){
+    Token token;
+    token.lexeme = "ENDOFGRAMMAR";
+    return token;
+  }
+
   //skip over white space
   if (isspace(grammar.at(index))){
     while (isspace(grammar.at(index))){
@@ -80,6 +91,7 @@ Token Tokeniser::getNextToken(){
   }
   
   if (grammar.at(index) == EOF){
+    cout<<"eof reached"<<endl;
     Token token;
     token.lexeme = "EOF";
     token.type = "endOfFile";

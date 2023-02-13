@@ -9,16 +9,11 @@
 //define elements
 
 //parse functions
-void parseGrammar(GrammarInfo &grammarInfo);
+void parseGrammar(Tokeniser &tokeniser);
 void grammar();
 void rule();
-void rhs();
-void lhs();
-void terminal();
-void nonTerminal();
-void character();
-void symbol();
-void digit();
-void letter();
+void expression();
+void term();
+void factor();
 
 #endif

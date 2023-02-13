@@ -1,6 +1,8 @@
 #include <iostream>
 #include <fstream>
 #include "tokeniser.hpp"
+#include "gparser.hpp"
+#include "fileWriter.hpp"
 using namespace std;
 
 int main(int argc, char* argv[]) {
@@ -13,22 +15,27 @@ int main(int argc, char* argv[]) {
 
     string rule;
     string grammar;
-    Tokeniser tokeniser;
 
     while(getline (fileReader, rule)){
         grammar.append(rule);
     }
 
-    tokeniser.setGrammar(grammar);
+    fileReader.close();
+
+    Tokeniser tokeniser(grammar);
+    FileWriter fileWriter()
+    parseGrammar(tokeniser, fileWriter);
+
+    /*
     Token token;
     token = tokeniser.getNextToken();
     while (token.lexeme != "EOF"){
         std::cout<<token.lexeme<<"  "<<token.type<<"  "<<token.lineNum<<std::endl;
         token = tokeniser.getNextToken();
     }
+    */
     //tokeniser.tokenise();
 
     // Close the grammar file
-    fileReader.close();
     return 0;
 }

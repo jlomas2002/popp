@@ -1,6 +1,6 @@
 CC = g++
 CFLAGS = -Wall -std=c++17
-SRCS = main.cpp tokeniser.cpp
+SRCS = main.cpp tokeniser.cpp gparser.cpp
 TARGET = parcelona
 
 all: $(TARGET)

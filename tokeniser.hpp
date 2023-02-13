@@ -21,7 +21,8 @@ extern std::set<char> keySymbols;
 
 class Tokeniser {
 public:
-    void setGrammar(std::string grammar);
+    Tokeniser(std::string grammar);
+    ~Tokeniser();
     void tokenise();
     GrammarInfo getGrammarInfo();
     Token peekNextToken();
