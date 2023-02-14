@@ -6,6 +6,11 @@ using namespace std;
 
 std::set<char> keySymbols = {'(', ')', '{', '}', '[', ']', ',', '|', '=', ';'};
 
+bool operator<(const Token &a, const Token &b){
+    return a.lexeme < b.lexeme;
+}
+
+
 //todo
 //implement tokeniser
 Tokeniser::Tokeniser(std::string grammar){
@@ -13,6 +18,7 @@ Tokeniser::Tokeniser(std::string grammar){
   Tokeniser::index = 0;
   Tokeniser::lineNum = 1;
   collectStartTerminals();
+  refineStartTerminals();
   for (auto el: nonTerminalInfo){
     cout<<el.nonTerminal<<" #";
     for (auto t: el.terminals){
@@ -112,23 +118,67 @@ Token Tokeniser::getNextToken(){
 //assumes for now grammar is valid, any syntactic error are picked up by the parser
 void Tokeniser::collectStartTerminals(){
   Token token;
-  Token prevToken;
   token = getNextToken();
   while (token.lexeme != "ENDOFGRAMMAR"){
     startTerminals st;
     if (token.type == "nonTerminal"){
       st.nonTerminal = token.lexeme;
     }
-    prevToken = getNextToken(); //should be =
+    bool collectNext;
+    token = getNextToken();
+    int currentLevel = 0;
+    int firstLevel = -1;  //the level where the first terminal/nonterminal was seen. Also acts as flag
     while (token.type != "symbol" || token.lexeme != ";"){
-      token = getNextToken();
-      if (prevToken.type == "symbol" && (prevToken.lexeme == "=" || prevToken.lexeme == "|")){
-        st.terminals.push_back(token);
+      if (token.type == "symbol" && (token.lexeme == "{" || token.lexeme == "[")){
+        currentLevel++;
       }
-      prevToken = token;
+      if (token.type == "symbol" && (token.lexeme == "}" || token.lexeme == "]")){
+        currentLevel--;
+      }
+      if (token.type == "symbol" && (token.lexeme == "=" || token.lexeme == "|")){
+        if (firstLevel == -1 || currentLevel == firstLevel){
+          collectNext = true;                   //collects first instance of terminal/nonterminal after an = or |
+        }
+      }
+      if (collectNext && (token.type == "terminal" || token.type == "nonTerminal")){
+        if (firstLevel == -1){
+          firstLevel = currentLevel;
+        }
+        st.terminals.insert(token);
+        collectNext = false;
+      }
+      token = getNextToken();
     }
     nonTerminalInfo.push_back(st);
     token = getNextToken();
   }
   index = 0;
+}
+
+void Tokeniser::insertTerminals(string nonTerminal, startTerminals &insertCollection){
+  for (auto &collection : nonTerminalInfo){
+    if (collection.nonTerminal == nonTerminal){
+      for (auto t : collection.terminals){
+        if (t.type == "terminal"){
+          insertCollection.terminals.insert(t);
+        }
+        else{ //non terminal
+          insertTerminals(t.lexeme, collection);
+          collection.terminals.erase(t);
+        }
+      }
+    }
+  }
+}
+
+//The current vector of terminals may contain non terminals
+//This function will go through this vector, and convert any non terminals to the terminals that can begin it
+void Tokeniser::refineStartTerminals(){
+  for (auto &collection : nonTerminalInfo){
+    for (auto t : collection.terminals){
+      if (t.type == "nonTerminal"){
+        insertTerminals(t.lexeme, collection);
+      }
+    }
+  }
 }

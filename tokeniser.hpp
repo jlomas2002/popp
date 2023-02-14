@@ -12,9 +12,11 @@ struct Token { //tokens in a ebnf grammar file
   std::string type;
 };
 
+bool operator<(const Token &a, const Token &b);
+
 struct startTerminals {
   std::string nonTerminal;
-  std::vector<Token> terminals;
+  std::set<Token> terminals;
 };
 
 extern std::set<char> keySymbols;
@@ -28,6 +30,8 @@ public:
     Token getNextToken(); //change to make a token struct?
 private:
     void collectStartTerminals();
+    void refineStartTerminals();
+    void insertTerminals(std::string nonTerminal, startTerminals &insertCollection);
     std::vector<startTerminals> nonTerminalInfo;
     std::string grammar;
     int index;
