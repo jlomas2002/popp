@@ -10,6 +10,7 @@ FileWriter fw("");
 void parseGrammar(Tokeniser &tokeniser, FileWriter writer){
     t = tokeniser;
     fw = writer;
+    fw.fileSetup(t.getNonTerminalInfo())
     grammar();
 }
 
@@ -43,11 +44,29 @@ void rule(){
 }
 
 void expression(){
-    term();
-    Token tok = t.peekNextToken();
+    Token tok;
+    tok = t.peekNextToken();
+    if (tok.type == "terminal"){
+        fw.writeText(tok.lexeme, "ifHeader");
+        term();
+        fw.writeText("", "endif");
+    }
+    else{
+        term();
+    }
+    tok = t.peekNextToken();
     while ((tok.lexeme == "|" || tok.lexeme == ",") && tok.type == "symbol"){
         t.getNextToken();
-        term();
+        tok = t.peekNextToken();
+        if (tok.type == "terminal"){
+            fw.writeText(tok.lexeme, "elseif");
+            term();
+            fw.writeText("", "endif");
+        }
+        else if (tok.type == "nonTerminal"){
+
+            term();
+        }
         tok = t.peekNextToken();
     }
 

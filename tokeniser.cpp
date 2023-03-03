@@ -18,7 +18,10 @@ Tokeniser::Tokeniser(std::string grammar){
   Tokeniser::index = 0;
   Tokeniser::lineNum = 1;
   collectStartTerminals();
-  refineStartTerminals();
+  for (auto &collection : nonTerminalInfo){
+    refineStartTerminals(collection, collection);
+
+  }
   for (auto el: nonTerminalInfo){
     cout<<el.nonTerminal<<" #";
     for (auto t: el.terminals){
@@ -155,30 +158,33 @@ void Tokeniser::collectStartTerminals(){
   index = 0;
 }
 
-void Tokeniser::insertTerminals(string nonTerminal, startTerminals &insertCollection){
-  for (auto &collection : nonTerminalInfo){
-    if (collection.nonTerminal == nonTerminal){
-      for (auto t : collection.terminals){
-        if (t.type == "terminal"){
-          insertCollection.terminals.insert(t);
-        }
-        else{ //non terminal
-          insertTerminals(t.lexeme, collection);
-          collection.terminals.erase(t);
-        }
-      }
-    }
-  }
-}
 
 //The current vector of terminals may contain non terminals
 //This function will go through this vector, and convert any non terminals to the terminals that can begin it
-void Tokeniser::refineStartTerminals(){
-  for (auto &collection : nonTerminalInfo){
-    for (auto t : collection.terminals){
-      if (t.type == "nonTerminal"){
-        insertTerminals(t.lexeme, collection);
+void Tokeniser::refineStartTerminals(startTerminals &returnCollection, startTerminals &currentCollection){
+  auto termPointer = currentCollection.terminals.begin(); //iterator pointing to set elements
+  while(termPointer != currentCollection.terminals.end()){
+    Token t = *termPointer;
+    if (t.type == "nonTerminal"){ //if non terminal
+      //move to seperate function
+      startTerminals nextCollection;
+      for (auto collection : nonTerminalInfo){
+        if (collection.nonTerminal == t.lexeme){
+          nextCollection = collection;
+          break;
+        }
       }
+      //
+      refineStartTerminals(currentCollection, nextCollection);
+      currentCollection.terminals.erase(t);
+      //returned to original collection -> start from beginning as items in set not added in order
+      termPointer = currentCollection.terminals.begin();
+    }
+    else{ //if terminal
+      if (returnCollection.nonTerminal != currentCollection.nonTerminal){ //then need to add terminal to return collection
+        returnCollection.terminals.insert(t);
+      }
+      termPointer++;
     }
   }
 }

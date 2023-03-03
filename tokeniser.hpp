@@ -30,8 +30,7 @@ public:
     Token getNextToken(); //change to make a token struct?
 private:
     void collectStartTerminals();
-    void refineStartTerminals();
-    void insertTerminals(std::string nonTerminal, startTerminals &insertCollection);
+    void refineStartTerminals(startTerminals &returnCollection, startTerminals &currentCollection);
     std::vector<startTerminals> nonTerminalInfo;
     std::string grammar;
     int index;

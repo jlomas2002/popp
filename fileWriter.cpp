@@ -25,6 +25,8 @@ string FileWriter::indentString(){
   return s;
 }
 
+//void FileWriter::fileSetup(string text, string mode){
+
 void FileWriter::writeText(string text, string mode){
   ofstream pfile;
   if (firstWrite){
@@ -59,5 +61,17 @@ void FileWriter::writeText(string text, string mode){
 
   else if (mode == "nt"){ //non terminal
     pfile<<indentString()<<text<<"();\n";  
+  }
+  else if (mode == "ifHeader"){
+    pfile<<indentString()<<"if (tok.lexeme == \""<<text<<"\"){\n";
+    indent += 4;
+  }
+  else if (mode == "elseif"){
+    pfile<<indentString()<<"else if (tok.lexeme == \""<<text<<"\"){\n";
+    indent += 4;
+  }
+  else if (mode == "endif"){
+    indent -= 4;
+    pfile<<indentString()<<"}\n";
   }
 }
