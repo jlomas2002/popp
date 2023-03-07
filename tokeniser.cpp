@@ -4,7 +4,7 @@
 #include "gparser.hpp"
 using namespace std;
 
-std::set<char> keySymbols = {'(', ')', '{', '}', '[', ']', ',', '|', '=', ';'};
+std::set<char> keySymbols = {'(', ')', '{', '}', '[', ']', '|', '=', ';'};
 
 bool operator<(const Token &a, const Token &b){
     return a.lexeme < b.lexeme;
@@ -22,13 +22,14 @@ Tokeniser::Tokeniser(std::string grammar){
     refineStartTerminals(collection, collection);
 
   }
+  /*
   for (auto el: nonTerminalInfo){
     cout<<el.nonTerminal<<" #";
     for (auto t: el.terminals){
       cout<<t.lexeme<<" ";
     }
     cout<<"\n";
-  }
+  */
 }
 
 Tokeniser::~Tokeniser(){
@@ -37,6 +38,10 @@ Tokeniser::~Tokeniser(){
 
 void Tokeniser::tokenise(){
   //parseGrammar(Tokeniser::grammarInfo);
+}
+
+std::vector<startTerminals> Tokeniser::getNonTerminalInfo(){
+  return nonTerminalInfo;
 }
 
 Token Tokeniser::peekNextToken(){

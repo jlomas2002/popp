@@ -7,8 +7,6 @@
 
 //Grammar Parser
 
-//define elements
-
 //parse functions
 void parseGrammar(Tokeniser &tokeniser, FileWriter writer);
 void grammar();

@@ -3,21 +3,10 @@
 
 #include <string>
 #include <vector>
-#include <set>
 
-struct Token { //tokens in a ebnf grammar file
-  std::string lexeme;
-  int lineNum;
-  std::string error; //can change to enums?
-  std::string type;
-};
+#include "tokenDef.hpp"
 
 bool operator<(const Token &a, const Token &b);
-
-struct startTerminals {
-  std::string nonTerminal;
-  std::set<Token> terminals;
-};
 
 extern std::set<char> keySymbols;
 
@@ -28,6 +17,7 @@ public:
     void tokenise();
     Token peekNextToken();
     Token getNextToken(); //change to make a token struct?
+    std::vector<startTerminals> getNonTerminalInfo();
 private:
     void collectStartTerminals();
     void refineStartTerminals(startTerminals &returnCollection, startTerminals &currentCollection);
