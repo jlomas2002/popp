@@ -3,9 +3,14 @@
 #include "tokeniser.hpp"
 #include "gparser.hpp"
 #include "fileWriter.hpp"
+
+#include <QtModule/QtHeader>
+#include <QtCore/QString>
+
 using namespace std;
 
 int main(int argc, char* argv[]) {
+    /*
     if (argc != 2){
         cout<<"USAGE: Please provide a text file specifying the grammar as a command line argument" << endl; 
         return 0;
@@ -37,5 +42,6 @@ int main(int argc, char* argv[]) {
     //tokeniser.tokenise();
 
     // Close the grammar file
+    */
     return 0;
 }

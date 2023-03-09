@@ -8,6 +8,8 @@ Tokeniser t("");
 FileWriter fw("");
 //flag required so to of the same terminal checks aren't written to the file
 bool startTerminal = true;
+//flag to check if the contains() write is to be written
+bool peekNonTerminal = true;
 
 void parseGrammar(Tokeniser &tokeniser, FileWriter writer){
     t = tokeniser;
