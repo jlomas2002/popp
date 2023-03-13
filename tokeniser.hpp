@@ -14,7 +14,6 @@ class Tokeniser {
 public:
     Tokeniser(std::string grammar);
     ~Tokeniser();
-    void tokenise();
     Token peekNextToken();
     Token getNextToken(); //change to make a token struct?
     std::vector<startTerminals> getNonTerminalInfo();

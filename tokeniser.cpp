@@ -3,6 +3,7 @@
 #include "tokeniser.hpp"
 #include "gparser.hpp"
 using namespace std;
+#include <QDebug>
 
 std::set<char> keySymbols = {'(', ')', '{', '}', '[', ']', '|', '=', ';'};
 
@@ -17,10 +18,12 @@ Tokeniser::Tokeniser(std::string grammar){
   Tokeniser::grammar.append(grammar);
   Tokeniser::index = 0;
   Tokeniser::lineNum = 1;
+  qDebug()<<"here10\n";
+
   collectStartTerminals();
+
   for (auto &collection : nonTerminalInfo){
     refineStartTerminals(collection, collection);
-
   }
   /*
   for (auto el: nonTerminalInfo){
@@ -34,10 +37,6 @@ Tokeniser::Tokeniser(std::string grammar){
 
 Tokeniser::~Tokeniser(){
   ;
-}
-
-void Tokeniser::tokenise(){
-  //parseGrammar(Tokeniser::grammarInfo);
 }
 
 std::vector<startTerminals> Tokeniser::getNonTerminalInfo(){
@@ -57,6 +56,7 @@ Token Tokeniser::getNextToken(){
   if (index >= grammar.length()){
     Token token;
     token.lexeme = "ENDOFGRAMMAR";
+    token.type = "ENDOFGRAMMAR";
     return token;
   }
 
@@ -68,10 +68,11 @@ Token Tokeniser::getNextToken(){
   }
 
   //terminal
-  if(grammar.at(index) == '"'){
+  if(grammar.at(index) == '\"'){
+     qDebug()<<"here30\n";
     string lexeme;
     index++;
-    while (grammar.at(index) != '"'){
+    while (grammar.at(index) != '\"'){
       lexeme += grammar.at(index);
       index++;
     }
@@ -80,6 +81,7 @@ Token Tokeniser::getNextToken(){
     token.type = "terminal";
     token.lineNum = lineNum;
     index++;
+    qDebug()<<QString::fromStdString(token.lexeme);
     return token;
   }
 
@@ -97,6 +99,7 @@ Token Tokeniser::getNextToken(){
 
   //non terminal
   if(isalpha(grammar.at(index))){
+      qDebug()<<"here31\n";
     string lexeme;
     lexeme += grammar.at(index);
     index++;
@@ -109,6 +112,7 @@ Token Tokeniser::getNextToken(){
     token.lexeme = lexeme;
     token.type = "nonTerminal";
     token.lineNum = lineNum;
+    qDebug()<<QString::fromStdString(token.lexeme);
     return token;
   }
   
