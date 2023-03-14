@@ -56,13 +56,9 @@ void GUI::createParser(){
     string grammar = (grammarDisplay->toPlainText()).toStdString();
     grammar.erase(grammar.size() - 1); //remove uneeded terminal char
 
-    qDebug()<<"here1\n";
     Tokeniser tokeniser(grammar);
-    qDebug()<<"here2\n";
     FileWriter fileWriter("test.txt");
-    qDebug()<<"here3\n";
     parseGrammar(tokeniser, fileWriter);
-    qDebug()<<"here4\n";
 
     QFile parserFile("test.txt");
     if (!parserFile.open(QIODevice::ReadOnly | QIODevice::Text)){

@@ -1,21 +1,91 @@
 #include <iostream>
 #include <fstream>
-#include "gui.hpp"
+#include "tokeniser.hpp"
+#include "gparser.hpp"
+#include "fileWriter.hpp"
+//#include "gui.hpp"
 
 using namespace std;
 
 int main(int argc, char* argv[]) {
-    /*
-    if (argc != 2){
-        cout<<"USAGE: Please provide a text file specifying the grammar as a command line argument" << endl; 
+    // if (argc == 1){ //open up gui
+    //     //setup qt app and create the main window
+    //     QApplication app(argc, argv);
+    //     GUI userInterface;
+    //     userInterface.show();
+
+    //     return app.exec();
+    // }
+    //else{
+        if (argc != 4){
+            cout<<"Incorrect number of arguments. Either supply 0 to use the GUI, or 3 to run on the command line.\n"<<endl;
+            cout<<"USAGE: ./parcelona grammarFile.txt outputParserFilename parserLanguage.\n"<<endl; 
+            cout<<"grammarFile.txt is the text file containing the grammar."<<endl; 
+            cout<<"outputParserFileName is the name the output parser file should be called."<<endl; 
+            cout<<"parserLanguage is the language the output parsershould be written in."<<endl;
+            cout<<"parserLanguage can be any of the following: c++, python."<< endl;  
+            return 1;
+        }
+        //Simply creates the parser file in the same directory
+        string grammarFilename = argv[1];
+        string parserFilename = argv[2];
+        string oLanguage = argv[3]; //output language
+
+        ifstream fileReader(grammarFilename);
+
+        //check if grammar file is txt file
+        string extension = grammarFilename.substr(grammarFilename.length() - 4);
+        if (grammarFilename.length() < 5 || extension != ".txt"){ //filename too short or doesn't have .txt extension
+            cout<<"The grammar file must have a .txt extension"<<endl;
+            return 1;
+        }
+
+        //check file can be opened/exists
+        if (fileReader.fail()){
+            cout<<"The provided grammar file could not be opened."<<endl;
+            return 1;
+        }
+
+        //check output parser name is valid
+
+        vector<string>validLangs = {"c++", "python"};
+        //check output lang is valid
+        bool valid = false;
+        for (string lang : validLangs){
+            if (oLanguage == lang){
+                valid = true;
+            }
+        }
+
+        if (!valid){
+            cout<<"The requested output language is not valid."<<endl;
+            cout<<"This argument must be one of the following: c++, python."<<endl;
+            return 1;
+        }
+
+        string rule;
+        string grammar;
+
+        while(getline (fileReader, rule)){
+            grammar.append(rule);
+        }
+
+        fileReader.close();
+
+        Tokeniser tokeniser(grammar);
+
+        if (oLanguage == "c++"){
+            parserFilename.append(".cpp");
+        }
+        else if (oLanguage == "python"){
+            parserFilename.append(".py");
+        }
+
+        FileWriter fileWriter(parserFilename, oLanguage);
+        parseGrammar(tokeniser, fileWriter);
+
         return 0;
-    }
-    */
+        
 
-    //setup qt app and create the main window
-    QApplication app(argc, argv);
-    GUI userInterface;
-    userInterface.show();
-
-    return app.exec();
+    //}
 }

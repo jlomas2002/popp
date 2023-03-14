@@ -5,7 +5,7 @@ using namespace std;
 
 //make parser into class?
 Tokeniser t("");
-FileWriter fw("");
+FileWriter fw("", "");
 //flag required so to of the same terminal checks aren't written to the file
 bool startTerminal = true;
 //flag to check if the contains() write is to be written
@@ -55,7 +55,7 @@ void expression(){
         if (fw.getCollectStartTerminalsFlag()){
             fw.addStartTerminal(tok);
         }
-        cout<<"in expression(), peeked tok is terminal, "+tok.lexeme+" creating if header\n";
+        //cout<<"in expression(), peeked tok is terminal, "+tok.lexeme+" creating if header\n";
         fw.writeText(tok.lexeme, "ifHeader");
         term();
         //cout<<"returned from term(), writing endif\n";
@@ -112,7 +112,7 @@ void term(){
     //cout<<"returned from factor()\n";
     Token tok = t.peekNextToken();
     while ((tok.type == "symbol" && (tok.lexeme == "{" || tok.lexeme == "[" || tok.lexeme == "(")) || tok.type == "terminal" || tok.type == "nonTerminal"){
-        cout<<"peeked token: "+tok.lexeme+" "+tok.type+"\n";
+        //cout<<"peeked token: "+tok.lexeme+" "+tok.type+"\n";
         factor();
         //cout<<"returned from factor()\n";
         tok = t.peekNextToken();
@@ -129,7 +129,7 @@ void factor(){
             fw.writeText(tok.lexeme, "nt");
         }
         else{
-            cout<<"in factor, seen token" + tok.lexeme + "\n";
+            //cout<<"in factor, seen token" + tok.lexeme + "\n";
             //add code for terminal
             if (startTerminal){
                 startTerminal = false;
