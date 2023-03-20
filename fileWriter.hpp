@@ -19,6 +19,7 @@ public:
     FileWriter(std::string fileName, std::string lang);
     ~FileWriter();
     void writeText(std::string text, std::string mode = "");
+    void createLexer(bool makeTemplate, std::vector<TokenRegexes> tokenRegexes);
     void fileSetup(std::vector<startTerminals> theCollections);
     bool getCollectStartTerminalsFlag();
     void addStartTerminal(Token token);

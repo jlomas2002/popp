@@ -19,9 +19,9 @@ relationalExpression = ArithmeticExpression { ( "=" | ">" | "<" ) ArithmeticExpr
 ArithmeticExpression = term { ( "+" | "-" ) term };
 term = factor { ( "*" | "/" ) factor };
 factor = ( "-" | "~" | empty ) operand;
-operand  integerConstant | identifier ["."identifier ] [ "[" expression "]" | "("expressionList ")" ] | "("expression")" | stringLiteral | "true" | "false" | "null" | "this";
+operand = integerConstant | identifier ["."identifier ] [ "[" expression "]" | "("expressionList ")" ] | "("expression")" | stringLiteral | "true" | "false" | "null" | "this";
 
-identifier = 
-empty = 
-integerConstant = 
-stringLiteral = 
+identifier = "placeholder";
+empty = "placeholder";
+integerConstant = "placeholder";
+stringLiteral = "placeholder";

@@ -34,6 +34,62 @@ Tokeniser::Tokeniser(std::string grammar){
   */
 }
 
+vector<TokenRegexes> parseRegexes(std::string input){
+  vector<TokenRegexes> regexes;
+  int index = 0;
+
+  while(true){
+    string id;
+    if (input.at(index) == '_' || isalpha(input.at(index))){
+      id += input.at(index);
+      index++;
+      if (index >= input.length())
+        return;
+    }
+    while (!isspace(input.at(index))){
+      id += input.at(index);
+      index++;
+      if (index >= input.length())
+        return;
+    }
+
+    while (isspace(input.at(index))){
+      index++;
+      if (index >= input.length())
+        return;
+    }
+
+    if (input.at(index) == '='){
+      index++;
+    }
+
+    while (isspace(input.at(index))){
+      index++;
+      if (index >= input.length())
+        return;
+    }
+
+    string regex;
+    while (!(input.at(index) == ';' && isspace(input.at(index + 1)))){
+      regex += input.at(index);
+      index++;
+      if (index >= input.length())
+        return;
+    }
+    TokenRegexes tr;
+    tr.name = id;
+    tr.regex = regex;
+    regexes.push_back(tr);
+
+    while (isspace(input.at(index))){
+      index++;
+      if (index >= input.length())
+        return;
+    }
+  }
+  return regexes;
+}
+
 Tokeniser::~Tokeniser(){
   ;
 }
@@ -63,6 +119,12 @@ Token Tokeniser::getNextToken(){
   if (isspace(grammar.at(index))){
     while (isspace(grammar.at(index))){
       index++;
+      if (index >= grammar.length()){
+        Token token;
+        token.lexeme = "ENDOFGRAMMAR";
+        token.type = "ENDOFGRAMMAR";
+        return token;
+      }
     }
   }
 

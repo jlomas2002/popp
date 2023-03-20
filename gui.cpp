@@ -1,5 +1,6 @@
 #include <iostream>
 #include <fstream>
+#include <QCoreApplication>
 #include "gui.hpp"
 #include "tokeniser.hpp"
 #include "gparser.hpp"
@@ -22,8 +23,21 @@ GUI::GUI(QWidget *parent) : QWidget(parent){
 
     parserDisplay = new QTextBrowser();
 
+    languageOptions = new QButtonGroup();
+    optionCpp = new QRadioButton("C++");
+    optionPy = new QRadioButton("Python");
+    optionCpp->setChecked(true);
+
+    languageOptions->addButton(optionCpp);
+    languageOptions->addButton(optionPy);
+
+    parserName = new QLineEdit();
+
     // Set up the layout
     QHBoxLayout *layout = new QHBoxLayout;
+    layout->addWidget(parserName);
+    layout->addWidget(optionCpp);
+    layout->addWidget(optionPy);
     layout->addWidget(gFileSelect_button);
     layout->addWidget(createParser_button);
     layout->addWidget(grammarDisplay);
@@ -53,16 +67,34 @@ void GUI::selectGrammarFile(){
 }
 
 void GUI::createParser(){
+    if (grammarDisplay->toPlainText().trimmed() == "" || parserName->text().trimmed() == ""){
+        //error
+        return;
+    }
     string grammar = (grammarDisplay->toPlainText()).toStdString();
     grammar.erase(grammar.size() - 1); //remove uneeded terminal char
 
+    string parserFilename = parserName->text().toStdString();
+
+    string chosenLang;
+    QString pfile_extension;
+    if (languageOptions->checkedButton() == optionCpp){
+        chosenLang = "c++";
+        pfile_extension = QString::fromStdString(parserFilename) + ".cpp";
+    }
+    else if (languageOptions->checkedButton() == optionPy){
+        chosenLang = "python";
+        pfile_extension = QString::fromStdString(parserFilename) + ".py";
+    }
+
     Tokeniser tokeniser(grammar);
-    FileWriter fileWriter("test.txt");
+    FileWriter fileWriter(pfile_extension.toStdString(), chosenLang);
     parseGrammar(tokeniser, fileWriter);
 
-    QFile parserFile("test.txt");
+    QFile parserFile(pfile_extension);
     if (!parserFile.open(QIODevice::ReadOnly | QIODevice::Text)){
         //error message
+        return;
     }
 
     QString parser = QString(parserFile.readAll());

@@ -16,6 +16,7 @@ public:
     ~Tokeniser();
     Token peekNextToken();
     Token getNextToken(); //change to make a token struct?
+    std::vector<TokenRegexes> parseRegexes(std::string input);
     std::vector<startTerminals> getNonTerminalInfo();
 private:
     void collectStartTerminals();

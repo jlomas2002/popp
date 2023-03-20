@@ -14,6 +14,11 @@ private:
     QPushButton *createParser_button;
     QTextEdit *grammarDisplay;
     QTextBrowser *parserDisplay;
+    QLineEdit *parserName;
+
+    QButtonGroup *languageOptions;
+    QRadioButton *optionCpp;
+    QRadioButton *optionPy;
 
 public slots:
     void selectGrammarFile();

@@ -4,11 +4,109 @@
 #include <vector>
 using namespace std;
 
+string py_setup =  R"(
+class Token:
+  lexeme = None
+  lineNumber = None
+  type = None
+
+input = ""
+index = 0
+lineNum = 1
+
+def initLexer(filename):
+  global input
+
+  fileReader = open('filename.txt', 'r')
+  input = fileReader.read()
+
+  fileReader.close()
+
+)";
+
+string cpp_setup =  R"(
+#include "lexer.hpp"
+
+using namespace std;
+
+string input = "";
+int index;
+int lineNum;
+
+void initLexer(string filename){
+  ifstream fileReader(filename);
+
+  string line;
+  while(getline (fileReader, line)){
+          input.append(line);
+      }
+
+  fileReader.close();}
+
+  index = 0;
+  lineNum = 1;
+
+}
+
+)";
+
+string cpp_header =  R"(
+#ifndef LEXER_HPP
+#define LEXER_HPP
+#include <string>
+
+struct Token {
+  std::string lexeme;
+  int lineNum;
+  std::string type;
+};
+
+void initLexer();
+Token getNextToken();
+Token peekNextToken();
+
+#endif
+
+)";
+
+string py_lexerPeek = R"(
+def peekNextToken(): 
+  tmp = index
+  token = Token()
+  token = getNextToken()
+  index = tmp
+  return token
+)";
+
+string cpp_lexerPeek = R"(
+Token peekNextToken(){
+  int tmp = index;
+  Token token;
+  token = getNextToken();
+  index = tmp;
+  return token;
+}
+
+)";
+
+string cpp_regexSearch = R"(
+  if (regex_search(input.begin() + index, input.end(), match, {0})) {
+      Token tok;
+      tok.lexeme = match.str();
+      tok.type = {1};
+      tok.lineNum = lineNum;
+      return tok;
+  }
+
+)";
+
+
 //getNextToken() should return a Token object 
 //where Token is a class
-map<std::string, std::string> py = {
+map<string, string> py = {
     {"functionHeader", "def {0}():\n"},
     {"getNext", "tok = getNextToken()\n"},
+    {"tokDeclar", "tok = Token()\n"},
     {"endFunction", "\n\n"},
     {"nonTerminal", "{0}()\n"},
     {"ifHeader", "if tok.lexeme == \"{0}\":\n"},
@@ -27,9 +125,14 @@ map<std::string, std::string> py = {
     {"terminalCheck_last", "tok.lexeme == \"{0}\":\n"},
     {"nonTerminalCheck_last", "tok.lexeme in {0}_startTerminals:\n"},
 
+    {"lexerPeek", py_lexerPeek},
+    {"lexerSetup", py_setup},
+    {"lexerGetDef", "def getNextToken():\n"},
+    {"includeRegex", "import re\n"}
+
 };
 
- map<std::string, std::string> cpp = {
+ map<string, string> cpp = {
     {"functionHeader", "void {0}(){\n"},
     {"getNext", "tok = getNextToken();\n"},
     {"tokDeclar", "Token tok;\n"},
@@ -43,13 +146,23 @@ map<std::string, std::string> py = {
     {"elseIf_nt", "else if (contains(tok.lexeme, {0}_startTerminals)){\n"},
     {"whileBegin", "while ("},
     {"ifBegin", "if ("},
-    {"scopeEnd", "}\n"},
+    {"scopeEnd", "}\n"}, //same as endIf -should probably change
     {"defineStartTerms", "string {0}_startTerminals[] = {"},
     {"listEnd", "\"{0}\"};\n"},
-    {"terminalCheck", "tok.lexeme == \"{0}\" | "},
-    {"nonTerminalCheck", "contains(tok.lexeme, {0}_startTerminals) | "},
+    {"terminalCheck", "tok.lexeme == \"{0}\" || "},
+    {"nonTerminalCheck", "contains(tok.lexeme, {0}_startTerminals) || "},
     {"terminalCheck_last", "tok.lexeme == \"{0}\"){\n"},
     {"nonTerminalCheck_last", "contains(tok.lexeme, {0}_startTerminals){\n"},
+
+    {"lexerPeek", cpp_lexerPeek},
+    {"lexerSetup", cpp_setup},
+    {"lexerGetDef", "Token getNextToken(){\n"},
+    {"includeRegex", "#include <regex>\n"},
+    {"regexDef", "    regex {0}_regex(\"{1}\");\n"},
+    {"matchObj", "smatch match;\n"},
+    {"searchCode", cpp_regexSearch}
+
+    {"header", cpp_header}
 };
 
 FileWriter::FileWriter(string name, string lang){
@@ -69,6 +182,57 @@ FileWriter::FileWriter(string name, string lang){
 }
 
 FileWriter::~FileWriter(){
+}
+
+void FileWriter::createLexer(bool makeTemplate, vector<TokenRegexes> tokenRegexes){
+  ofstream lexfile;
+
+  if (*language == cpp){
+    ofstream headerfile;
+
+    headerfile.open("lexer.hpp", ios_base::out);
+    headerfile<<(*language)["header"];
+    headerfile.close();
+      
+    lexfile.open("lexer.cpp", ios_base::out);
+  }
+    else if (*language == py){
+      lexfile.open("lexer.py", ios_base::out);
+  }
+
+  if (!makeTemplate){
+    lexfile<<(*language)["includeRegex"];
+  }
+
+  lexfile<<(*language)["lexerSetup"];
+  lexfile<<(*language)["lexerGetDef"]<<"\n";
+
+  if (makeTemplate){
+    lexfile<<(*language)["scopeEnd"]<<"\n";
+    lexfile<<(*language)["lexerPeek"];
+  }
+  else{
+    string def = (*language)["regexDef"];
+    for (auto regexDef:tokenRegexes){
+      def.replace(def.find("{0}"), 3, regexDef.name);
+      def.replace(def.find("{1}"), 3, regexDef.regex);
+      lexfile<<def;
+    }
+
+    lexfile<<(*language)["matchObj"];
+
+    for (auto regexDef:tokenRegexes){
+      string searchCode = (*language)["regexSearch"];
+      searchCode.replace(searchCode.find("{0}"), 3, regexDef.name.append("_regex"));
+      searchCode.replace(searchCode.find("{1}"), 3, regexDef.name.append("_regex"));
+      lexfile<<searchCode<<"\n";
+    }
+    lexfile<<(*language)["scopeEnd"]<<"\n";
+    lexfile<<(*language)["lexerPeek"];
+
+  }
+
+  lexfile.close();
 }
 
 
@@ -197,10 +361,7 @@ void FileWriter::writeText(string text, string mode){
     string formatted = formatString((*language)["functionHeader"], text);
     pfile<<formatted;
     indent += 4;
-    if ((*language) == cpp){
-      pfile<<indentString()<<(*language)["tokDeclar"];
-    }
-    pfile<<indentString()<<(*language)["getNext"];
+    pfile<<indentString()<<(*language)["tokDeclar"];
   }
 
   else if (mode == "ef"){ //end of function
@@ -233,7 +394,6 @@ void FileWriter::writeText(string text, string mode){
     code.append(indentString()+(*language)["endIf"]);
   }
   else if (mode == "elseif_nt"){
-    code.append(indentString()+(*language)["peekNext"]);
     code.append(indentString()+formatString((*language)["elseIf_nt"], text));
     indent += 4;
   }
@@ -299,6 +459,13 @@ void FileWriter::writeText(string text, string mode){
     subCodeInfo.indents.pop_back();
     return; //dont want to run the code at the bottom of the function
   }
+  else if (mode == "getNext"){
+    code.append(indentString()+(*language)["getNext"]);
+  }
+  else if (mode == "peekNext"){
+    code.append(indentString()+(*language)["peekNext"]);
+  }
+
 
 
   if (pfile.is_open()){

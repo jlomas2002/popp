@@ -16,4 +16,9 @@ struct startTerminals {
   std::set<Token> terminals;
 };
 
+struct TokenRegexes {
+  std::string name;
+  std::string regex;
+};
+
 #endif

@@ -8,8 +8,7 @@ Tokeniser t("");
 FileWriter fw("", "");
 //flag required so to of the same terminal checks aren't written to the file
 bool startTerminal = true;
-//flag to check if the contains() write is to be written
-bool peekNonTerminal = true;
+bool veryFirstElement = true;
 
 void parseGrammar(Tokeniser &tokeniser, FileWriter writer){
     t = tokeniser;
@@ -32,6 +31,7 @@ void grammar(){
 void rule(){
     Token tok = t.getNextToken();
     if (tok.lexeme == "=" && tok.type == "symbol"){
+        veryFirstElement = true;
         expression();
     }
     else{
@@ -48,31 +48,40 @@ void rule(){
 }
 
 void expression(){
-        //cout<<"ENTERING EXPRESSION()\n";
+    startTerminal = true;
+
     Token tok;
     tok = t.peekNextToken();
     if (tok.type == "terminal"){
+        if (veryFirstElement){
+            fw.writeText("", "peekNext");
+            veryFirstElement = false;
+        }
+
         if (fw.getCollectStartTerminalsFlag()){
             fw.addStartTerminal(tok);
         }
-        //cout<<"in expression(), peeked tok is terminal, "+tok.lexeme+" creating if header\n";
         fw.writeText(tok.lexeme, "ifHeader");
+        fw.writeText("", "getNext"); //consume the peeked token
         term();
-        //cout<<"returned from term(), writing endif\n";
         fw.writeText("", "endif");
     }
     else if (tok.type == "nonTerminal"){
+        if (veryFirstElement){
+            fw.writeText("", "peekNext");
+            veryFirstElement = false;
+        }
+
         startTerminal = false;
         if (fw.getCollectStartTerminalsFlag()){
             fw.addStartTerminal(tok);
         }
-        //cout<<"in expression(), peeked tok is non terminal, creating if header for nt\n";
-        //fw.writeText(tok.lexeme, "ifHeader_nt");
+        fw.writeText(tok.lexeme, "ifHeader_nt");
         term();
-        //cout<<"returned from term(), writing endif (in non t section)\n";
-        //fw.writeText("", "endif");
+        fw.writeText("", "endif");
     }
     else{
+        veryFirstElement = false;
         term();
     }
 
@@ -86,6 +95,7 @@ void expression(){
                 fw.addStartTerminal(tok);
             }
             fw.writeText(tok.lexeme, "elseif");
+            fw.writeText("", "getNext"); //consume the peeked token
             term();
             fw.writeText("", "endif");
         }
@@ -107,29 +117,21 @@ void expression(){
 }
 
 void term(){
-        //cout<<"ENTERING TERM()\n";
     factor();
-    //cout<<"returned from factor()\n";
     Token tok = t.peekNextToken();
     while ((tok.type == "symbol" && (tok.lexeme == "{" || tok.lexeme == "[" || tok.lexeme == "(")) || tok.type == "terminal" || tok.type == "nonTerminal"){
-        //cout<<"peeked token: "+tok.lexeme+" "+tok.type+"\n";
         factor();
-        //cout<<"returned from factor()\n";
         tok = t.peekNextToken();
-        //cout<<"in term(), next token is "+tok.lexeme+"\n";
     }
 }
 
 void factor(){
-        //cout<<"ENTERING FACTOR()\n";
     Token tok = t.getNextToken();
     if (tok.type == "terminal" || tok.type == "nonTerminal"){
         if (tok.type == "nonTerminal"){
-            //cout<<"in factor, seen token" + tok.lexeme + "\n";
             fw.writeText(tok.lexeme, "nt");
         }
         else{
-            //cout<<"in factor, seen token" + tok.lexeme + "\n";
             //add code for terminal
             if (startTerminal){
                 startTerminal = false;
@@ -144,11 +146,9 @@ void factor(){
     }
     else if(tok.type == "symbol" && tok.lexeme == "{"){
         fw.writeText("", "bracketSeen");
-        //cout<<"in factor, seen token" + tok.lexeme + " calling expression()...\n";
         expression();
         tok = t.getNextToken();
         if (tok.type == "symbol" && tok.lexeme == "}"){
-            //cout<<"in factor, seen token" + tok.lexeme + " writing zeroor many end\n";
             fw.writeText("", "zeroormany_end");
         }
         else{
@@ -156,6 +156,7 @@ void factor(){
         } 
     } 
     else if(tok.type == "symbol" && tok.lexeme == "("){
+        fw.writeText("", "peekNext");
         expression();
         tok = t.getNextToken();
         if (tok.type == "symbol" && tok.lexeme == ")"){
@@ -167,11 +168,9 @@ void factor(){
     } 
     else if(tok.type == "symbol" && tok.lexeme == "["){
         fw.writeText("", "bracketSeen");
-        //cout<<"in factor, seen token" + tok.lexeme + " calling expression()...\n";
         expression();
         tok = t.getNextToken();
         if (tok.type == "symbol" && tok.lexeme == "]"){
-            //cout<<"in factor, seen token" + tok.lexeme + " writing zeroor one end\n";
             fw.writeText("", "zeroorone_end");
         }
         else{
