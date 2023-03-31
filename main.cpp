@@ -120,14 +120,14 @@ int main(int argc, char* argv[]) {
         FileWriter fileWriter(parserFilename, oLanguage);
         parseGrammar(tokeniser, fileWriter);
 
-        vector<TokenRegexes> tokenRegexes; 
+        vector<TokenRegex> tokenRegexes; 
 
         if (tokenFile != ""){ //create lexer
             if (tokenFile == "template"){
                 fileWriter.createLexer(true, tokenRegexes);
             }
             else{
-                tokenRegexes = tokeniser.parseRegexes(tokensInput);
+                tokenRegexes = tokeniser.extractRegexes(tokensInput);
                 fileWriter.createLexer(false, tokenRegexes);
             }
         }

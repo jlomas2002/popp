@@ -160,7 +160,7 @@ map<string, string> py = {
     {"includeRegex", "#include <regex>\n"},
     {"regexDef", "    regex {0}_regex(\"{1}\");\n"},
     {"matchObj", "smatch match;\n"},
-    {"searchCode", cpp_regexSearch}
+    {"searchCode", cpp_regexSearch},
 
     {"header", cpp_header}
 };
@@ -184,7 +184,7 @@ FileWriter::FileWriter(string name, string lang){
 FileWriter::~FileWriter(){
 }
 
-void FileWriter::createLexer(bool makeTemplate, vector<TokenRegexes> tokenRegexes){
+void FileWriter::createLexer(bool makeTemplate, vector<TokenRegex> tokenRegexes){
   ofstream lexfile;
 
   if (*language == cpp){
@@ -243,8 +243,8 @@ bool FileWriter::getCollectStartTerminalsFlag(){
   return false;
 }
 
-void FileWriter::addStartTerminal(Token token){
-  vector<Token>& currentArray = subCodeInfo.startTokens.back();
+void FileWriter::addStartTerminal(Gtoken token){
+  vector<Gtoken>& currentArray = subCodeInfo.startTokens.back();
   currentArray.push_back(token);
 }
 
@@ -262,23 +262,23 @@ string FileWriter::indentString(){
   return s;
 }
 
-string FileWriter::createStatement(){
+string FileWriter::createConditionStatement(){
   string statement;
   int i = 0;
-  vector<Token> &currentTokens = subCodeInfo.startTokens.back();
+  vector<Gtoken> &currentTokens = subCodeInfo.startTokens.back();
   while (i != currentTokens.size()-1){
-    if (currentTokens[i].type == "terminal"){
+    if (currentTokens[i].type == Terminal){
       statement.append(formatString((*language)["terminalCheck"], currentTokens[i].lexeme));
     }
-    else if (currentTokens[i].type == "nonTerminal"){
+    else if (currentTokens[i].type == Non_Terminal){
       statement.append(formatString((*language)["nonTerminalCheck"], currentTokens[i].lexeme));
     }
     i++;
   }
-  if (currentTokens[i].type == "terminal"){
+  if (currentTokens[i].type == Terminal){
     statement.append(formatString((*language)["terminalCheck_last"], currentTokens[i].lexeme));
   }
-  else if (currentTokens[i].type == "nonTerminal"){
+  else if (currentTokens[i].type == Non_Terminal){
     statement.append(formatString((*language)["nonTerminalCheck_last"], currentTokens[i].lexeme));
   }
 
@@ -307,12 +307,12 @@ void FileWriter::appendCode(string code){
   subCodeInfo.startTokens.pop_back();
 }
 
-void FileWriter::fileSetup(vector<startTerminals> theCollections){
+void FileWriter::fileSetup(vector<StartTermCollection> theCollections){
   ofstream pfile;
   pfile.open(fileName, ios_base::out);
 
   for (auto collection : theCollections){
-    pfile<<indentString()<<formatString((*language)["defineStartTerms"], collection.nonTerminal);
+    pfile<<indentString()<<formatString((*language)["defineStartTerms"], collection.nonTerminal.lexeme);
     auto termPointer = collection.terminals.begin();
     auto tp = termPointer; //used to check if we are on the last terminal
     tp++;
@@ -337,82 +337,66 @@ void FileWriter::fileSetup(vector<startTerminals> theCollections){
   pfile.close();
 }
 
-void FileWriter::writeText(string text, string mode){
+void FileWriter::writeText(string text, Mode mode){
   ofstream pfile;
   if (subCodeInfo.startTokens.size() == 0){
     pfile.open(fileName, ios_base::app);
   }
 
   string code;
-  
-  if (mode == ""){
-    if (pfile.is_open()){
-        pfile<<text<<"\n";
-    }
-    else{
-      cout << "File could not be opened"<<endl;
-    }
-    if (pfile.fail() || pfile.bad()){
-      cout<<"File has failed"<<endl;
-    }
-  }
 
-  else if (mode == "fh"){ //function header
+  if (mode == Func_Begin){ //function header
     string formatted = formatString((*language)["functionHeader"], text);
     pfile<<formatted;
     indent += 4;
     pfile<<indentString()<<(*language)["tokDeclar"];
   }
 
-  else if (mode == "ef"){ //end of function
+  else if (mode == Func_End){ //end of function
     indent = 0;
     pfile<<(*language)["endFunction"];
   }
 
-  else if (mode == "nt"){ //non terminal
+  else if (mode == NonTerminal_Seen){ //non terminal
     code.append(indentString()+formatString((*language)["nonTerminal"], text));
   }
 
-  else if (mode == "getNext"){
-    code.append(indentString()+(*language)["getNext"]);
-  }
-
-  else if (mode == "ifHeader"){
+  else if (mode == If_Begin_Terminal){
     code.append(indentString()+formatString((*language)["ifHeader"], text));
     indent += 4;
   }
-  else if (mode == "ifHeader_nt"){
+  else if (mode == If_Begin_NonTerminal){
     code.append(indentString()+formatString((*language)["ifHeader_nt"], text));
     indent += 4;
   }
-  else if (mode == "elseif"){
+  else if (mode == ElseIf_Terminal){
     code.append(indentString()+formatString((*language)["elseIf"], text));
     indent += 4;
   }
-  else if (mode == "endif"){
-    indent -= 4;
-    code.append(indentString()+(*language)["endIf"]);
-  }
-  else if (mode == "elseif_nt"){
+  else if (mode == ElseIf_NonTerminal){
     code.append(indentString()+formatString((*language)["elseIf_nt"], text));
     indent += 4;
   }
-  else if (mode == "bracketSeen"){
-    vector<Token> newlist;
+  else if (mode == If_End){
+    indent -= 4;
+    code.append(indentString()+(*language)["endIf"]);
+  }
+  else if (mode == Bracket_Begin){
+    vector<Gtoken> newlist;
     string newcode;
     subCodeInfo.startTokens.push_back(newlist);
     subCodeInfo.code.push_back(newcode);
     subCodeInfo.indents.push_back(indent); 
     indent += 4;
   }
-  else if (mode == "zeroormany_end"){
+  else if (mode == CurlyBracket_End){
     int temp = indent;
     indent = subCodeInfo.indents.back();
     code.append(indentString()+(*language)["peekNext"]);
     code.append(indentString()+(*language)["whileBegin"]);
 
     //the while loop
-    code.append(createStatement());
+    code.append(createConditionStatement());
 
     appendCode(code);
     indent = temp;
@@ -433,14 +417,14 @@ void FileWriter::writeText(string text, string mode){
     subCodeInfo.indents.pop_back();
     return; //dont want to run the code at the bottom of the function
   }
-  else if (mode == "zeroorone_end"){
+  else if (mode == SquareBracket_End){
     int temp = indent;
     indent = subCodeInfo.indents.back();
     code.append(indentString()+(*language)["peekNext"]);
     code.append(indentString()+(*language)["ifBegin"]);
 
     //the while loop
-    code.append(createStatement());
+    code.append(createConditionStatement());
 
     appendCode(code);
     indent = temp;
@@ -459,13 +443,12 @@ void FileWriter::writeText(string text, string mode){
     subCodeInfo.indents.pop_back();
     return; //dont want to run the code at the bottom of the function
   }
-  else if (mode == "getNext"){
+  else if (mode == Get_NextTok){
     code.append(indentString()+(*language)["getNext"]);
   }
-  else if (mode == "peekNext"){
+  else if (mode == Peek_NextTok){
     code.append(indentString()+(*language)["peekNext"]);
   }
-
 
 
   if (pfile.is_open()){

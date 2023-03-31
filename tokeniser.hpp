@@ -6,24 +6,28 @@
 
 #include "tokenDef.hpp"
 
-bool operator<(const Token &a, const Token &b);
+bool operator<(const Gtoken &a, const Gtoken &b);
 
-extern std::set<char> keySymbols;
+extern std::set<char> reservedSymbols;
 
 class Tokeniser {
 public:
     Tokeniser(std::string grammar);
     ~Tokeniser();
-    Token peekNextToken();
-    Token getNextToken(); //change to make a token struct?
-    std::vector<TokenRegexes> parseRegexes(std::string input);
-    std::vector<startTerminals> getNonTerminalInfo();
+    Gtoken peekNextToken();
+    Gtoken getNextToken();
+    Gtoken makeErrorToken(Error err);
+    std::vector<TokenRegex> extractRegexes(std::string input);
+    std::vector<StartTermCollection> getStartTermCollections();
 private:
-    void collectStartTerminals();
-    void refineStartTerminals(startTerminals &returnCollection, startTerminals &currentCollection);
-    std::vector<startTerminals> nonTerminalInfo;
+    void collectStartTerms();
+    void refineStartTerms(StartTermCollection &returnCollection, StartTermCollection &currentCollection);
+    StartTermCollection matchNonTerminalToCollection(Gtoken t);
+    int incrementIndex();
+    std::vector<StartTermCollection> startTermCollections;
     std::string grammar;
     int index;
+    int pos;
     int lineNum;
 };
 
