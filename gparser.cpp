@@ -3,7 +3,7 @@
 #include "gparser.hpp"
 using namespace std;
 
-Tokeniser t("");
+Tokeniser t("", "");
 FileWriter fw("", "");
 //Flag required so to of the same terminal checks aren't written to the file
 bool startTerminal = true;
@@ -12,7 +12,6 @@ bool veryFirstElement = true;
 void parseGrammar(Tokeniser &tokeniser, FileWriter writer){
     t = tokeniser;
     fw = writer;
-    fw.fileSetup(t.getStartTermCollections());
     grammar();
 }
 
@@ -25,6 +24,11 @@ void grammar(){
         startTerminal = true;
         tok = t.peekNextToken();
     }
+
+    if (tok.type != END_OF_GRAMMAR){
+         //ERROR
+         tok = t.makeErrorToken(ExpectedNonTerminal);
+     }
 }
 
 void rule(){
@@ -53,37 +57,32 @@ void expression(){
     Gtoken tok;
 
     tok = t.peekNextToken();
-    if (tok.type == Terminal){
-        if (veryFirstElement){
-            fw.writeText("", Peek_NextTok);
-            veryFirstElement = false;
-        }
 
-        if (fw.getCollectStartTerminalsFlag()){
-            fw.addStartTerminal(tok);
-        }
-
-        fw.writeText(tok.lexeme, If_Begin_Terminal);
-        fw.writeText("", Get_NextTok); //To consume the peeked token
-        term();
-        fw.writeText("", If_End);
-    }
-
-    else if (tok.type == Non_Terminal){
-        startTerminal = false;
+    if (tok.type == Terminal || tok.type == Non_Terminal || tok.type == Token_Type){
+        fw.addStartTerminal(tok);
 
         if (veryFirstElement){
             fw.writeText("", Peek_NextTok);
             veryFirstElement = false;
         }
 
-        if (fw.getCollectStartTerminalsFlag()){
-            fw.addStartTerminal(tok);
+        if (tok.type == Terminal){
+            fw.writeText(tok.lexeme, If_Begin_Terminal);
+            fw.writeText("", Get_NextTok); //To consume the peeked token
         }
 
-        fw.writeText(tok.lexeme, If_Begin_NonTerminal);
+        else if (tok.type == Token_Type){
+            fw.writeText(tok.lexeme, If_Begin_Token);
+            fw.writeText("", Get_NextTok); //To consume the peeked token
+        }
+
+        else if (tok.type == Non_Terminal){
+            startTerminal = false;
+            fw.writeText(tok.lexeme, If_Begin_NonTerminal);
+        }
+
         term();
-        fw.writeText("", If_End);
+        fw.writeText("", Scope_End);
     }
 
     else{
@@ -96,31 +95,31 @@ void expression(){
         t.getNextToken();
 
         tok = t.peekNextToken();
-        if (tok.type == Terminal){
-            startTerminal = true;
+        if (tok.type == Terminal || tok.type == Non_Terminal || tok.type == Token_Type){
+            fw.addStartTerminal(tok);
 
-            if (fw.getCollectStartTerminalsFlag()){
-                fw.addStartTerminal(tok);
+            if (tok.type == Terminal){
+                startTerminal = true;
+                
+                fw.writeText(tok.lexeme, ElseIf_Terminal);
+                fw.writeText("", Get_NextTok); //To consume the peeked token
             }
 
-            fw.writeText(tok.lexeme, ElseIf_Terminal);
-            fw.writeText("", Get_NextTok); //To consume the peeked token
-            term();
-            fw.writeText("", If_End);
-        }
+            else if (tok.type == Token_Type){
+                startTerminal = true;
 
-        else if (tok.type == Non_Terminal){
-            startTerminal = false;
-
-            if (fw.getCollectStartTerminalsFlag()){
-                fw.addStartTerminal(tok);
+                fw.writeText(tok.lexeme, ElseIf_Token);
+                fw.writeText("", Get_NextTok); //To consume the peeked token
             }
 
-            fw.writeText(tok.lexeme, ElseIf_NonTerminal);
-            term();
-            fw.writeText("", If_End);
-        }
+            else if (tok.type == Non_Terminal){
+                startTerminal = false;
+                fw.writeText(tok.lexeme, ElseIf_NonTerminal);
+            }
 
+            term();
+            fw.writeText("", Scope_End);
+        }
         else{
             term();
         }
@@ -128,12 +127,17 @@ void expression(){
         tok = t.peekNextToken();
     }
 
+    // if (!insideBracket){
+    //     fw.writeText("", Else_Expr);
+    //     fw.writeText("", Scope_End);
+    // }
+
 }
 
 void term(){
     factor();
     Gtoken tok = t.peekNextToken();
-    while ((tok.type == Symbol && (tok.lexeme == "{" || tok.lexeme == "[" || tok.lexeme == "(")) || tok.type == Terminal || tok.type == Non_Terminal){
+    while ((tok.type == Symbol && (tok.lexeme == "{" || tok.lexeme == "[" || tok.lexeme == "(")) || tok.type == Terminal || tok.type == Non_Terminal || tok.type == Token_Type){
         factor();
         tok = t.peekNextToken();
     }
@@ -142,22 +146,30 @@ void term(){
 void factor(){
     Gtoken tok = t.getNextToken();
 
-    if (tok.type == Terminal || tok.type == Non_Terminal){
-        if (tok.type == Non_Terminal){
-            fw.writeText(tok.lexeme, NonTerminal_Seen);
+    if (tok.type == Terminal  || tok.type == Token_Type){
+        if (startTerminal){
+            startTerminal = false;
         }
 
-        else{ //If Terminal
-            if (startTerminal){
-                startTerminal = false;
-            }
+        else{
+            fw.writeText("", Get_NextTok);
 
-            else{
-                fw.writeText("", Get_NextTok);
+            if (tok.type == Terminal){
                 fw.writeText(tok.lexeme, If_Begin_Terminal);
-                fw.writeText("", If_End);
+                fw.writeText("", Scope_End);
+                fw.writeText(tok.lexeme, Else_Fact_Terminal);
             }
+            else{
+                fw.writeText(tok.lexeme, If_Begin_Token);
+                fw.writeText("", Scope_End);
+                fw.writeText(tok.lexeme, Else_Fact_Token);
+            }
+            fw.writeText("", Scope_End);
         }
+    }
+
+    else if (tok.type == Non_Terminal){
+        fw.writeText(tok.lexeme, NonTerminal_Seen);
     }
 
     else if(tok.type == Symbol && tok.lexeme == "{"){
@@ -166,6 +178,7 @@ void factor(){
         tok = t.getNextToken();
 
         if (tok.type == Symbol && tok.lexeme == "}"){
+            cout<<"here200\n";
             fw.writeText("", CurlyBracket_End);
         }
 
@@ -196,6 +209,7 @@ void factor(){
         tok = t.getNextToken();
 
         if (tok.type == Symbol && tok.lexeme == "]"){
+            cout<<"HERE\n";
             fw.writeText("", SquareBracket_End);
         }
 

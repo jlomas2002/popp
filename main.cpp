@@ -82,7 +82,7 @@ int main(int argc, char* argv[]) {
         }
 
         //check tokenFile is valid
-        string tokensInput;
+        string tokensInput = "";
         if (argc == 5 && tokenFile != "template"){
             string extension = tokenFile.substr(tokenFile.length() - 4);
             if (tokenFile.length() < 5 || extension != ".txt"){ //filename too short or doesn't have .txt extension
@@ -108,8 +108,6 @@ int main(int argc, char* argv[]) {
 
         }
 
-        Tokeniser tokeniser(grammar);
-
         if (oLanguage == "c++"){
             parserFilename.append(".cpp");
         }
@@ -117,20 +115,12 @@ int main(int argc, char* argv[]) {
             parserFilename.append(".py");
         }
 
+        Tokeniser tokeniser(grammar, tokensInput);
         FileWriter fileWriter(parserFilename, oLanguage);
+
+        fileWriter.fileSetup(tokeniser.getAllNonTerminalInfo(), tokeniser.getListOfTokens(), tokenFile, tokeniser.getTokenRegexes());
+            
         parseGrammar(tokeniser, fileWriter);
-
-        vector<TokenRegex> tokenRegexes; 
-
-        if (tokenFile != ""){ //create lexer
-            if (tokenFile == "template"){
-                fileWriter.createLexer(true, tokenRegexes);
-            }
-            else{
-                tokenRegexes = tokeniser.extractRegexes(tokensInput);
-                fileWriter.createLexer(false, tokenRegexes);
-            }
-        }
 
         return 0;
         

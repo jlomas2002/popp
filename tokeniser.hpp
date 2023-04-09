@@ -12,23 +12,38 @@ extern std::set<char> reservedSymbols;
 
 class Tokeniser {
 public:
-    Tokeniser(std::string grammar);
+    Tokeniser(std::string grammar, std::string tokensInput);
     ~Tokeniser();
     Gtoken peekNextToken();
     Gtoken getNextToken();
     Gtoken makeErrorToken(Error err);
-    std::vector<TokenRegex> extractRegexes(std::string input);
-    std::vector<StartTermCollection> getStartTermCollections();
+    std::vector<NonTerminalInfo> getAllNonTerminalInfo();
+    std::set<std::string> getListOfTokens();
+    std::vector<TokenRegex> getTokenRegexes();
 private:
-    void collectStartTerms();
-    void refineStartTerms(StartTermCollection &returnCollection, StartTermCollection &currentCollection);
-    StartTermCollection matchNonTerminalToCollection(Gtoken t);
+    void firstPass();
+    void collectNonTerminalInfo();
+    void parseExpr(NonTerminalInfo &ntInfo);
+    void skipUntilBar();
+    void collectListOfNonTerminals();
+    void refineNonTerminalInfo(NonTerminalInfo &returnNtInfo, NonTerminalInfo &currentNtInfo);
+    NonTerminalInfo findNonTerminalInfo(Gtoken t);
     int incrementIndex();
-    std::vector<StartTermCollection> startTermCollections;
+    Error checkTokOrNtError(std::string id);
+    void extractRegexes(std::string input);
+
+    std::vector<NonTerminalInfo> allNonTerminalInfo;
+    std::set<std::string> listOfNonTerminals;
+    std::set<std::string> listOfTokens;
+    std::vector<TokenRegex> tokenRegexes;
+
     std::string grammar;
-    int index;
+
     int pos;
     int lineNum;
+    int index;
+    bool tokenFileExists;
+    bool secondPass;
 };
 
 #endif

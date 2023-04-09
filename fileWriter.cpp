@@ -4,12 +4,26 @@
 #include <vector>
 using namespace std;
 
-string py_setup =  R"(
+string py_tokenDef =  R"(
 class Token:
+  type = None
   lexeme = None
   lineNumber = None
-  type = None
+  pos = None
+  error = None
+)";
 
+string cpp_tokenDef = R"(
+struct Token {
+  Type type;
+  std::string lexeme;
+  int lineNum;
+  int pos;
+  std::string error;
+};
+)";
+
+string py_initLexer = R"(
 input = ""
 index = 0
 lineNum = 1
@@ -24,7 +38,8 @@ def initLexer(filename):
 
 )";
 
-string cpp_setup =  R"(
+string cpp_initLexer =  R"(
+#include "tokenDef.hpp"
 #include "lexer.hpp"
 
 using namespace std;
@@ -50,16 +65,10 @@ void initLexer(string filename){
 
 )";
 
-string cpp_header =  R"(
+string cpp_lexerHeader =  R"(
 #ifndef LEXER_HPP
 #define LEXER_HPP
 #include <string>
-
-struct Token {
-  std::string lexeme;
-  int lineNum;
-  std::string type;
-};
 
 void initLexer();
 Token getNextToken();
@@ -104,6 +113,7 @@ string cpp_regexSearch = R"(
 //getNextToken() should return a Token object 
 //where Token is a class
 map<string, string> py = {
+    //Parser strings
     {"functionHeader", "def {0}():\n"},
     {"getNext", "tok = getNextToken()\n"},
     {"tokDeclar", "tok = Token()\n"},
@@ -111,28 +121,44 @@ map<string, string> py = {
     {"nonTerminal", "{0}()\n"},
     {"ifHeader", "if tok.lexeme == \"{0}\":\n"},
     {"ifHeader_nt", "if tok.lexeme in {0}_startTerminals:\n"},
+    {"ifHeader_tok", "if tok.type == Type.{0}:\n"},
     {"elseIf", "elif tok.lexeme == \"{0}\":\n"},
-    {"endIf", "\n"},
+    {"else", "else:\n"},
     {"peekNext", "tok = peekNextToken()\n"},
     {"elseIf_nt", "elif tok.lexeme in {0}_startTerminals"},
+    {"elseIf_tok", "elif tok.type == Type.{0}:\n"},
     {"whileBegin", "while "},
     {"ifBegin", "if "},
     {"scopeEnd", "\n"},
-    {"defineStartTerms", "{0}_startTerminals = ["},
-    {"listEnd", "\"{0}\"]\n"},
+    {"defineStartTerminals", "{0}_startTerminals = ["},
+    {"defineStartTokens", "{0}_startTokens = ["},
+    {"terminalList", "\"{0}\", "},
+    {"tokenList", "Type.{0}, "},
+    {"terminalListEnd", "\"{0}\"]\n"},
+    {"tokenListEnd", "Type.{0}]\n"},
     {"terminalCheck", "tok.lexeme == \"{0}\" or "},
-    {"nonTerminalCheck", "tok.lexeme in {0}_startTerminals or "},
+    {"tokenCheck", "tok.type == Type.{0} or "},
+    {"nonTerminalCheck_terminal", "tok.lexeme in {0}_startTerminals or "},
+    {"nonTerminalCheck_token", "tok.type in {0}_starttokens or "},
     {"terminalCheck_last", "tok.lexeme == \"{0}\":\n"},
-    {"nonTerminalCheck_last", "tok.lexeme in {0}_startTerminals:\n"},
+    {"nonTerminalCheck_last_terminal", "tok.lexeme in {0}_startTerminals:\n"},
+    {"nonTerminalCheck_last_token", "tok.type in {0}_startTokens:\n"},
+    {"tokenCheck_last", "tok.type == {0}:\n"},
+    {"errorComment", "#ERROR: Expected one of the following: "},
 
+    //Lexer strings
+    {"initLexer", py_initLexer},
     {"lexerPeek", py_lexerPeek},
-    {"lexerSetup", py_setup},
     {"lexerGetDef", "def getNextToken():\n"},
-    {"includeRegex", "import re\n"}
+    {"includeRegex", "import re\n"},
+
+    //TokenDef strings
+    {"tokenDef", py_tokenDef},
 
 };
 
  map<string, string> cpp = {
+    //Parser strings
     {"functionHeader", "void {0}(){\n"},
     {"getNext", "tok = getNextToken();\n"},
     {"tokDeclar", "Token tok;\n"},
@@ -140,29 +166,46 @@ map<string, string> py = {
     {"nonTerminal", "{0}();\n"},
     {"ifHeader", "if (tok.lexeme == \"{0}\"){\n"},
     {"ifHeader_nt", "if (contains(tok.lexeme, {0}_startTerminals)){\n"},
+    {"ifHeader_tok", "if (tok.type == {0}){\n"},
     {"elseIf", "else if (tok.lexeme == \"{0}\"){\n"},
-    {"endIf", "}\n"},
+    {"else", "else{\n"},
     {"peekNext", "tok = peekNextToken();\n"},
     {"elseIf_nt", "else if (contains(tok.lexeme, {0}_startTerminals)){\n"},
+    {"elseIf_tok", "else if (tok.type == {0}){\n"},
     {"whileBegin", "while ("},
     {"ifBegin", "if ("},
-    {"scopeEnd", "}\n"}, //same as endIf -should probably change
-    {"defineStartTerms", "string {0}_startTerminals[] = {"},
-    {"listEnd", "\"{0}\"};\n"},
+    {"scopeEnd", "}\n"},
+    {"defineStartTerminals", "string {0}_startTerminals[] = {"},
+    {"defineStartTokens", "Type {0}_startTokens[] = {"},
+    {"terminalList", "\"{0}\", "},
+    {"tokenList", "{0}, "},
+    {"terminalListEnd", "\"{0}\"};\n"},
+    {"tokenListEnd", "{0}};\n"},
     {"terminalCheck", "tok.lexeme == \"{0}\" || "},
-    {"nonTerminalCheck", "contains(tok.lexeme, {0}_startTerminals) || "},
+    {"tokenCheck", "tok.type == {0} || "},
+    {"nonTerminalCheck_terminal", "contains(tok.lexeme, {0}_startTerminals) || "},
+    {"nonTerminalCheck_token", "contains(tok.type, {0}_startTokens) || "},
     {"terminalCheck_last", "tok.lexeme == \"{0}\"){\n"},
-    {"nonTerminalCheck_last", "contains(tok.lexeme, {0}_startTerminals){\n"},
+    {"nonTerminalCheck_last_terminal", "contains(tok.lexeme, {0}_startTerminals){\n"},
+    {"nonTerminalCheck_last_token", "contains(tok.type, {0}_startTokens){\n"},
+    {"tokenCheck_last", "tok.type == {0}){\n"},
+    {"errorComment", "//ERROR: Expected one of the following: "},
 
+    //Lexer strings
+    {"initLexer", cpp_initLexer},
     {"lexerPeek", cpp_lexerPeek},
-    {"lexerSetup", cpp_setup},
     {"lexerGetDef", "Token getNextToken(){\n"},
     {"includeRegex", "#include <regex>\n"},
     {"regexDef", "    regex {0}_regex(\"{1}\");\n"},
     {"matchObj", "smatch match;\n"},
     {"searchCode", cpp_regexSearch},
 
-    {"header", cpp_header}
+    {"header", cpp_lexerHeader},
+
+    //TokenDef strings
+    {"tokenDef", cpp_tokenDef},
+    {"typeEnumBegin", "enum Type {\n"},
+    {"typeEnumEnd", "};\n"}
 };
 
 FileWriter::FileWriter(string name, string lang){
@@ -184,30 +227,52 @@ FileWriter::FileWriter(string name, string lang){
 FileWriter::~FileWriter(){
 }
 
+
+void FileWriter::createTokenDef(set<string> allTokenTypes){
+  ofstream defFile;
+
+  if (*language == cpp){
+    defFile.open("tokenDef.cpp", ios_base::out);
+
+    defFile<<"#ifndef TOKENDEF_HPP\n";
+    defFile<<"#define TOKENDEF_HPP\n\n";
+
+  }
+  else if (*language == py){
+    defFile.open("output/tokenDef.py", ios_base::out);
+  }
+
+  defFile<<(*language)["tokenDef"];
+
+  if (allTokenTypes.size()>0){
+    defFile<<(*language)["typeEnumBegin"];
+    for (string tokenType : allTokenTypes){
+      defFile<<"    "<<tokenType<<",\n";
+    }
+    defFile<<(*language)["typeEnumEnd"];
+  }
+
+  defFile<<"#endif";
+}
 void FileWriter::createLexer(bool makeTemplate, vector<TokenRegex> tokenRegexes){
   ofstream lexfile;
 
   if (*language == cpp){
-    ofstream headerfile;
-
-    headerfile.open("lexer.hpp", ios_base::out);
-    headerfile<<(*language)["header"];
-    headerfile.close();
-      
     lexfile.open("lexer.cpp", ios_base::out);
   }
     else if (*language == py){
-      lexfile.open("lexer.py", ios_base::out);
+    lexfile.open("lexer.py", ios_base::out);
   }
 
   if (!makeTemplate){
     lexfile<<(*language)["includeRegex"];
   }
 
-  lexfile<<(*language)["lexerSetup"];
+  lexfile<<(*language)["initLexer"];
   lexfile<<(*language)["lexerGetDef"]<<"\n";
 
   if (makeTemplate){
+    //Add code to return next character in input
     lexfile<<(*language)["scopeEnd"]<<"\n";
     lexfile<<(*language)["lexerPeek"];
   }
@@ -222,7 +287,7 @@ void FileWriter::createLexer(bool makeTemplate, vector<TokenRegex> tokenRegexes)
     lexfile<<(*language)["matchObj"];
 
     for (auto regexDef:tokenRegexes){
-      string searchCode = (*language)["regexSearch"];
+      string searchCode = (*language)["searchCode"];
       searchCode.replace(searchCode.find("{0}"), 3, regexDef.name.append("_regex"));
       searchCode.replace(searchCode.find("{1}"), 3, regexDef.name.append("_regex"));
       lexfile<<searchCode<<"\n";
@@ -235,93 +300,55 @@ void FileWriter::createLexer(bool makeTemplate, vector<TokenRegex> tokenRegexes)
   lexfile.close();
 }
 
+void FileWriter::fileSetup(vector<NonTerminalInfo> allNtInfo, set<string> allTokenTypes, string tokenFile, vector<TokenRegex> tokenRegexes){
+  //Create token definition header file to be used by lexer and parser
+  createTokenDef(allTokenTypes);
 
-bool FileWriter::getCollectStartTerminalsFlag(){
-  if (subCodeInfo.startTokens.size() > 0){
-    return true;
-  }
-  return false;
-}
-
-void FileWriter::addStartTerminal(Gtoken token){
-  vector<Gtoken>& currentArray = subCodeInfo.startTokens.back();
-  currentArray.push_back(token);
-}
-
-string FileWriter::formatString(string base, string text){
-  string formatted = base;
-  return formatted.replace(formatted.find("{0}"), 3, text);
-}
-
-
-string FileWriter::indentString(){
-  string s;
-  for (int i=0; i<indent; i++){
-    s.append(" ");
-  }
-  return s;
-}
-
-string FileWriter::createConditionStatement(){
-  string statement;
-  int i = 0;
-  vector<Gtoken> &currentTokens = subCodeInfo.startTokens.back();
-  while (i != currentTokens.size()-1){
-    if (currentTokens[i].type == Terminal){
-      statement.append(formatString((*language)["terminalCheck"], currentTokens[i].lexeme));
+  //Create lexer file if required
+  if (tokenFile != ""){
+    if (tokenFile == "template"){
+      createLexer(true, tokenRegexes);
     }
-    else if (currentTokens[i].type == Non_Terminal){
-      statement.append(formatString((*language)["nonTerminalCheck"], currentTokens[i].lexeme));
+    else{
+       createLexer(false, tokenRegexes);
     }
-    i++;
-  }
-  if (currentTokens[i].type == Terminal){
-    statement.append(formatString((*language)["terminalCheck_last"], currentTokens[i].lexeme));
-  }
-  else if (currentTokens[i].type == Non_Terminal){
-    statement.append(formatString((*language)["nonTerminalCheck_last"], currentTokens[i].lexeme));
   }
 
-  return statement;
-}
-
-void FileWriter::appendCode(string code){
-  ofstream pfile;
-
-  if (subCodeInfo.code.size() == 1){//add to pfile
-    pfile.open(fileName, ios_base::app);
-    pfile<<code;
-    string codeBlock = subCodeInfo.code[0];
-    pfile<<codeBlock;
-
-    pfile.close();
-  }
-  else{
-    subCodeInfo.code[subCodeInfo.code.size()-2].append(code);
-    string codeBlock = subCodeInfo.code.back();
-    subCodeInfo.code[subCodeInfo.code.size()-2].append(codeBlock);
-  }
-
-  //erase the subsequent code and the start tokens.
-  subCodeInfo.code.pop_back();
-  subCodeInfo.startTokens.pop_back();
-}
-
-void FileWriter::fileSetup(vector<StartTermCollection> theCollections){
+  //Add list of start terminals/start tokens for each non terminal to parser file
   ofstream pfile;
   pfile.open(fileName, ios_base::out);
 
-  for (auto collection : theCollections){
-    pfile<<indentString()<<formatString((*language)["defineStartTerms"], collection.nonTerminal.lexeme);
-    auto termPointer = collection.terminals.begin();
-    auto tp = termPointer; //used to check if we are on the last terminal
-    tp++;
-    while (tp != collection.terminals.end()){
-      pfile<<"\""<<(*termPointer).lexeme<<"\", "; //same for all langs (so far)
-      termPointer++;
-      tp++;
+  for (auto ntInfo : allNtInfo){
+    auto terminalPointer = ntInfo.startingTerminals.begin();
+    auto tokenPointer = ntInfo.startingTokens.begin();
+
+    auto lookAhead = terminalPointer; //used to check if we are on the last terminal
+
+    if (ntInfo.startingTerminals.size() > 0){
+      lookAhead++;
+      
+      pfile<<indentString()<<formatString((*language)["defineStartTerminals"], ntInfo.nonTerminal.lexeme);
+      while (lookAhead != ntInfo.startingTerminals.end()){
+        pfile<<formatString((*language)["terminalList"], (*terminalPointer).lexeme); //same for all langs (so far)
+        terminalPointer++;
+        lookAhead++;
+      }
+      pfile<<formatString((*language)["terminalListEnd"], (*terminalPointer).lexeme);
     }
-    pfile<<formatString((*language)["listEnd"], (*termPointer).lexeme);
+
+    if (ntInfo.startingTokens.size() > 0){
+      lookAhead = tokenPointer;
+      lookAhead++;
+
+      pfile<<indentString()<<formatString((*language)["defineStartTokens"], ntInfo.nonTerminal.lexeme);
+      while (lookAhead != ntInfo.startingTokens.end()){
+        pfile<<formatString((*language)["tokenList"], (*tokenPointer).lexeme); //same for all langs (so far)
+        tokenPointer++;
+        lookAhead++;
+      }
+      pfile<<formatString((*language)["tokenListEnd"], (*tokenPointer).lexeme);
+    }
+    pfile<<"\n";
   }
   pfile<<"\n\n";
 
@@ -337,127 +364,294 @@ void FileWriter::fileSetup(vector<StartTermCollection> theCollections){
   pfile.close();
 }
 
-void FileWriter::writeText(string text, Mode mode){
-  ofstream pfile;
-  if (subCodeInfo.startTokens.size() == 0){
-    pfile.open(fileName, ios_base::app);
+void FileWriter::addStartTerminal(Gtoken token){
+  vector<Gtoken>& currentArray = subCodeInfo.startTokens.back();
+  currentArray.push_back(token);
+}
+
+string FileWriter::formatString(string base, string text){
+  string formatted = base;
+  return formatted.replace(formatted.find("{0}"), 3, text);
+}
+
+string FileWriter::indentString(){
+  string s;
+  for (int i=0; i<indent; i++){
+    s.append(" ");
+  }
+  return s;
+}
+
+string FileWriter::createConditionStatement(){
+  string statement;
+  int i = 0;
+  vector<Gtoken> &currentTokens = subCodeInfo.startTokens.back();
+  while (i != int(currentTokens.size()-1)){
+    if (currentTokens[i].type == Terminal){
+      statement.append(formatString((*language)["terminalCheck"], currentTokens[i].lexeme));
+    }
+    else if (currentTokens[i].type == Non_Terminal){
+      //use all non terminal info to check if a terminal can start, and if a token can start
+      statement.append(formatString((*language)["nonTerminalCheck_terminal"], currentTokens[i].lexeme));
+      statement.append(formatString((*language)["nonTerminalCheck_token"], currentTokens[i].lexeme));
+    }
+    else if (currentTokens[i].type == Token_Type){
+      statement.append(formatString((*language)["tokenCheck"], currentTokens[i].lexeme));
+    }
+    i++;
+  }
+  if (currentTokens[i].type == Terminal){
+    statement.append(formatString((*language)["terminalCheck_last"], currentTokens[i].lexeme));
+  }
+  else if (currentTokens[i].type == Non_Terminal){
+    statement.append(formatString((*language)["nonTerminalCheck_last_terminal"], currentTokens[i].lexeme));
+    statement.append(formatString((*language)["nonTerminalCheck_last_token"], currentTokens[i].lexeme));
+  }
+  else if (currentTokens[i].type == Token_Type){
+    statement.append(formatString((*language)["tokenCheck_last"], currentTokens[i].lexeme));
   }
 
+  return statement;
+}
+
+void FileWriter::appendCode(string code){
+  //cout<<subCodeInfo.code.size()<<"\n";
+
+  subCodeInfo.code[subCodeInfo.code.size()-2].append(code);
+  //cout<<"here12\n";
+  string codeBlock = subCodeInfo.code.back();
+  //cout<<"here13\n";
+  subCodeInfo.code[subCodeInfo.code.size()-2].append(codeBlock);
+  //cout<<"here14\n";
+
+  //erase the subsequent code and the start tokens.
+  subCodeInfo.code.pop_back();
+  subCodeInfo.startTokens.pop_back();
+}
+
+void FileWriter::writeText(string text, Mode mode){
   string code;
 
-  if (mode == Func_Begin){ //function header
-    string formatted = formatString((*language)["functionHeader"], text);
-    pfile<<formatted;
-    indent += 4;
-    pfile<<indentString()<<(*language)["tokDeclar"];
-  }
-
-  else if (mode == Func_End){ //end of function
-    indent = 0;
-    pfile<<(*language)["endFunction"];
-  }
-
-  else if (mode == NonTerminal_Seen){ //non terminal
-    code.append(indentString()+formatString((*language)["nonTerminal"], text));
-  }
-
-  else if (mode == If_Begin_Terminal){
-    code.append(indentString()+formatString((*language)["ifHeader"], text));
-    indent += 4;
-  }
-  else if (mode == If_Begin_NonTerminal){
-    code.append(indentString()+formatString((*language)["ifHeader_nt"], text));
-    indent += 4;
-  }
-  else if (mode == ElseIf_Terminal){
-    code.append(indentString()+formatString((*language)["elseIf"], text));
-    indent += 4;
-  }
-  else if (mode == ElseIf_NonTerminal){
-    code.append(indentString()+formatString((*language)["elseIf_nt"], text));
-    indent += 4;
-  }
-  else if (mode == If_End){
-    indent -= 4;
-    code.append(indentString()+(*language)["endIf"]);
-  }
-  else if (mode == Bracket_Begin){
-    vector<Gtoken> newlist;
-    string newcode;
-    subCodeInfo.startTokens.push_back(newlist);
-    subCodeInfo.code.push_back(newcode);
-    subCodeInfo.indents.push_back(indent); 
-    indent += 4;
-  }
-  else if (mode == CurlyBracket_End){
-    int temp = indent;
-    indent = subCodeInfo.indents.back();
-    code.append(indentString()+(*language)["peekNext"]);
-    code.append(indentString()+(*language)["whileBegin"]);
-
-    //the while loop
-    code.append(createConditionStatement());
-
-    appendCode(code);
-    indent = temp;
-
-    if (subCodeInfo.code.size() == 0){
-      pfile.open(fileName, ios_base::app);
-      pfile<<indentString()+(*language)["peekNext"];
-      indent -= 4;
-      pfile<<indentString()<<(*language)["scopeEnd"];
-      pfile.close();
+  switch(mode){
+    case Func_Begin :
+    {
+      //cout<<"here0\n";
+      vector<Gtoken> newlist;
+      string newcode;
+      subCodeInfo.startTokens.push_back(newlist); //Need to know start tokens for error feedback
+      subCodeInfo.code.push_back(newcode);
+      //cout<<subCodeInfo.code.size()<<"\n";
+      indent = 0;
+      code.append(formatString((*language)["functionHeader"], text));
+      indent += 4;
+      code.append(indentString()+(*language)["tokDeclar"]);
+      break;
     }
 
-    else{
-      subCodeInfo.code[subCodeInfo.code.size()-1].append(indentString()+(*language)["peekNext"]);
-      indent -= 4;
-      subCodeInfo.code[subCodeInfo.code.size()-1].append(indentString()+(*language)["scopeEnd"]);
+    case Func_End :
+    {
+      indent = 0;
+      code.append((*language)["endFunction"]);
+      break;
     }
-    subCodeInfo.indents.pop_back();
-    return; //dont want to run the code at the bottom of the function
-  }
-  else if (mode == SquareBracket_End){
-    int temp = indent;
-    indent = subCodeInfo.indents.back();
-    code.append(indentString()+(*language)["peekNext"]);
-    code.append(indentString()+(*language)["ifBegin"]);
 
-    //the while loop
-    code.append(createConditionStatement());
-
-    appendCode(code);
-    indent = temp;
-
-    if (subCodeInfo.code.size() == 0){ //can now write to file
-      pfile.open(fileName, ios_base::app);
-      indent -= 4;
-      pfile<<indentString()<<(*language)["scopeEnd"];
-      pfile.close();
-      
+    case NonTerminal_Seen :
+    {
+      code.append(indentString()+formatString((*language)["nonTerminal"], text));
+      break;
     }
-    else{
-      indent -= 4;
-      subCodeInfo.code[subCodeInfo.code.size()-1].append(indentString()+(*language)["scopeEnd"]);
+
+    case If_Begin_Terminal :
+    {
+      code.append(indentString()+formatString((*language)["ifHeader"], text));
+      indent += 4;
+      break;
     }
-    subCodeInfo.indents.pop_back();
-    return; //dont want to run the code at the bottom of the function
-  }
-  else if (mode == Get_NextTok){
-    code.append(indentString()+(*language)["getNext"]);
-  }
-  else if (mode == Peek_NextTok){
-    code.append(indentString()+(*language)["peekNext"]);
+
+    case If_Begin_NonTerminal :
+    {
+      code.append(indentString()+formatString((*language)["ifHeader_nt"], text));
+      indent += 4;
+      break;
+    }
+
+    case If_Begin_Token :
+    {
+      code.append(indentString()+formatString((*language)["ifHeader_tok"], text));
+      indent += 4;
+      break;
+    }
+
+    case ElseIf_Terminal :
+    {
+      code.append(indentString()+formatString((*language)["elseIf"], text));
+      indent += 4;
+      break;
+    }
+
+    case ElseIf_NonTerminal :
+    {
+      code.append(indentString()+formatString((*language)["elseIf_nt"], text));
+      indent += 4;
+      break;
+    }
+
+    case ElseIf_Token :
+    {
+      code.append(indentString()+formatString((*language)["elseIf_tok"], text));
+      indent += 4;
+      break;
+    }
+
+    case Scope_End :
+    {
+      indent -= 4;
+      code.append(indentString()+(*language)["scopeEnd"]);
+      break;
+    }
+
+    case Else_Expr :
+    {
+      //cout<<"here7\n";
+      code.append(indentString()+(*language)["else"]);
+      indent += 4;
+      code.append(indentString()+(*language)["errorComment"]);
+
+      int length = 0;
+      for (Gtoken tok : subCodeInfo.startTokens.back()){
+        if (length >= 30){
+          code.append("\n");
+          if ((*language) == py){
+            code.append(indentString()+"# ");
+          }
+          if ((*language) == cpp){
+            code.append(indentString()+"// ");
+          }
+        }
+
+        if (tok.type == Terminal){}
+          code.append("a "+tok.lexeme+" character, ");
+          length += 14;
+        if (tok.type == Non_Terminal){
+          code.append("a "+tok.lexeme+" start terminal/token, ");
+          length += 25;
+        }
+        if (tok.type == Token_Type){
+          code.append("a "+tok.lexeme+" type, ");
+          length += 9;
+        }
+      }
+      code.append("\n");
+      break;
+    }
+
+    case Else_Fact_Terminal :
+    {
+      //cout<<"here5\n";
+      code.append(indentString()+(*language)["else"]);
+      indent += 4;
+
+      code.append(indentString()+(*language)["errorComment"]);
+      code.append("a " + text + " character.");
+      code.append("\n");
+      break;
+    }
+
+    case Else_Fact_Token :
+    {
+    //cout<<"here6\n";
+      code.append(indentString()+(*language)["else"]);
+      indent += 4;
+
+      code.append(indentString()+(*language)["errorComment"]);
+      code.append("a " + text + " type.");
+      code.append("\n");
+      break;
+    }
+
+    case Bracket_Begin :
+    {
+      //cout<<"here15\n";
+      vector<Gtoken> newlist;
+      string newcode;
+      subCodeInfo.startTokens.push_back(newlist);
+      subCodeInfo.code.push_back(newcode);
+      //cout<<subCodeInfo.code.size()<<"\n";
+      indent += 4;
+      break;
+    }
+
+    case CurlyBracket_End :
+    {
+      cout<<"here3\n";
+      indent -= 4;
+      code.append(indentString()+(*language)["peekNext"]);
+      code.append(indentString()+(*language)["whileBegin"]);
+
+      //Create the while loop
+      code.append(createConditionStatement());
+
+      appendCode(code);
+      indent += 4;
+
+      code = "";
+
+      code.append(indentString()+(*language)["peekNext"]);
+      indent -= 4;
+      code.append(indentString()+(*language)["scopeEnd"]);
+      break;
+    }
+  
+    case SquareBracket_End :
+    {
+      cout<<"here4\n";
+      indent -= 4;
+      code.append(indentString()+(*language)["peekNext"]);
+      code.append(indentString()+(*language)["ifBegin"]);
+
+      //Create the while loop
+      code.append(createConditionStatement());
+      //cout<<"here9\n";
+
+      appendCode(code);
+
+      //cout<<"here10\n";
+
+      code = "";
+
+      code.append(indentString()+(*language)["scopeEnd"]);
+      break;
+
+      //cout<<"here11\n";
+    }
+
+    case Get_NextTok :
+    {
+      code.append(indentString()+(*language)["getNext"]);
+      break;
+    }
+
+    case Peek_NextTok :
+    {
+      code.append(indentString()+(*language)["peekNext"]);
+      break;
+    }
   }
 
+  //cout<<"here1\n";
+  string &codeBlock = subCodeInfo.code.back();
+  codeBlock.append(code);
+                  //cout<<"here2\n";
 
-  if (pfile.is_open()){
-    pfile<<code;
-    pfile.close();
-  }
-  else{
-    string &codeBlock = subCodeInfo.code.back();
-    codeBlock.append(code);
+  if (mode == Func_End){
+    ofstream pfile;
+
+    pfile.open(fileName, ios_base::app);
+    pfile<<subCodeInfo.code.back();
+
+    subCodeInfo.code.pop_back();
+    subCodeInfo.startTokens.pop_back();
   }
 }
+
 

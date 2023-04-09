@@ -9,24 +9,27 @@
 enum Mode {
     Func_Begin,
     Func_End,
-    Terminal_Seen,
     NonTerminal_Seen,
     Get_NextTok,
     Peek_NextTok,
     If_Begin_Terminal,
     If_Begin_NonTerminal,
+    If_Begin_Token,
     ElseIf_Terminal,
     ElseIf_NonTerminal,
-    If_End,
+    ElseIf_Token,
+    Scope_End,
+    Else_Expr,
+    Else_Fact_Terminal,
+    Else_Fact_Token,
     Bracket_Begin,
     CurlyBracket_End,
     SquareBracket_End,
 };
 
 
-struct SubsequentCodeInfo { //contains information required to correctly format if/while loopd for [] and {}
+struct SubsequentCodeInfo { //contains information required to correctly format if/while loops for [] and {}
     std::vector<std::vector<Gtoken>> startTokens;
-    std::vector<int> indents; //the indent of the if/while loop
     std::vector<std::string> code; //code to come after the if/while loop
 };
 
@@ -36,15 +39,16 @@ public:
     FileWriter(std::string fileName, std::string lang);
     ~FileWriter();
     void writeText(std::string text, Mode mode);
-    void createLexer(bool makeTemplate, std::vector<TokenRegex> tokenRegexes);
-    void fileSetup(std::vector<StartTermCollection> theCollections);
-    bool getCollectStartTerminalsFlag();
+    void fileSetup(std::vector<NonTerminalInfo> allNtInfo, std::set<std::string> allTokens, std::string tokenFile, std::vector<TokenRegex> tokenRegexes);
     void addStartTerminal(Gtoken token);
 private:
+    void createLexer(bool makeTemplate, std::vector<TokenRegex> tokenRegexes);
+    void createTokenDef(std::set<std::string> allTokenTypes);
     std::string formatString(std::string base, std::string text);
     std::string indentString();
     std::string createConditionStatement();
     void appendCode(std::string);
+    void writeFuncToParserFile();
     SubsequentCodeInfo subCodeInfo;
     int indent; //defines how many spaces to use as the current indentation level
     std::string fileName;

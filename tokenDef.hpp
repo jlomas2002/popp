@@ -16,7 +16,13 @@ enum Type {
 
 enum Error {
   UnexpectedEOF, //Grammar string suddenly ends when it shouldn't
+  UnknownCharacter,
+  NonTerminalNoDefintion,
+  RedefinedElement,
+  RedefinedNonTerminal,
+  UndefinedElement,
 
+  ExpectedNonTerminal,
   ExpectedEquals,
   ExpectedSemiColon,
   ExpectedCurlyBracket,
@@ -27,10 +33,15 @@ enum Error {
   NONE //Default of no error
 };
  
-// std::string typeToString(Type t){
-//   switch(r)
+//  std::string typeToString(Type t){
+//   switch(t)
 //   {
-//       case red  : std::cout << "red\n";   break;
+//       case Terminal  : std::cout << "Terminal\n";   break;
+//       case Non_Terminal  : std::cout << "Non Terminal\n";   break;
+//       case Symbol  : std::cout << "Symbol\n";   break;
+//       case Token_Type  : std::cout << "Token\n";   break;
+//       case ERROR  : std::cout << "Error\n";   break;
+//       case END_OF_GRAMMAR  : std::cout << "End Of Grammar\n";   break;
 //   }
 // }
 
@@ -45,9 +56,10 @@ struct Gtoken {
 
 
 //Stores the name of a non terminal, and a set of all of the terminals that can start it
-struct StartTermCollection {
+struct NonTerminalInfo{
   Gtoken nonTerminal;
-  std::set<Gtoken> terminals;
+  std::set<Gtoken> startingTerminals;
+  std::set<Gtoken> startingTokens;
 };
 
 //Stores the name of a token and its corresponding regex
