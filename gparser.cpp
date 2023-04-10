@@ -9,6 +9,8 @@ FileWriter fw("", "");
 bool startTerminal = true;
 bool veryFirstElement = true;
 
+int bracketTracker = 0;
+
 void parseGrammar(Tokeniser &tokeniser, FileWriter writer){
     t = tokeniser;
     fw = writer;
@@ -33,6 +35,8 @@ void grammar(){
 
 void rule(){
     Gtoken tok = t.getNextToken();
+
+    bracketTracker = 0;
     if (tok.lexeme == "=" && tok.type == Symbol){
         veryFirstElement = true;
         expression();
@@ -127,10 +131,10 @@ void expression(){
         tok = t.peekNextToken();
     }
 
-    // if (!insideBracket){
-    //     fw.writeText("", Else_Expr);
-    //     fw.writeText("", Scope_End);
-    // }
+    if (!bracketTracker){
+        fw.writeText("", Else_Expr);
+        fw.writeText("", Scope_End);
+     }
 
 }
 
@@ -173,13 +177,16 @@ void factor(){
     }
 
     else if(tok.type == Symbol && tok.lexeme == "{"){
+        bracketTracker++;
+
         fw.writeText("", Bracket_Begin);
         expression();
         tok = t.getNextToken();
 
         if (tok.type == Symbol && tok.lexeme == "}"){
-            cout<<"here200\n";
             fw.writeText("", CurlyBracket_End);
+
+            bracketTracker--;
         }
 
         else{
@@ -189,12 +196,14 @@ void factor(){
     } 
 
     else if(tok.type == Symbol && tok.lexeme == "("){
+        bracketTracker++;
+
         fw.writeText("", Peek_NextTok);
         expression();
         tok = t.getNextToken();
 
         if (tok.type == Symbol && tok.lexeme == ")"){
-            ;//Good
+            bracketTracker--;
         }
 
         else{
@@ -204,13 +213,16 @@ void factor(){
     }
 
     else if(tok.type == Symbol && tok.lexeme == "["){
+        bracketTracker++;
+
         fw.writeText("", Bracket_Begin);
         expression();
         tok = t.getNextToken();
 
         if (tok.type == Symbol && tok.lexeme == "]"){
-            cout<<"HERE\n";
             fw.writeText("", SquareBracket_End);
+
+            bracketTracker--;
         }
 
         else{
