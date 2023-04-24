@@ -122,11 +122,11 @@ Token peekNextToken(){
 //Regex search for each language
 string cpp_regexSearch = R"(
   if (regex_search(input.begin() + index, input.end(), match, {0})) {
-      Token tok;
-      tok.lexeme = match.str();
-      tok.type = {1};
-      tok.lineNum = lineNum;
-      return tok;
+    Token tok;
+    tok.lexeme = match.str();
+    tok.type = {1};
+    tok.lineNum = lineNum;
+    return tok;
   }
 
 )";
@@ -136,97 +136,97 @@ string cpp_regexSearch = R"(
 //--------------------------------------------------------------------
 //Dictionary of strings used to build parser/lexer for each language
 map<OutputStringType, string> py = {
-    //Parser strings
-    {functionHeader, "def {0}():\n"},
-    {tokDeclaration, ""},
-    {getNextToken, "tok = getNextToken()\n"},
-    {peekNextToken, "tok = peekNextToken()\n"},
-    {scopeEnd, "\n"},
-    {callNonTerminal, "{0}()\n"},
-    {ifHeader_terminal, "if tok.lexeme == \"{0}\":\n"},
-    {ifHeader_nonTerminal, "if tok.lexeme in {0}_startTerminals:\n"},
-    {ifHeader_token, "if tok.type == Type.{0}:\n"},
-    {elseIfHeader_terminal, "elif tok.lexeme == \"{0}\":\n"},
-    {elseIfHeader_nonTerminal, "elif tok.lexeme in {0}_startTerminals"},
-    {elseIfHeader_token, "elif tok.type == Type.{0}:\n"},
-    {elseHeader, "else:\n"},
-    {whileHeader_begin, "while "},
-    {ifHeader_begin, "if "},
-    {defineStartTerminals_begin, "{0}_startTerminals = ["},
-    {defineStartTokens_begin, "{0}_startTokens = ["},
-    {defineStartTerminals_list, "\"{0}\", "},
-    {defineStartTokens_list, "Type.{0}, "},
-    {defineStartTerminals_end, "\"{0}\"]\n"},
-    {defineStartTokens_end, "Type.{0}]\n"},
-    {statement_terminalCheck, "tok.lexeme == \"{0}\" or "},
-    {statement_tokenCheck, "tok.type == Type.{0} or "},
-    {statement_nonTerminalCheck_terminal, "tok.lexeme in {0}_startTerminals or "},
-    {statement_nonTerminalCheck_token, "tok.type in {0}_starttokens or "},
-    {statement_terminalCheck_last, "tok.lexeme == \"{0}\":\n"},
-    {statement_tokenCheck_last, "tok.type == {0}:\n"},
-    {statement_nonTerminalCheck_terminal_last, "tok.lexeme in {0}_startTerminals:\n"},
-    {statement_nonTerminalCheck_token_last, "tok.type in {0}_startTokens:\n"},
-    {errorComment, "#ERROR: Expected one of the following: "},
+  //Parser strings
+  {functionHeader, "def {0}():\n"},
+  {tokDeclaration, ""},
+  {getNextToken, "tok = getNextToken()\n"},
+  {peekNextToken, "tok = peekNextToken()\n"},
+  {scopeEnd, "\n"},
+  {callNonTerminal, "{0}()\n"},
+  {ifHeader_terminal, "if tok.lexeme == \"{0}\":\n"},
+  {ifHeader_nonTerminal, "if tok.lexeme in {0}_startTerminals:\n"},
+  {ifHeader_token, "if tok.type == Type.{0}:\n"},
+  {elseIfHeader_terminal, "elif tok.lexeme == \"{0}\":\n"},
+  {elseIfHeader_nonTerminal, "elif tok.lexeme in {0}_startTerminals"},
+  {elseIfHeader_token, "elif tok.type == Type.{0}:\n"},
+  {elseHeader, "else:\n"},
+  {whileHeader_begin, "while "},
+  {ifHeader_begin, "if "},
+  {defineStartTerminals_begin, "{0}_startTerminals = ["},
+  {defineStartTokens_begin, "{0}_startTokens = ["},
+  {defineStartTerminals_list, "\"{0}\", "},
+  {defineStartTokens_list, "Type.{0}, "},
+  {defineStartTerminals_end, "\"{0}\"]\n"},
+  {defineStartTokens_end, "Type.{0}]\n"},
+  {statement_terminalCheck, "tok.lexeme == \"{0}\" or "},
+  {statement_tokenCheck, "tok.type == Type.{0} or "},
+  {statement_nonTerminalCheck_terminal, "tok.lexeme in {0}_startTerminals or "},
+  {statement_nonTerminalCheck_token, "tok.type in {0}_starttokens or "},
+  {statement_terminalCheck_last, "tok.lexeme == \"{0}\":\n"},
+  {statement_tokenCheck_last, "tok.type == {0}:\n"},
+  {statement_nonTerminalCheck_terminal_last, "tok.lexeme in {0}_startTerminals:\n"},
+  {statement_nonTerminalCheck_token_last, "tok.type in {0}_startTokens:\n"},
+  {errorComment, "#ERROR: Expected one of the following: "},
 
-    //Lexer strings
-    {lexer_initFunction, py_initLexer},
-    {lexer_peekNextFunction, py_lexerPeek},
-    {lexer_getNextFunction_header, "def getNextToken():\n"},
-    {lexer_includeRegex, "import re\n"},
+  //Lexer strings
+  {lexer_initFunction, py_initLexer},
+  {lexer_peekNextFunction, py_lexerPeek},
+  {lexer_getNextFunction_header, "def getNextToken():\n"},
+  {lexer_includeRegex, "import re\n"},
 
-    //TokenDef strings
-    {tokenDefinition, py_tokenDef},
+  //TokenDef strings
+  {tokenDefinition, py_tokenDef},
 
 };
 
  map<OutputStringType, string> cpp = {
-    //Parser strings
-    {functionHeader, "void {0}(){\n"},
-    {tokDeclaration, "Token tok;\n"},
-    {getNextToken, "tok = getNextToken();\n"},
-    {peekNextToken, "tok = peekNextToken();\n"},
-    {scopeEnd, "}\n"},
-    {callNonTerminal, "{0}();\n"},
-    {ifHeader_terminal, "if (tok.lexeme == \"{0}\"){\n"},
-    {ifHeader_nonTerminal, "if (contains(tok.lexeme, {0}_startTerminals)){\n"},
-    {ifHeader_token, "if (tok.type == {0}){\n"},
-    {elseIfHeader_terminal, "else if (tok.lexeme == \"{0}\"){\n"},
-    {elseIfHeader_nonTerminal, "else if (contains(tok.lexeme, {0}_startTerminals)){\n"},
-    {elseIfHeader_token, "else if (tok.type == {0}){\n"},
-    {elseHeader, "else{\n"},
-    {whileHeader_begin, "while ("},
-    {ifHeader_begin, "if ("},
-    {defineStartTerminals_begin, "string {0}_startTerminals[] = {"},
-    {defineStartTokens_begin, "Type {0}_startTokens[] = {"},
-    {defineStartTerminals_list, "\"{0}\", "},
-    {defineStartTokens_list, "{0}, "},
-    {defineStartTerminals_end, "\"{0}\"};\n"},
-    {defineStartTokens_end, "{0}};\n"},
-    {statement_terminalCheck, "tok.lexeme == \"{0}\" || "},
-    {statement_tokenCheck, "tok.type == {0} || "},
-    {statement_nonTerminalCheck_terminal, "contains(tok.lexeme, {0}_startTerminals) || "},
-    {statement_nonTerminalCheck_token, "contains(tok.type, {0}_startTokens) || "},
-    {statement_terminalCheck_last, "tok.lexeme == \"{0}\"){\n"},
-    {statement_tokenCheck_last, "tok.type == {0}){\n"},
-    {statement_nonTerminalCheck_terminal_last, "contains(tok.lexeme, {0}_startTerminals){\n"},
-    {statement_nonTerminalCheck_token_last, "contains(tok.type, {0}_startTokens){\n"},
-    {errorComment, "//ERROR: Expected one of the following: "},
+  //Parser strings
+  {functionHeader, "void {0}(){\n"},
+  {tokDeclaration, "Token tok;\n"},
+  {getNextToken, "tok = getNextToken();\n"},
+  {peekNextToken, "tok = peekNextToken();\n"},
+  {scopeEnd, "}\n"},
+  {callNonTerminal, "{0}();\n"},
+  {ifHeader_terminal, "if (tok.lexeme == \"{0}\"){\n"},
+  {ifHeader_nonTerminal, "if (contains(tok.lexeme, {0}_startTerminals)){\n"},
+  {ifHeader_token, "if (tok.type == {0}){\n"},
+  {elseIfHeader_terminal, "else if (tok.lexeme == \"{0}\"){\n"},
+  {elseIfHeader_nonTerminal, "else if (contains(tok.lexeme, {0}_startTerminals)){\n"},
+  {elseIfHeader_token, "else if (tok.type == {0}){\n"},
+  {elseHeader, "else{\n"},
+  {whileHeader_begin, "while ("},
+  {ifHeader_begin, "if ("},
+  {defineStartTerminals_begin, "string {0}_startTerminals[] = {"},
+  {defineStartTokens_begin, "Type {0}_startTokens[] = {"},
+  {defineStartTerminals_list, "\"{0}\", "},
+  {defineStartTokens_list, "{0}, "},
+  {defineStartTerminals_end, "\"{0}\"};\n"},
+  {defineStartTokens_end, "{0}};\n"},
+  {statement_terminalCheck, "tok.lexeme == \"{0}\" || "},
+  {statement_tokenCheck, "tok.type == {0} || "},
+  {statement_nonTerminalCheck_terminal, "contains(tok.lexeme, {0}_startTerminals) || "},
+  {statement_nonTerminalCheck_token, "contains(tok.type, {0}_startTokens) || "},
+  {statement_terminalCheck_last, "tok.lexeme == \"{0}\"){\n"},
+  {statement_tokenCheck_last, "tok.type == {0}){\n"},
+  {statement_nonTerminalCheck_terminal_last, "contains(tok.lexeme, {0}_startTerminals){\n"},
+  {statement_nonTerminalCheck_token_last, "contains(tok.type, {0}_startTokens){\n"},
+  {errorComment, "//ERROR: Expected one of the following: "},
 
-    //Lexer strings
-    {lexer_initFunction, cpp_initLexer},
-    {lexer_peekNextFunction, cpp_lexerPeek},
-    {lexer_getNextFunction_header, "Token getNextToken(){\n"},
-    {lexer_includeRegex, "#include <regex>\n"},
-    {lexer_regexDefintion, "regex {0}_regex(\"{1}\");\n"},
-    {lexer_matchDeclaration, "smatch match;\n"},
-    {lexer_searchCode, cpp_regexSearch},
+  //Lexer strings
+  {lexer_initFunction, cpp_initLexer},
+  {lexer_peekNextFunction, cpp_lexerPeek},
+  {lexer_getNextFunction_header, "Token getNextToken(){\n"},
+  {lexer_includeRegex, "#include <regex>\n"},
+  {lexer_regexDefintion, "regex {0}_regex(\"{1}\");\n"},
+  {lexer_matchDeclaration, "smatch match;\n"},
+  {lexer_searchCode, cpp_regexSearch},
 
-    {lexer_headerFile, cpp_lexerHeader},
+  {lexer_headerFile, cpp_lexerHeader},
 
-    //TokenDef strings
-    {tokenDefinition, cpp_tokenDef},
-    {typeEnumDefinition_begin, "enum Type {\n"},
-    {typeEnumDefinition_end, "};\n"}
+  //TokenDef strings
+  {tokenDefinition, cpp_tokenDef},
+  {typeEnumDefinition_begin, "enum Type {\n"},
+  {typeEnumDefinition_end, "};\n"}
 };
 
 //--------------------------------------------------------------------
@@ -252,11 +252,11 @@ FileWriter::FileWriter(string name, string lang){
 FileWriter::~FileWriter(){
 }
 
-//Return the nonTerminalInfo for the non terminal which matches the name argument
-NonTerminalInfo FileWriter::getNtInfo(string name){
-  for (NonTerminalInfo ntInfo : allNonTerminalInfo){
-    if (ntInfo.nonTerminal.lexeme == name){
-      return ntInfo;
+//Return the firse set information for the non terminal which matches the name argument
+FirstSetInfo FileWriter::getFirstSetInfo(string name){
+  for (FirstSetInfo info : allFirstSetInfo){
+    if (info.nonTerminal.lexeme == name){
+      return info;
     }
   }
 }
@@ -338,11 +338,11 @@ void FileWriter::createLexer(bool makeTemplate, vector<TokenRegex> tokenRegexes)
   lexfile.close();
 }
 
-void FileWriter::fileSetup(vector<NonTerminalInfo> allNtInfo, set<string> allTokenTypes, string tokenFile, vector<TokenRegex> tokenRegexes){
+void FileWriter::fileSetup(vector<FirstSetInfo> allFSInfo, set<string> allTokenTypes, string tokenFile, vector<TokenRegex> tokenRegexes){
   //Create token definition header file to be used by lexer and parser
   createTokenDef(allTokenTypes);
 
-  allNonTerminalInfo = allNtInfo;
+  allFirstSetInfo = allFSInfo;
 
   //Create lexer file if required
   if (tokenFile != ""){
@@ -358,17 +358,17 @@ void FileWriter::fileSetup(vector<NonTerminalInfo> allNtInfo, set<string> allTok
   ofstream pfile;
   pfile.open(fileName, ios_base::out);
 
-  for (NonTerminalInfo ntInfo : allNonTerminalInfo){
-    auto terminalPointer = ntInfo.startingTerminals.begin();
-    auto tokenPointer = ntInfo.startingTokens.begin();
+  for (FirstSetInfo info : allFirstSetInfo){
+    auto terminalPointer = info.firstTerminals.begin();
+    auto tokenPointer = info.firstTokens.begin();
 
     auto lookAhead = terminalPointer; //Used to check if we are on the last terminal
 
-    if (ntInfo.startingTerminals.size() > 0){
+    if (info.firstTerminals.size() > 0){
       lookAhead++;
       
-      pfile<<indentString()<<formatString((*language)[defineStartTerminals_begin], ntInfo.nonTerminal.lexeme);
-      while (lookAhead != ntInfo.startingTerminals.end()){
+      pfile<<indentString()<<formatString((*language)[defineStartTerminals_begin], info.nonTerminal.lexeme);
+      while (lookAhead != info.firstTerminals.end()){
         pfile<<formatString((*language)[defineStartTerminals_list], (*terminalPointer).lexeme); //same for all langs (so far)
         terminalPointer++;
         lookAhead++;
@@ -376,12 +376,12 @@ void FileWriter::fileSetup(vector<NonTerminalInfo> allNtInfo, set<string> allTok
       pfile<<formatString((*language)[defineStartTerminals_end], (*terminalPointer).lexeme);
     }
 
-    if (ntInfo.startingTokens.size() > 0){
+    if (info.firstTokens.size() > 0){
       lookAhead = tokenPointer;
       lookAhead++;
 
-      pfile<<indentString()<<formatString((*language)[defineStartTokens_begin], ntInfo.nonTerminal.lexeme);
-      while (lookAhead != ntInfo.startingTokens.end()){
+      pfile<<indentString()<<formatString((*language)[defineStartTokens_begin], info.nonTerminal.lexeme);
+      while (lookAhead != info.firstTokens.end()){
         pfile<<formatString((*language)[defineStartTokens_list], (*tokenPointer).lexeme); //same for all langs (so far)
         tokenPointer++;
         lookAhead++;
@@ -432,12 +432,12 @@ string FileWriter::createConditionStatement(){
     }
     else if (currentTokens[i].type == Non_Terminal){
       //use all non terminal info to check if a terminal can start, and if a token can start
-      NonTerminalInfo ntInfo = getNtInfo(currentTokens[i].lexeme);
-      if (ntInfo.startingTerminals.size() > 0){
+      FirstSetInfo info = getFirstSetInfo(currentTokens[i].lexeme);
+      if (info.firstTerminals.size() > 0){
         statement.append(formatString((*language)[statement_nonTerminalCheck_terminal], currentTokens[i].lexeme));
       }
 
-      if (ntInfo.startingTokens.size() > 0){
+      if (info.firstTokens.size() > 0){
         statement.append(formatString((*language)[statement_nonTerminalCheck_token], currentTokens[i].lexeme));
       }
     }
@@ -450,15 +450,15 @@ string FileWriter::createConditionStatement(){
     statement.append(formatString((*language)[statement_terminalCheck_last], currentTokens[i].lexeme));
   }
   else if (currentTokens[i].type == Non_Terminal){
-    NonTerminalInfo ntInfo = getNtInfo(currentTokens[i].lexeme);
+    FirstSetInfo info = getFirstSetInfo(currentTokens[i].lexeme);
 
-    if (ntInfo.startingTerminals.size() > 0){
-      if (ntInfo.startingTokens.size() > 0){
+    if (info.firstTerminals.size() > 0){
+      if (info.firstTokens.size() > 0){
         statement.append(formatString((*language)[statement_tokenCheck], currentTokens[i].lexeme));
       }
       statement.append(formatString((*language)[statement_nonTerminalCheck_terminal_last], currentTokens[i].lexeme));
     }
-    else if (ntInfo.startingTokens.size() > 0){
+    else if (info.firstTokens.size() > 0){
       statement.append(formatString((*language)[statement_nonTerminalCheck_token_last], currentTokens[i].lexeme));
     }
   }

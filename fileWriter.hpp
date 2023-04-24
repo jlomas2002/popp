@@ -85,10 +85,10 @@ public:
     FileWriter(std::string fileName, std::string lang);
     ~FileWriter();
     void writeText(std::string text, Mode mode);
-    void fileSetup(std::vector<NonTerminalInfo> allNtInfo, std::set<std::string> allTokens, std::string tokenFile, std::vector<TokenRegex> tokenRegexes);
+    void fileSetup(std::vector<FirstSetInfo> allFirstSetInfo, std::set<std::string> allTokens, std::string tokenFile, std::vector<TokenRegex> tokenRegexes);
     void addStartTerminal(Gtoken token);
 private:
-    NonTerminalInfo getNtInfo(std::string);
+    FirstSetInfo getFirstSetInfo(std::string);
     void createLexer(bool makeTemplate, std::vector<TokenRegex> tokenRegexes);
     void createTokenDef(std::set<std::string> allTokenTypes);
     std::string formatString(std::string base, std::string text);
@@ -99,7 +99,7 @@ private:
     void writeFuncToParserFile();
     void addNewSubCode();
 
-    std::vector<NonTerminalInfo> allNonTerminalInfo;
+    std::vector<FirstSetInfo> allFirstSetInfo;
     SubsequentCodeInfo subCodeInfo;
     int indent; //defines how many spaces to use as the current indentation level
     std::string fileName;

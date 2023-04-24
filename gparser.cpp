@@ -29,7 +29,7 @@ void grammar(){
 
     if (tok.type != END_OF_GRAMMAR){
          //ERROR
-         tok = t.makeErrorToken(ExpectedNonTerminal);
+         tok = t.makeErrorToken(ExpectedNonTerminal, tok.lexeme);
      }
 }
 
@@ -43,7 +43,7 @@ void rule(){
     }
     else{
         //ERROR
-        tok = t.makeErrorToken(ExpectedEquals);
+        tok = t.makeErrorToken(ExpectedEquals, tok.lexeme);
     }
 
     tok = t.getNextToken();
@@ -52,7 +52,7 @@ void rule(){
     }
     else{
         //ERROR
-        tok = t.makeErrorToken(ExpectedSemiColon);
+        tok = t.makeErrorToken(ExpectedSemiColon, tok.lexeme);
     }
 }
 
@@ -191,7 +191,7 @@ void factor(){
 
         else{
             //ERROR
-            tok = t.makeErrorToken(ExpectedCurlyBracket);     
+            tok = t.makeErrorToken(ExpectedCurlyBracket, tok.lexeme);     
         } 
     } 
 
@@ -208,7 +208,7 @@ void factor(){
 
         else{
             //ERROR
-            tok = t.makeErrorToken(ExpectedNormalBracket); 
+            tok = t.makeErrorToken(ExpectedNormalBracket, tok.lexeme); 
         } 
     }
 
@@ -227,12 +227,12 @@ void factor(){
 
         else{
             //ERROR
-            tok = t.makeErrorToken(ExpectedSquareBracket); 
+            tok = t.makeErrorToken(ExpectedSquareBracket, tok.lexeme); 
         } 
     }
     else{
         //ERROR
-        tok = t.makeErrorToken(SyntacticError); 
+        tok = t.makeErrorToken(SyntacticError, tok.lexeme); 
     } 
 
 }

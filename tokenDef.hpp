@@ -15,13 +15,15 @@ enum Type {
 };
 
 enum Error {
-  UnexpectedEOF, //Grammar string suddenly ends when it shouldn't
-  UnknownCharacter,
-  NonTerminalNoDefintion,
+  //Dealt with by tokeniser
   RedefinedElement,
   RedefinedNonTerminal,
-  UndefinedElement,
+  RedefinedToken,
 
+  //Dealt with by parser
+  UnexpectedEOF, //Grammar string suddenly ends when it shouldn't
+  UnknownCharacter,
+  UndefinedToken,
   ExpectedNonTerminal,
   ExpectedEquals,
   ExpectedSemiColon,
@@ -51,15 +53,15 @@ struct Gtoken {
   std::string lexeme;
   int lineNum;
   int pos; //Position on line
-  std::string error;
+  Error error;
 };
 
 
 //Stores the name of a non terminal, and a set of all of the terminals that can start it
-struct NonTerminalInfo{
+struct FirstSetInfo{
   Gtoken nonTerminal;
-  std::set<Gtoken> startingTerminals;
-  std::set<Gtoken> startingTokens;
+  std::set<Gtoken> firstTerminals;
+  std::set<Gtoken> firstTokens;
 };
 
 //Stores the name of a token and its corresponding regex

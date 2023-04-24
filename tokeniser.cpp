@@ -5,12 +5,16 @@
 using namespace std;
 
 //These have special meaning in a grammar file
-std::set<char> reservedSymbols = {'(', ')', '{', '}', '[', ']', '|', '=', ';'};
+set<char> reservedSymbols = {'(', ')', '{', '}', '[', ']', '|', '=', ';'};
 
 
 //So tokens in a set can be placed in an order
 bool operator<(const Gtoken &a, const Gtoken &b){
     return a.lexeme < b.lexeme;
+}
+
+bool operator==(const Gtoken &a, const Gtoken &b){
+    return a.lexeme == b.lexeme;
 }
 
 
@@ -22,16 +26,31 @@ Tokeniser::Tokeniser(string grammar, string tokensInput){
   
   secondPass = false;
   tokenFileExists = false;
+  erroneous = false;
 
   if (tokensInput != ""){
-    extractRegexes(tokensInput);
+    Gtoken checkErrorTok = extractRegexes(tokensInput);
+    if (checkErrorTok.type == ERROR){
+      erroneous = true;
+      tokenFileError = checkErrorTok;
+    }
     tokenFileExists = true;
+  }
+
+  if (!erroneous){
+    Gtoken tok;
+    tok.error = NONE;
+    tokenFileError = tok;
   }
 
 
   //This serves as a first pass to collect necessary information about the grammar
   firstPass();
   secondPass = true;
+
+  Tokeniser::index = 0;
+  Tokeniser::lineNum = 1;
+  Tokeniser::pos = 1;
 }
 
 
@@ -39,8 +58,8 @@ Tokeniser::~Tokeniser(){
   ;
 }
 
-vector<NonTerminalInfo> Tokeniser::getAllNonTerminalInfo(){
-  return allNonTerminalInfo;
+vector<FirstSetInfo> Tokeniser::getAllFirstSetInfo(){
+  return allFirstSetInfo;
 }
 
 vector<TokenRegex> Tokeniser::getTokenRegexes(){
@@ -51,19 +70,44 @@ set<string> Tokeniser::getListOfTokens(){
   return listOfTokens;
 }
 
-void Tokeniser::firstPass(){
-  collectNonTerminalInfo(); 
-  collectListOfNonTerminals();
+bool Tokeniser::getErrorState(){
+  return erroneous;
+}
 
-  for (auto &ntInfo : allNonTerminalInfo){
-    refineNonTerminalInfo(ntInfo, ntInfo);
+Gtoken Tokeniser::getTokenFileError(){
+  return tokenFileError;
+}
+
+Gtoken Tokeniser::getGrammarFileError(){
+  return grammarFileError;
+}
+
+void Tokeniser::firstPass(){
+  collectFirstSetInfo(); 
+  Gtoken checkErrorTok = collectListOfNonTerminals();
+
+  if (checkErrorTok.type == ERROR){
+    erroneous = true;
+    grammarFileError = checkErrorTok;
+
+    //File is erroneous, thus return
+    return;
   }
 
-    //Remove any tokens in starting terminals list
-  for (auto &ntInfo : allNonTerminalInfo){
-    for (auto element = ntInfo.startingTerminals.begin(); element != ntInfo.startingTerminals.end(); ){
+  Gtoken tok;
+  tok.error = NONE;
+  grammarFileError = tok;
+
+  for (auto &info : allFirstSetInfo){
+    refineFirstSetInfo(info, info);
+  }
+
+
+  //Remove any tokens in starting terminals list
+  for (auto &info : allFirstSetInfo){
+    for (auto element = info.firstTerminals.begin(); element != info.firstTerminals.end(); ){
       if ((*element).type == Token_Type || (*element).type == Non_Terminal){
-        element = ntInfo.startingTerminals.erase(element);
+        element = info.firstTerminals.erase(element);
       }
       else{
         element++;
@@ -72,59 +116,130 @@ void Tokeniser::firstPass(){
   }
 }
 
+Error Tokeniser::checkUndefinedError(std::string id){
+  if (tokenFileExists){
+    if (listOfNonTerminals.count(id) + listOfTokens.count(id) < 1){
+      return UndefinedToken;
+    }
+  }
+  return NONE;
+}
+
+Gtoken Tokeniser::collectListOfNonTerminals(){
+  for(auto info : allFirstSetInfo){
+    //Here we can check for redefinition of a non terminal
+    if (tokenFileExists){
+      if (listOfTokens.count(info.nonTerminal.lexeme)){
+        lineNum = info.nonTerminal.lineNum;
+        pos = info.nonTerminal.pos;
+        return makeErrorToken(RedefinedElement, info.nonTerminal.lexeme);
+      }
+    }
+
+    if (listOfNonTerminals.count(info.nonTerminal.lexeme)){
+      lineNum = info.nonTerminal.lineNum;
+      pos = info.nonTerminal.pos;
+      return makeErrorToken(RedefinedNonTerminal, info.nonTerminal.lexeme);
+    }
+
+    listOfNonTerminals.insert(info.nonTerminal.lexeme);
+  }
+
+  Gtoken tok;
+  tok.error = NONE;
+  return tok;
+}
+
+int Tokeniser::incrementIndex(string input){
+  index++;
+  pos++;
+  
+  if (index >= int(input.length())){
+    return -1;
+  }
+
+  return 0;
+}
+
+Gtoken Tokeniser::makeErrorToken(Error err, string lex){
+  Gtoken token;
+
+  token.type = ERROR;
+  token.lexeme = lex;
+  token.lineNum = lineNum;
+  token.pos = pos;
+  token.error = err;
+
+  return token;
+}
 
 //For a given token file, this extracts the regexes that describe the tokens
-void Tokeniser::extractRegexes(string input){
+Gtoken Tokeniser::extractRegexes(string input){
   int index = 0;
+  int lineNum = 0;
+
+  Gtoken token;
 
   while(true){
     string id;
 
+    lineNum++;
+    pos = 1;
+    
     if (index >= int(input.length())){
-      return;
+      token.type = END_OF_GRAMMAR;
+      token.lexeme = "";
+      token.lineNum = lineNum;
+      token.error = NONE;
+      return token;
     }
 
     //Skip over any white space
     while (isspace(input.at(index))){
-      index++;
-      if (index >= int(input.length())) return;
+      if (incrementIndex(input) != 0){
+        token.type = END_OF_GRAMMAR;
+        token.lexeme = "";
+        token.lineNum = lineNum;
+        token.error = NONE;
+        return token;
+      }
     }
 
     //First extract the name of the token, can begin with a letter or _ char
     if (input.at(index) == '_' || isalpha(input.at(index))){
       id += input.at(index);
-      index++;
-      if (index >= int(input.length())) return;
+      if (incrementIndex(input) != 0) return makeErrorToken(UnexpectedEOF, "");
     }
     //Add the rest of the name while a space char isnt seen
     while (!isspace(input.at(index))){
       id += input.at(index);
-      index++;
-      if (index >= int(input.length())) return;
+      if (incrementIndex(input) != 0) return makeErrorToken(UnexpectedEOF, "");
+    }
+
+    if (listOfTokens.count(id)){
+      //ERROR - Multiple definitions of token
+      return makeErrorToken(RedefinedToken, id);
     }
 
     //Skip over white space until the = char is seen
     while (isspace(input.at(index))){
-      index++;
-      if (index >= int(input.length())) return;
+      if (incrementIndex(input) != 0) return makeErrorToken(UnexpectedEOF, "");
     }
 
     if (input.at(index) == '='){
-      index++;
+      if (incrementIndex(input) != 0) return makeErrorToken(UnexpectedEOF, "");
     }
 
     //Skip over white space until regex is reached
     while (isspace(input.at(index))){
-      index++;
-      if (index >= int(input.length())) return;
+      if (incrementIndex(input) != 0) return makeErrorToken(UnexpectedEOF, "");
     }
 
     //Extract the regex
     string regex;
     while (!(input.at(index) == ';')){ //Add to regex until ; followed by a space is seen
       regex += input.at(index);
-      index++;
-      if (index >= int(input.length())) return;
+      if (incrementIndex(input) != 0) return makeErrorToken(UnexpectedEOF, "");
     }
 
 
@@ -134,57 +249,14 @@ void Tokeniser::extractRegexes(string input){
     tr.regex = regex;
     tokenRegexes.push_back(tr);
 
-    if (listOfTokens.count(id)){
-      //ERROR - Multiple definitions of token
-    }
-    else{
-      listOfTokens.insert(id);
-    }
+    listOfTokens.insert(id);
 
   }
-  return;
+  Gtoken tok;
+  tok.error = NONE;
+  return tok;
 }
 
-int Tokeniser::incrementIndex(){
-  index++;
-  pos++;
-  if (index >= int(grammar.length())){
-    return -1;
-  }
-
-  return 0;
-}
-
-Gtoken Tokeniser::makeErrorToken(Error err){
-  Gtoken token;
-
-  token.type = ERROR;
-  token.lexeme = "";
-  token.lineNum = lineNum;
-  token.pos = pos;
-  token.error = err;
-
-  return token;
-}
-
-Error Tokeniser::checkTokOrNtError(std::string id){
-  if (tokenFileExists){
-    if (listOfNonTerminals.count(id) + listOfTokens.count(id) > 1){
-      return RedefinedElement;
-    }
-    else if (listOfNonTerminals.count(id) + listOfTokens.count(id) < 1){
-      return UndefinedElement;
-    }
-  }
-
-  else{
-    if (listOfNonTerminals.count(id) > 1){
-      return RedefinedNonTerminal;
-    }
-  }
-
-  return NONE;
-}
 
 //Returns the next token in the grammar file, but doesn't consume it
 Gtoken Tokeniser::peekNextToken(){
@@ -213,13 +285,7 @@ Gtoken Tokeniser::getNextToken(){
 
   //Skip over white space
   while (isspace(grammar.at(index))){
-    if (grammar.at(index) == '\n'){
-      lineNum++;
-      pos = 1;
-    }
-
-    incrementIndex();
-    if (index >= int(grammar.length())){
+    if (incrementIndex(grammar) != 0){
       Gtoken token;
 
       token.type = END_OF_GRAMMAR;
@@ -234,6 +300,11 @@ Gtoken Tokeniser::getNextToken(){
 
   //Token is reserved symbol
   if(reservedSymbols.count(grammar.at(index))){
+    if (grammar.at(index) == ';'){
+      lineNum++;
+      pos = 0;
+    }
+
     Gtoken token;
 
     token.type = Symbol;
@@ -242,7 +313,7 @@ Gtoken Tokeniser::getNextToken(){
     token.pos = pos;
     token.error = NONE;
 
-    incrementIndex();
+    incrementIndex(grammar);
 
     return token;
   }
@@ -251,15 +322,15 @@ Gtoken Tokeniser::getNextToken(){
   else if(isalpha(grammar.at(index)) || grammar.at(index) == '_'){
     string lexeme;
     lexeme += grammar.at(index);
-    if (incrementIndex() != 0) return makeErrorToken(UnexpectedEOF);
+    if (incrementIndex(grammar) != 0) return makeErrorToken(UnexpectedEOF, "");
     
     while (isalpha(grammar.at(index)) || isdigit(grammar.at(index)) || grammar.at(index) == '_'){
       lexeme += grammar.at(index);
-      if (incrementIndex() != 0) return makeErrorToken(UnexpectedEOF);
+      if (incrementIndex(grammar) != 0) return makeErrorToken(UnexpectedEOF, "");
     }
 
     if (secondPass){
-      Error err = checkTokOrNtError(lexeme);
+      Error err = checkUndefinedError(lexeme);
 
       if (err == NONE){
         Gtoken token;
@@ -268,7 +339,7 @@ Gtoken Tokeniser::getNextToken(){
         token.pos = pos;
         token.error = NONE;
 
-        if (listOfNonTerminals.count(lexeme) == 1){
+        if (listOfNonTerminals.count(lexeme)){
           token.type = Non_Terminal;
         }
 
@@ -280,7 +351,7 @@ Gtoken Tokeniser::getNextToken(){
       }
 
       else{
-        return makeErrorToken(err);
+        return makeErrorToken(err, lexeme);
       }
 
     }
@@ -300,11 +371,11 @@ Gtoken Tokeniser::getNextToken(){
   //Token is a terminal
   else if(grammar.at(index) == '\"'){
     string lexeme;
-    if (incrementIndex() != 0) return makeErrorToken(UnexpectedEOF);
+    if (incrementIndex(grammar) != 0) return makeErrorToken(UnexpectedEOF, "");
 
     while (grammar.at(index) != '\"'){
       lexeme += grammar.at(index);
-      if (incrementIndex() != 0) return makeErrorToken(UnexpectedEOF);
+      if (incrementIndex(grammar) != 0) return makeErrorToken(UnexpectedEOF, "");
     }
 
     Gtoken token;
@@ -315,32 +386,27 @@ Gtoken Tokeniser::getNextToken(){
     token.pos = pos;
     token.error = NONE;
 
-    incrementIndex();
+    incrementIndex(grammar);
     return token;
   }
 
   else{
-    return makeErrorToken(UnknownCharacter);
+    Gtoken tok = makeErrorToken(UnknownCharacter, string(1, grammar.at(index)));
+    incrementIndex(grammar);
+    return tok;
   }
 }
-
-void Tokeniser::collectListOfNonTerminals(){
-  for(auto ntInfo : allNonTerminalInfo){
-    listOfNonTerminals.insert(ntInfo.nonTerminal.lexeme);
-  }
-}
-
 
 //For each non terminal, this function calculates and stores all possible terminals that can begin it
 //It Assumes for now grammar is syntactically valid, any syntactic errors are picked up by the parser
-void Tokeniser::collectNonTerminalInfo(){
+void Tokeniser::collectFirstSetInfo(){
   Gtoken token;
 
   token = getNextToken();
   while (token.type != END_OF_GRAMMAR){
-    NonTerminalInfo ntInfo;
+    FirstSetInfo info;
 
-    ntInfo.nonTerminal.lexeme = token.lexeme;
+    info.nonTerminal= token;
 
     token = getNextToken(); //Should consume the = symbol
 
@@ -352,8 +418,8 @@ void Tokeniser::collectNonTerminalInfo(){
     bool firstFoundInBracket = false;
     bool checkOutsideBracket = false;
 
-
     while (token.type != Symbol || token.lexeme != ";"){
+      //if token.type == eRROR || ENDOFGRAMMAR
       if (token.type == Symbol && (token.lexeme == "{" || token.lexeme == "[" || token.lexeme == "(")){
         currentLevel++;
       }
@@ -385,32 +451,32 @@ void Tokeniser::collectNonTerminalInfo(){
             firstFoundInBracket = true;
           }
         }
-        ntInfo.startingTerminals.insert(token);
+        info.firstTerminals.insert(token);
         collectNext = false;
       }
       token = getNextToken();
     }
-    allNonTerminalInfo.push_back(ntInfo);
+    allFirstSetInfo.push_back(info);
     token = getNextToken();
     
   }
   index = 0; //Return to start of grammar
 }
 
-NonTerminalInfo Tokeniser::findNonTerminalInfo(Gtoken t){
-  for (auto ntInfo : allNonTerminalInfo){
-    if (ntInfo.nonTerminal.lexeme == t.lexeme){
-      return ntInfo;
+FirstSetInfo Tokeniser::findFirstSetInfo(Gtoken t){
+  for (auto info : allFirstSetInfo){
+    if (info.nonTerminal.lexeme == t.lexeme){
+      return info;
     }
   }
 }
 
 //The current vector of terminals may contain non terminals
 //This function will go through this vector, and convert any non terminals to the terminals or tokens that can begin it
-void Tokeniser::refineNonTerminalInfo(NonTerminalInfo &returnNtInfo, NonTerminalInfo &currentNtInfo){
-  auto termPointer = currentNtInfo.startingTerminals.begin(); //Iterator pointing to set elements
+void Tokeniser::refineFirstSetInfo(FirstSetInfo &returnInfo, FirstSetInfo &currentInfo){
+  auto termPointer = currentInfo.firstTerminals.begin(); //Iterator pointing to set elements
 
-  while(termPointer != currentNtInfo.startingTerminals.end()){
+  while(termPointer != currentInfo.firstTerminals.end()){
     Gtoken t = *termPointer;
 
     if (t.type == Non_Terminal || t.type == Token_Type){
@@ -418,11 +484,11 @@ void Tokeniser::refineNonTerminalInfo(NonTerminalInfo &returnNtInfo, NonTerminal
       if (t.type == Token_Type || listOfNonTerminals.count(t.lexeme) == 0){ //Assume it is a token
         t.type = Token_Type;
 
-        if (returnNtInfo.nonTerminal.lexeme != currentNtInfo.nonTerminal.lexeme){ //Then need to add token to return non terminal info
-          returnNtInfo.startingTokens.insert(t);
-          returnNtInfo.startingTerminals.insert(t);
+        if (returnInfo.nonTerminal.lexeme != currentInfo.nonTerminal.lexeme){ //Then need to add token to return non terminal info
+          returnInfo.firstTokens.insert(t);
+          returnInfo.firstTerminals.insert(t);
         }
-        currentNtInfo.startingTokens.insert(t);
+        currentInfo.firstTokens.insert(t);
 
         if (!tokenFileExists){
           listOfTokens.insert(t.lexeme);
@@ -432,17 +498,17 @@ void Tokeniser::refineNonTerminalInfo(NonTerminalInfo &returnNtInfo, NonTerminal
       }
 
       else{ //It is a non terminal
-        NonTerminalInfo nextNtInfo = findNonTerminalInfo(t);
+        FirstSetInfo nextInfo = findFirstSetInfo(t);
     
-        refineNonTerminalInfo(currentNtInfo, nextNtInfo);
-        currentNtInfo.startingTerminals.erase(t);
+        refineFirstSetInfo(currentInfo, nextInfo);
+        currentInfo.firstTerminals.erase(t);
         //Returned to original non terminal info, start from beginning as items in set not to the end
-        termPointer = currentNtInfo.startingTerminals.begin();
+        termPointer = currentInfo.firstTerminals.begin();
       }
     }
     else{ //If terminal
-      if (returnNtInfo.nonTerminal.lexeme != currentNtInfo.nonTerminal.lexeme){ //Then need to add terminal to return non terminal info
-        returnNtInfo.startingTerminals.insert(t);
+      if (returnInfo.nonTerminal.lexeme != currentInfo.nonTerminal.lexeme){ //Then need to add terminal to return non terminal info
+        returnInfo.firstTerminals.insert(t);
       }
       termPointer++;
     }

@@ -118,7 +118,7 @@ int main(int argc, char* argv[]) {
         Tokeniser tokeniser(grammar, tokensInput);
         FileWriter fileWriter(parserFilename, oLanguage);
 
-        fileWriter.fileSetup(tokeniser.getAllNonTerminalInfo(), tokeniser.getListOfTokens(), tokenFile, tokeniser.getTokenRegexes());
+        fileWriter.fileSetup(tokeniser.getAllFirstSetInfo(), tokeniser.getListOfTokens(), tokenFile, tokeniser.getTokenRegexes());
             
         parseGrammar(tokeniser, fileWriter);
 

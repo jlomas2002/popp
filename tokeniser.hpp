@@ -7,6 +7,7 @@
 #include "tokenDef.hpp"
 
 bool operator<(const Gtoken &a, const Gtoken &b);
+bool operator==(const Gtoken &a, const Gtoken &b);
 
 extern std::set<char> reservedSymbols;
 
@@ -16,23 +17,26 @@ public:
     ~Tokeniser();
     Gtoken peekNextToken();
     Gtoken getNextToken();
-    Gtoken makeErrorToken(Error err);
-    std::vector<NonTerminalInfo> getAllNonTerminalInfo();
+    Gtoken makeErrorToken(Error err, std::string lex);
+    std::vector<FirstSetInfo> getAllFirstSetInfo();
     std::set<std::string> getListOfTokens();
     std::vector<TokenRegex> getTokenRegexes();
+    bool getErrorState();
+    Gtoken getTokenFileError();
+    Gtoken getGrammarFileError();
 private:
     void firstPass();
-    void collectNonTerminalInfo();
-    void parseExpr(NonTerminalInfo &ntInfo);
+    void collectFirstSetInfo();
+    void parseExpr(FirstSetInfo &firstSetInfo);
     void skipUntilBar();
-    void collectListOfNonTerminals();
-    void refineNonTerminalInfo(NonTerminalInfo &returnNtInfo, NonTerminalInfo &currentNtInfo);
-    NonTerminalInfo findNonTerminalInfo(Gtoken t);
-    int incrementIndex();
-    Error checkTokOrNtError(std::string id);
-    void extractRegexes(std::string input);
+    Gtoken collectListOfNonTerminals();
+    void refineFirstSetInfo(FirstSetInfo &returnInfo, FirstSetInfo &currentInfo);
+    FirstSetInfo findFirstSetInfo(Gtoken t);
+    int incrementIndex(std::string input);
+    Error checkUndefinedError(std::string id);
+    Gtoken extractRegexes(std::string input);
 
-    std::vector<NonTerminalInfo> allNonTerminalInfo;
+    std::vector<FirstSetInfo> allFirstSetInfo;
     std::set<std::string> listOfNonTerminals;
     std::set<std::string> listOfTokens;
     std::vector<TokenRegex> tokenRegexes;
@@ -44,6 +48,11 @@ private:
     int index;
     bool tokenFileExists;
     bool secondPass;
+
+    bool erroneous;
+    Gtoken tokenFileError;
+    Gtoken grammarFileError;
+    
 };
 
 #endif
