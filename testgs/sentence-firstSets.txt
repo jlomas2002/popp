@@ -1,0 +1,17 @@
+sentence
+a,an,the,
+
+noun_phrase
+a,an,the,
+
+verb_phrase
+run,walks,likes,
+
+article
+a,an,the,
+
+noun
+dog,cat,boy,girl,
+
+verb
+run,walks,likes,

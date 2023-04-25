@@ -15,13 +15,8 @@ subroutineCall = identifier [ "." identifier ] "(" expressionList ")";
 expressionList = expression { "," expression } | empty;
 returnStatement = "return" [ expression ] ";";
 expression = relationalExpression { ( "&" | "|" ) relationalExpression };
-relationalExpression = ArithmeticExpression { ( "=" | ">" | "<" ) ArithmeticExpression };
-ArithmeticExpression = term { ( "+" | "-" ) term };
+relationalExpression = arithmeticExpression { ( "=" | ">" | "<" ) ArithmeticExpression };
+arithmeticExpression = term { ( "+" | "-" ) term };
 term = factor { ( "*" | "/" ) factor };
 factor = ( "-" | "~" | empty ) operand;
 operand = integerConstant | identifier ["."identifier ] [ "[" expression "]" | "("expressionList ")" ] | "("expression")" | stringLiteral | "true" | "false" | "null" | "this";
-
-identifier = "placeholder";
-empty = "placeholder";
-integerConstant = "placeholder";
-stringLiteral = "placeholder";

@@ -30,7 +30,9 @@ enum Error {
   ExpectedCurlyBracket,
   ExpectedNormalBracket,
   ExpectedSquareBracket,
-  SyntacticError,
+
+  //Token only errors
+  InvalidRegexId,
 
   NONE //Default of no error
 };

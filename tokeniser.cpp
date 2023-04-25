@@ -43,6 +43,10 @@ Tokeniser::Tokeniser(string grammar, string tokensInput){
     tokenFileError = tok;
   }
 
+  Tokeniser::index = 0;
+  Tokeniser::lineNum = 1;
+  Tokeniser::pos = 1;
+
 
   //This serves as a first pass to collect necessary information about the grammar
   firstPass();
@@ -175,8 +179,8 @@ Gtoken Tokeniser::makeErrorToken(Error err, string lex){
 
 //For a given token file, this extracts the regexes that describe the tokens
 Gtoken Tokeniser::extractRegexes(string input){
-  int index = 0;
-  int lineNum = 0;
+  index = 0;
+  lineNum = 0;
 
   Gtoken token;
 
@@ -207,18 +211,17 @@ Gtoken Tokeniser::extractRegexes(string input){
 
     //First extract the name of the token, can begin with a letter or _ char
     if (input.at(index) == '_' || isalpha(input.at(index))){
+      int startPos = pos;
       id += input.at(index);
       if (incrementIndex(input) != 0) return makeErrorToken(UnexpectedEOF, "");
+    }
+    else{
+      return makeErrorToken(InvalidRegexId, string(1, input.at(index)));
     }
     //Add the rest of the name while a space char isnt seen
-    while (!isspace(input.at(index))){
+    while (isalpha(input.at(index)) || isdigit(input.at(index))){
       id += input.at(index);
       if (incrementIndex(input) != 0) return makeErrorToken(UnexpectedEOF, "");
-    }
-
-    if (listOfTokens.count(id)){
-      //ERROR - Multiple definitions of token
-      return makeErrorToken(RedefinedToken, id);
     }
 
     //Skip over white space until the = char is seen
@@ -228,6 +231,9 @@ Gtoken Tokeniser::extractRegexes(string input){
 
     if (input.at(index) == '='){
       if (incrementIndex(input) != 0) return makeErrorToken(UnexpectedEOF, "");
+    }
+    else{
+      return makeErrorToken(ExpectedEquals, string(1, input.at(index)));
     }
 
     //Skip over white space until regex is reached
@@ -242,6 +248,10 @@ Gtoken Tokeniser::extractRegexes(string input){
       if (incrementIndex(input) != 0) return makeErrorToken(UnexpectedEOF, "");
     }
 
+    if (listOfTokens.count(id)){
+      //ERROR - Multiple definitions of token
+      return makeErrorToken(RedefinedToken, id);
+    }
 
     //Add the regex struct to a list of structs
     TokenRegex tr;
@@ -250,6 +260,14 @@ Gtoken Tokeniser::extractRegexes(string input){
     tokenRegexes.push_back(tr);
 
     listOfTokens.insert(id);
+
+    if (incrementIndex(input) != 0){
+      token.type = END_OF_GRAMMAR;
+      token.lexeme = "";
+      token.lineNum = lineNum;
+      token.error = NONE;
+      return token;
+  }
 
   }
   Gtoken tok;
@@ -260,10 +278,17 @@ Gtoken Tokeniser::extractRegexes(string input){
 
 //Returns the next token in the grammar file, but doesn't consume it
 Gtoken Tokeniser::peekNextToken(){
-  int tmp = index;
+  int tmpIndex = index;
+  int tmpLinenum = lineNum;
+  int tmpPos = pos;
+
   Gtoken token;
   token = getNextToken();
-  index = tmp;
+
+  index = tmpIndex;
+  lineNum = tmpLinenum;
+  pos = tmpPos;
+
   return token; 
 }
 
@@ -320,6 +345,7 @@ Gtoken Tokeniser::getNextToken(){
 
   //Token is a non terminal or a token type
   else if(isalpha(grammar.at(index)) || grammar.at(index) == '_'){
+    int startPos = pos;
     string lexeme;
     lexeme += grammar.at(index);
     if (incrementIndex(grammar) != 0) return makeErrorToken(UnexpectedEOF, "");
@@ -336,9 +362,9 @@ Gtoken Tokeniser::getNextToken(){
         Gtoken token;
         token.lexeme = lexeme;
         token.lineNum = lineNum;
-        token.pos = pos;
+        token.pos = startPos;
         token.error = NONE;
-
+       
         if (listOfNonTerminals.count(lexeme)){
           token.type = Non_Terminal;
         }
@@ -361,7 +387,7 @@ Gtoken Tokeniser::getNextToken(){
       token.type = Non_Terminal;
       token.lexeme = lexeme;
       token.lineNum = lineNum;
-      token.pos = pos;
+      token.pos = startPos;
       token.error = NONE;
 
       return token;
@@ -370,6 +396,7 @@ Gtoken Tokeniser::getNextToken(){
 
   //Token is a terminal
   else if(grammar.at(index) == '\"'){
+    int startPos = pos;
     string lexeme;
     if (incrementIndex(grammar) != 0) return makeErrorToken(UnexpectedEOF, "");
 
@@ -383,7 +410,7 @@ Gtoken Tokeniser::getNextToken(){
     token.type = Terminal;
     token.lexeme = lexeme;
     token.lineNum = lineNum;
-    token.pos = pos;
+    token.pos = startPos;
     token.error = NONE;
 
     incrementIndex(grammar);
@@ -418,8 +445,12 @@ void Tokeniser::collectFirstSetInfo(){
     bool firstFoundInBracket = false;
     bool checkOutsideBracket = false;
 
-    while (token.type != Symbol || token.lexeme != ";"){
-      //if token.type == eRROR || ENDOFGRAMMAR
+    while (!(token.type == Symbol && token.lexeme == ";")){
+      if (token.type == ERROR || token.type == END_OF_GRAMMAR){
+        allFirstSetInfo.push_back(info);
+        return;
+      }
+
       if (token.type == Symbol && (token.lexeme == "{" || token.lexeme == "[" || token.lexeme == "(")){
         currentLevel++;
       }

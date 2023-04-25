@@ -1,0 +1,3 @@
+Token = regex;
+Token2 = regex;
+Token3 = regex

@@ -1,0 +1,2 @@
+Token = regex;
+5oken = regex;

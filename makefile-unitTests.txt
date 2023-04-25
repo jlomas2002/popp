@@ -1,0 +1,14 @@
+CC = g++
+CFLAGS = -Wall -std=c++17
+SRCS = unitTests.cpp tokeniser.cpp gparser.cpp fileWriter.cpp
+TARGET = unitTests
+
+all: $(TARGET)
+
+$(TARGET): $(SRCS)
+	$(CC) $(CFLAGS) -o $(TARGET) $(SRCS)
+
+.PHONY: clean
+
+clean:
+	rm -f $(TARGET)

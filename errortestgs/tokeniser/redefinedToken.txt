@@ -1,0 +1,4 @@
+Token = regex;
+A = B;
+C = DEF;
+  Token = GHI;

@@ -8,11 +8,11 @@
 //Grammar Parser
 
 //parse functions
-void parseGrammar(Tokeniser &tokeniser, FileWriter writer);
-void grammar();
-void rule();
-void expression();
-void term();
-void factor();
+Gtoken parseGrammar(Tokeniser &tokeniser, FileWriter writer);
+Gtoken grammar();
+Gtoken rule();
+Gtoken expression();
+Gtoken term();
+Gtoken factor();
 
 #endif

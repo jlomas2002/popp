@@ -6,23 +6,30 @@
 
 using namespace std;
 
-
 vector<string> validFiles = {"testgs/listofints", "testgs/sentence", "testgs/json", "testgs/jack" };
 
-vector<string> tokeniserErrorGfiles = {"errortestgs/nontermRedef"};
+vector<string> tokeniser_errorGramFiles = {"tokeniser/redefinedNonterm"};
 
-vector<string> tokeniserErrorTfiles = {};
+vector<string> tokeniser_errorTokFiles = {"tokeniser/unexpectedEOF-toks1", "tokeniser/unexpectedEOF-toks2",
+                                          "tokeniser/unexpectedEOF-toks3", "tokeniser/unexpectedEOF-toks4",
+                                          "tokeniser/invalidRegexId", "tokeniser/redefinedToken", 
+                                          "tokeniser/expectedEquals"};
 
-vector<string> tokeniserErrorGnTfiles = {"errortestgs/elementRedef", "errortestgs/elementRedef-toks",
-                                         "errortestgs/tokRedef", "errortestgs/tokRedef-toks"};
-
-vector<Error> tokeniserErrors = {RedefinedNonTerminal, RedefinedElement, RedefinedToken};
-vector<int> tokeniserLineNums = {3, 1, 3};
-vector<int> tokeniserPositions = {1, 1, 1};
-vector<string> tokeniserLexemes = {"A", "A", "A"};
+vector<Error> tokeniserErrors = {RedefinedNonTerminal, UnexpectedEOF, UnexpectedEOF, UnexpectedEOF, UnexpectedEOF, InvalidRegexId, RedefinedToken, ExpectedEquals};
+vector<int> tokeniserLineNums = {3, 2, 2, 2, 3, 2, 4, 1};
+vector<int> tokeniserPositions = {1, 2, 5, 8, 15, 1, 14, 7};
+vector<string> tokeniserLexemes = {"ANonTerm", "", "", "", "", "5", "Token", "@"};
 //Type is always error
 
-vector<string> errorTokenFiles = {};
+vector<string> parser_errorFiles = {"parser/expectedNonTerm", "parser/expectedEquals", "parser/expectedSemiColon",
+                                    "parser/expectedCurlyBracket", "parser/expectedNormalBracket", "parser/expectedSquareBracket",
+                                    "parser/unknownChar"};
+
+vector<Error> parserErrors = {ExpectedNonTerminal, ExpectedEquals, ExpectedSemiColon, ExpectedCurlyBracket, ExpectedNormalBracket, ExpectedSquareBracket, UnknownCharacter};
+vector<int> parserLineNums = {2, 2, 2, 1, 1, 2, 2};
+vector<int> parserPositions = {1, 16, 20, 13, 15, 1, 16};
+vector<string> parserLexemes = {"Bob", "here", "", "]", "]", ";", "@"};
+
 
 void generateTestData(string filename, string &fileInput, vector<FirstSetInfo> &allFirstSetInfo){
     ifstream file(filename+".txt");
@@ -100,10 +107,9 @@ void firstSetTests(){
                 cout<<"Expected: "<<correctFirstSets[i].nonTerminal.lexeme<<"\n";
                 cout<<"Actual: "<<firstSet.nonTerminal.lexeme<<"\n";
                 i++;
-                continue;
             }
 
-            if (firstSet.firstTerminals != correctFirstSets[i].firstTerminals){
+            else if (firstSet.firstTerminals != correctFirstSets[i].firstTerminals){
                 cout<<"ERROR: Testing "<<filename<<" file, incorrect set of starting terminals for non terminal: "<<correctFirstSets[i].nonTerminal.lexeme<<"\n";
                 cout<<"Expected: ";
                 for (auto t : correctFirstSets[i].firstTerminals){
@@ -115,10 +121,9 @@ void firstSetTests(){
                 }
                 cout<<"\n";
                 i++;
-                continue;
             }
 
-            if (firstSet.firstTokens != correctFirstSets[i].firstTokens){
+            else if (firstSet.firstTokens != correctFirstSets[i].firstTokens){
                 cout<<"ERROR: Testing "<<filename<<" file, incorrect set of starting tokens for non terminal: "<<correctFirstSets[i].nonTerminal.lexeme<<"\n";
                 cout<<"Expected: ";
                 for (auto t : correctFirstSets[i].firstTokens){
@@ -130,11 +135,12 @@ void firstSetTests(){
                 }
                 cout<<"\n";
                 i++;
-                continue;
             }
-
-            cout<<"PASSED: "<<filename<<" file, non terminal "<<correctFirstSets[i].nonTerminal.lexeme<<"\n";       
-            i++;
+            
+            else{
+                cout<<"PASSED: "<<filename<<" file, non terminal "<<correctFirstSets[i].nonTerminal.lexeme<<"\n";       
+                i++;
+            }
         }
         cout<<"\n";
     } 
@@ -169,8 +175,8 @@ void tokeniserTests(){
     }
 
     //Test errors in grammar file alone
-    for (string filename : tokeniserErrorGfiles){
-        ifstream file(filename+".txt");
+    for (string filename : tokeniser_errorGramFiles){
+        ifstream file("errortestgs/"+filename+".txt");
 
         string line;
         string fileInput;
@@ -189,39 +195,163 @@ void tokeniserTests(){
             cout<<"ERROR: Testing error grammar "<<filename<<" file, error indicated for token file.\n";
         }
 
-        if (gramFileErr.type != ERROR){
+        else if (gramFileErr.type != ERROR){
             cout<<"ERROR: Testing error grammar "<<filename<<" type not set to error.\n";
         }
 
-        if (gramFileErr.error != tokeniserErrors[i]){
+        else if (gramFileErr.error != tokeniserErrors[i]){
             cout<<"ERROR: Testing error grammar "<<filename<<" incorrect error.\n";
         }
 
-        if (gramFileErr.lexeme != tokeniserLexemes[i]){
+        else if (gramFileErr.lexeme != tokeniserLexemes[i]){
             cout<<"ERROR: Testing error grammar "<<filename<<" incorrect lexeme.\n";
             cout<<"Expected: "<<tokeniserLexemes[i]<<"\n";
             cout<<"Actual: "<<gramFileErr.lexeme<<"\n";
         }
 
-        if (gramFileErr.lineNum != tokeniserLineNums[i]){
+        else if (gramFileErr.lineNum != tokeniserLineNums[i]){
             cout<<"ERROR: Testing error grammar "<<filename<<" incorrect lineNum.\n";
             cout<<"Expected: "<<tokeniserLineNums[i]<<"\n";
             cout<<"Actual: "<<gramFileErr.lineNum<<"\n";
         }
 
-        if (gramFileErr.pos != tokeniserPositions[i]){
+        else if (gramFileErr.pos != tokeniserPositions[i]){
             cout<<"ERROR: Testing error grammar "<<filename<<" incorrect pos.\n";
             cout<<"Expected: "<<tokeniserPositions[i]<<"\n";
             cout<<"Actual: "<<gramFileErr.pos<<"\n";
         }
 
+        else{
+            cout<<"PASSED: "<<filename<<" file.\n";
+        }
 
         i++;
   
     }
 
     //Test errors in token file alone
-    for (string filename : tokeniserErrorTfiles){
+    for (string filename : tokeniser_errorTokFiles){
+        ifstream tokFile("errortestgs/"+filename+".txt");
+        ifstream gramFile("testgs/listofints.txt"); //Use a valid grammar, as we are testing tokens
+
+        string line;
+        string fileInput;
+        string gramInput;
+
+        while(getline (tokFile, line)){
+            fileInput.append(line);
+        }
+        tokFile.close();
+
+        while(getline (gramFile, line)){
+            gramInput.append(line);
+        }
+        gramFile.close();
+
+        Tokeniser tokeniser(gramInput, fileInput);
+
+        Gtoken tokFileErr = tokeniser.getTokenFileError();
+        Gtoken gramFileErr = tokeniser.getGrammarFileError();
+
+        if (gramFileErr.error != NONE){
+            cout<<"ERROR: Testing error tokens "<<filename<<" file, error indicated for grammar file.\n";
+        }
+
+        else if (tokFileErr.type != ERROR){
+            cout<<"ERROR: Testing error tokens "<<filename<<" type not set to error.\n";
+        }
+
+        else if (tokFileErr.error != tokeniserErrors[i]){
+            cout<<"ERROR: Testing error tokens "<<filename<<" incorrect error.\n";
+        }
+
+        else if (tokFileErr.lexeme != tokeniserLexemes[i]){
+            cout<<"ERROR: Testing error tokens "<<filename<<" incorrect lexeme.\n";
+            cout<<"Expected: "<<tokeniserLexemes[i]<<"\n";
+            cout<<"Actual: "<<tokFileErr.lexeme<<"\n";
+        }
+
+        else if (tokFileErr.lineNum != tokeniserLineNums[i]){
+            cout<<"ERROR: Testing error tokens "<<filename<<" incorrect lineNum.\n";
+            cout<<"Expected: "<<tokeniserLineNums[i]<<"\n";
+            cout<<"Actual: "<<tokFileErr.lineNum<<"\n";
+        }
+
+        else if (tokFileErr.pos != tokeniserPositions[i]){
+            cout<<"ERROR: Testing error tokens "<<filename<<" incorrect pos.\n";
+            cout<<"Expected: "<<tokeniserPositions[i]<<"\n";
+            cout<<"Actual: "<<tokFileErr.pos<<"\n";
+        }
+
+        else{
+            cout<<"PASSED: "<<filename<<" file.\n";
+        }
+
+        i++;
+  
+    }
+
+    //Test redefintition across two files
+    ifstream tokFile("errortestgs/tokeniser/redefinedElement-toks.txt");
+    ifstream gramFile("errortestgs/tokeniser/redefinedElement.txt"); 
+
+    string line;
+    string tokInput;
+    string gramInput;
+
+    while(getline (tokFile, line)){
+        tokInput.append(line);
+    }
+    tokFile.close();
+
+    while(getline (gramFile, line)){
+        gramInput.append(line);
+    }
+    gramFile.close();
+
+    Tokeniser tokeniser(gramInput, tokInput);
+
+    Gtoken tokFileErr = tokeniser.getTokenFileError();
+    Gtoken gramFileErr = tokeniser.getGrammarFileError();
+
+    if (tokFileErr.error != NONE){
+        cout<<"ERROR: Testing redef across files, token file should have no error as its processed first.\n";
+    }
+
+    else if (gramFileErr.type != ERROR){
+        cout<<"ERROR: Testing redef across files, grammar file doesn't have an error.\n";
+    }
+
+    else if (gramFileErr.error != RedefinedElement){
+        cout<<"ERROR: Testing redef across files, grammar file has wrong error.\n";
+    }
+
+    
+    else if (gramFileErr.lexeme != "ANonTerm"){
+        cout<<"ERROR: Testing redef across files, grammar file has wrong lexeme.\n";
+    }
+    
+    else if (gramFileErr.lineNum != 1){
+        cout<<"ERROR: Testing redef across files, grammar file has wrong line number.\n";
+    }
+
+    else if (gramFileErr.pos != 4){
+        cout<<"ERROR: Testing redef across files, grammar file has wrong position.\n";
+    }
+
+    else{
+        cout<<"PASSED: Redefinition across files.\n";
+    }
+
+
+    cout<<"\n----End of testing tokeniser's error detection----\n";  
+}
+
+void parserTests(){
+    cout<<"\n----Beginning testing parser error detection----\n\n";
+
+    //Test parsing of valid files
+    for (string filename : validFiles){
         ifstream file(filename+".txt");
 
         string line;
@@ -233,117 +363,131 @@ void tokeniserTests(){
         file.close();
 
         Tokeniser tokeniser(fileInput, "");
+        FileWriter fw("DELETEME", "c++");
+        fw.fileSetup(tokeniser.getAllFirstSetInfo(), tokeniser.getListOfTokens(), "", tokeniser.getTokenRegexes());
 
-        Gtoken tokFileErr = tokeniser.getTokenFileError();
-        Gtoken gramFileErr = tokeniser.getGrammarFileError();
+        Gtoken tok = parseGrammar(tokeniser, fw);
 
-        if (tokFileErr.error != NONE){
-            cout<<"ERROR: Testing error grammar "<<filename<<" file, error indicated for token file.\n";
+        if (tok.type == ERROR){
+            cout<<"ERROR: Testing valid "<<filename<<" file, error incorrectly detected in parser.\n";
         }
-
-        if (gramFileErr.type != ERROR){
-            cout<<"ERROR: Testing error grammar "<<filename<<" type not set to error.\n";
+        else if (tokeniser.getErrorState()){
+            cout<<"ERROR: Testing valid "<<filename<<" file, error incorrectly detected in tokeniser.\n";
         }
-
-        if (gramFileErr.error != tokeniserErrors[i]){
-            cout<<"ERROR: Testing error grammar "<<filename<<" incorrect error.\n";
+        else{
+            cout<<"PASSED: "<<filename<<" file.\n";
         }
+    }
 
-        if (gramFileErr.lexeme != tokeniserLexemes[i]){
-            cout<<"ERROR: Testing error grammar "<<filename<<" incorrect lexeme.\n";
-            cout<<"Expected: "<<tokeniserLexemes[i]<<"\n";
-            cout<<"Actual: "<<gramFileErr.lexeme<<"\n";
+    int i = 0;
+
+    for (string filename : parser_errorFiles){
+       ifstream file("errortestgs/"+filename+".txt"); 
+
+       string line;
+       string fileInput;
+
+        while(getline (file, line)){
+            fileInput.append(line);
         }
+        file.close();
+        Tokeniser tokeniser(fileInput, "");
+        FileWriter fw("DELETEME", "c++");
 
-        if (gramFileErr.lineNum != tokeniserLineNums[i]){
-            cout<<"ERROR: Testing error grammar "<<filename<<" incorrect lineNum.\n";
-            cout<<"Expected: "<<tokeniserLineNums[i]<<"\n";
-            cout<<"Actual: "<<gramFileErr.lineNum<<"\n";
+        fw.fileSetup(tokeniser.getAllFirstSetInfo(), tokeniser.getListOfTokens(), "", tokeniser.getTokenRegexes());
+
+
+        Gtoken tok = parseGrammar(tokeniser, fw);
+
+        if (tok.type != ERROR){
+            cout<<"ERROR: Testing error grammar "<<filename<<" file, type not set to error.\n";
         }
-
-        if (gramFileErr.pos != tokeniserPositions[i]){
-            cout<<"ERROR: Testing error grammar "<<filename<<" incorrect pos.\n";
-            cout<<"Expected: "<<tokeniserPositions[i]<<"\n";
-            cout<<"Actual: "<<gramFileErr.pos<<"\n";
+        else if (tokeniser.getErrorState()){
+            cout<<"ERROR: Testing error grammar "<<filename<<" file, error incorrectly detected in tokeniser.\n";
+        }
+        else if (tok.error != parserErrors[i]){
+            cout<<"ERROR: Testing error grammar "<<filename<<" file, incorrect error.\n";
+        }
+        else if (tok.lexeme != parserLexemes[i]){
+            cout<<"ERROR: Testing error grammar "<<filename<<" file, incorrect lexeme.\n";
+            cout<<"Expected: "<<parserLexemes[i]<<"\n";
+            cout<<"Actual: "<<tok.lexeme<<"\n";
+        }
+        else if (tok.lineNum != parserLineNums[i]){
+            cout<<"ERROR: Testing error grammar "<<filename<<" file, incorrect line number.\n";
+            cout<<"Expected: "<<parserLineNums[i]<<"\n";
+            cout<<"Actual: "<<tok.lineNum<<"\n";
+        }
+        else if (tok.pos != parserPositions[i]){
+            cout<<"ERROR: Testing error grammar "<<filename<<" file, incorrect position.\n";
+            cout<<"Expected: "<<parserPositions[i]<<"\n";
+            cout<<"Actual: "<<tok.pos<<"\n";
+        }
+        else{
+            cout<<"PASSED: "<<filename<<" file.\n";
         }
 
         i++;
-  
     }
 
-    //Test errors in grammar and token files
-    // int gram = 0;
-    // int toks = 1;
-    // while(gram < tokeniserErrorGnTfiles.size()){
-    //     string gramFilename = tokeniserErrorGnTfiles[gram];
-    //     string tokFilename = tokeniserErrorGnTfiles[toks];
+    //Special case unknown token - only an issue if a token file was provided
+    ifstream tokFile("errortestgs/tokeniser/redefinedElement-toks.txt");
+    ifstream gramFile("errortestgs/parser/undefinedTok.txt"); 
 
-    //     ifstream gramFile(gramFilename+".txt");
-    //     ifstream tokFile(tokFilename+".txt");
+    string line;
+    string tokInput;
+    string gramInput;
 
-    //     string line;
-    //     string gramFileInput;
-    //     string tokFileInput;
+    while(getline (tokFile, line)){
+        tokInput.append(line);
+    }
+    tokFile.close();
 
-    //     while(getline (gramFile, line)){
-    //         gramFileInput.append(line);
-    //     }
-    //     gramFile.close();
+    while(getline (gramFile, line)){
+        gramInput.append(line);
+    }
+    gramFile.close();
 
-    //     while(getline (tokFile, line)){
-    //         tokFileInput.append(line);
-    //     }
-    //     tokFile.close();
+    Tokeniser tokeniser(gramInput, tokInput);
 
-    //     Tokeniser tokeniser(gramFileInput, tokFileInput);
+    Gtoken tokFileErr = tokeniser.getTokenFileError();
+    Gtoken gramFileErr = tokeniser.getGrammarFileError();
 
-    //     Gtoken tokFileErr = tokeniser.getTokenFileError();
-    //     Gtoken gramFileErr = tokeniser.getGrammarFileError();
+    FileWriter fw("DELETEME", "c++");
+    fw.fileSetup(tokeniser.getAllFirstSetInfo(), tokeniser.getListOfTokens(), "", tokeniser.getTokenRegexes());
 
-    //     if (tokFileErr.error != NONE){
-    //         cout<<"ERROR: Testing error grammar "<<filename<<" file, error indicated for token file.\n";
-    //     }
+    Gtoken tok = parseGrammar(tokeniser, fw);
 
-    //     if (gramFileErr.type != ERROR){
-    //         cout<<"ERROR: Testing error grammar "<<filename<<" type not set to error.\n";
-    //     }
-
-    //     if (gramFileErr.error != tokeniserErrors[i]){
-    //         cout<<"ERROR: Testing error grammar "<<filename<<" incorrect error.\n";
-    //     }
-
-    //     if (gramFileErr.lexeme != tokeniserLexemes[i]){
-    //         cout<<"ERROR: Testing error grammar "<<filename<<" incorrect lexeme.\n";
-    //         cout<<"Expected: "<<tokeniserLexemes[i]<<"\n";
-    //         cout<<"Actual: "<<gramFileErr.lexeme<<"\n";
-    //     }
-
-    //     if (gramFileErr.lineNum != tokeniserLineNums[i]){
-    //         cout<<"ERROR: Testing error grammar "<<filename<<" incorrect lineNum.\n";
-    //         cout<<"Expected: "<<tokeniserLineNums[i]<<"\n";
-    //         cout<<"Actual: "<<gramFileErr.lineNum<<"\n";
-    //     }
-
-    //     if (gramFileErr.pos != tokeniserPositions[i]){
-    //         cout<<"ERROR: Testing error grammar "<<filename<<" incorrect pos.\n";
-    //         cout<<"Expected: "<<tokeniserPositions[i]<<"\n";
-    //         cout<<"Actual: "<<gramFileErr.pos<<"\n";
-    //     }
-
-        //i++;
-  
-    //}
+    if (tok.type != ERROR){
+        cout<<"ERROR: Testing unknown token, type not set to error.\n";
+    }
+    else if (tokeniser.getErrorState()){
+        cout<<"ERROR: Testing unknown token, error incorrectly detected in tokeniser.\n";
+    }
+    else if (tok.error != UndefinedToken){
+        cout<<"ERROR: Testing unknown token, incorrect error.\n";
+    }
+    else if (tok.lexeme != "C"){
+        cout<<"ERROR: Testing unknown token, incorrect lexeme.\n";
+        cout<<"Expected: C\n";
+        cout<<"Actual: "<<tok.lexeme<<"\n";
+    }
+    else if (tok.lineNum != 2){
+        cout<<"ERROR: Testing unknown token, incorrect line number.\n";
+        cout<<"Expected: 2\n";
+        cout<<"Actual: "<<tok.lineNum<<"\n";
+    }
+    else if (tok.pos != 6){
+        cout<<"ERROR: Testing unknown token, incorrect position.\n";
+        cout<<"Expected: 6\n";
+        cout<<"Actual: "<<tok.pos<<"\n";
+    }
+    else{
+        cout<<"PASSED: Testing unknown token.\n";
+    }
 
 
-    cout<<"\n----End of testing tokeniser's error detection----\n";  
-}
-
-void parserTests(){
-    // cout<<"\n----Beginning testing token files----\n\n";
-
-    // for 
-
-    // cout<<"\n----End of testing token files----\n";
+    cout<<"\n----End of testing parser error detection----\n";
 }
 
 int main(int argc, char* argv[]) {

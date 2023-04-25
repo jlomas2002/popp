@@ -11,39 +11,47 @@ bool veryFirstElement = true;
 
 int bracketTracker = 0;
 
-void parseGrammar(Tokeniser &tokeniser, FileWriter writer){
+Gtoken parseGrammar(Tokeniser &tokeniser, FileWriter writer){
     t = tokeniser;
     fw = writer;
-    grammar();
+    return grammar();
 }
 
-void grammar(){
+Gtoken grammar(){
     Gtoken tok = t.peekNextToken();
     while ((tok.type == Non_Terminal)){
         fw.writeText(tok.lexeme, Func_Begin);
         t.getNextToken();
-        rule();
+        tok = rule();
+        if (tok.type == ERROR) return tok;
         startTerminal = true;
         tok = t.peekNextToken();
     }
 
     if (tok.type != END_OF_GRAMMAR){
          //ERROR
-         tok = t.makeErrorToken(ExpectedNonTerminal, tok.lexeme);
+        if (tok.error ==  ExpectedSemiColon || tok.error == UnknownCharacter){
+            return tok;
+        }
+        return t.makeErrorToken(ExpectedNonTerminal, tok.lexeme);
      }
+
+     return tok;
 }
 
-void rule(){
+Gtoken rule(){
     Gtoken tok = t.getNextToken();
+    if (tok.type == ERROR) return tok;
 
     bracketTracker = 0;
     if (tok.lexeme == "=" && tok.type == Symbol){
         veryFirstElement = true;
-        expression();
+        tok = expression();
+        if (tok.type == ERROR) return tok;
     }
     else{
         //ERROR
-        tok = t.makeErrorToken(ExpectedEquals, tok.lexeme);
+        return t.makeErrorToken(ExpectedEquals, tok.lexeme);
     }
 
     tok = t.getNextToken();
@@ -52,11 +60,13 @@ void rule(){
     }
     else{
         //ERROR
-        tok = t.makeErrorToken(ExpectedSemiColon, tok.lexeme);
+        return t.makeErrorToken(ExpectedSemiColon, tok.lexeme);
     }
+
+    return tok;
 }
 
-void expression(){
+Gtoken expression(){
     startTerminal = true;
     Gtoken tok;
 
@@ -85,13 +95,15 @@ void expression(){
             fw.writeText(tok.lexeme, If_Begin_NonTerminal);
         }
 
-        term();
+        tok = term();
+        if (tok.type == ERROR) return tok;
         fw.writeText("", Scope_End);
     }
 
     else{
         veryFirstElement = false;
-        term();
+        tok = term();
+        if (tok.type == ERROR) return tok;
     }
 
     tok = t.peekNextToken();
@@ -121,11 +133,13 @@ void expression(){
                 fw.writeText(tok.lexeme, ElseIf_NonTerminal);
             }
 
-            term();
+            tok = term();
+            if (tok.type == ERROR) return tok;
             fw.writeText("", Scope_End);
         }
         else{
-            term();
+            tok = term();
+            if (tok.type == ERROR) return tok;
         }
 
         tok = t.peekNextToken();
@@ -136,21 +150,28 @@ void expression(){
         fw.writeText("", Scope_End);
      }
 
+    return tok;
+
 }
 
-void term(){
-    factor();
-    Gtoken tok = t.peekNextToken();
+Gtoken term(){
+    Gtoken tok;
+    tok = factor();
+    if (tok.type == ERROR) return tok;
+    tok = t.peekNextToken();
     while ((tok.type == Symbol && (tok.lexeme == "{" || tok.lexeme == "[" || tok.lexeme == "(")) || tok.type == Terminal || tok.type == Non_Terminal || tok.type == Token_Type){
-        factor();
+        tok = factor();
+        if (tok.type == ERROR) return tok;
         tok = t.peekNextToken();
     }
+
+    return tok;
 }
 
-void factor(){
+Gtoken factor(){
     Gtoken tok = t.getNextToken();
 
-    if (tok.type == Terminal  || tok.type == Token_Type){
+    if (tok.type == Terminal || tok.type == Token_Type){
         if (startTerminal){
             startTerminal = false;
         }
@@ -180,7 +201,9 @@ void factor(){
         bracketTracker++;
 
         fw.writeText("", Bracket_Begin);
-        expression();
+        tok = expression();
+        if (tok.type == ERROR) return tok;
+        
         tok = t.getNextToken();
 
         if (tok.type == Symbol && tok.lexeme == "}"){
@@ -191,7 +214,7 @@ void factor(){
 
         else{
             //ERROR
-            tok = t.makeErrorToken(ExpectedCurlyBracket, tok.lexeme);     
+            return t.makeErrorToken(ExpectedCurlyBracket, tok.lexeme);     
         } 
     } 
 
@@ -199,7 +222,9 @@ void factor(){
         bracketTracker++;
 
         fw.writeText("", Peek_NextTok);
-        expression();
+        tok = expression();
+        if (tok.type == ERROR) return tok;
+
         tok = t.getNextToken();
 
         if (tok.type == Symbol && tok.lexeme == ")"){
@@ -208,15 +233,16 @@ void factor(){
 
         else{
             //ERROR
-            tok = t.makeErrorToken(ExpectedNormalBracket, tok.lexeme); 
+            return t.makeErrorToken(ExpectedNormalBracket, tok.lexeme); 
         } 
     }
 
     else if(tok.type == Symbol && tok.lexeme == "["){
         bracketTracker++;
-
         fw.writeText("", Bracket_Begin);
-        expression();
+        tok = expression();
+        if (tok.type == ERROR) return tok;
+
         tok = t.getNextToken();
 
         if (tok.type == Symbol && tok.lexeme == "]"){
@@ -227,13 +253,15 @@ void factor(){
 
         else{
             //ERROR
-            tok = t.makeErrorToken(ExpectedSquareBracket, tok.lexeme); 
+            return t.makeErrorToken(ExpectedSquareBracket, tok.lexeme); 
         } 
     }
-    else{
+    else if (tok.type == ERROR){
         //ERROR
-        tok = t.makeErrorToken(SyntacticError, tok.lexeme); 
-    } 
+        return tok;
+    }
+
+    return tok;
 
 }
 

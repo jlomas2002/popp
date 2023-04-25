@@ -1,0 +1,3 @@
+ANonTerm = [B];
+B = "x" "y";
+ANonTerm = {"test"} | B;
