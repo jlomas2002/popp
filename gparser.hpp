@@ -8,7 +8,7 @@
 //Grammar Parser
 
 //parse functions
-Gtoken parseGrammar(Tokeniser &tokeniser, FileWriter writer);
+Gtoken parseGrammar(Tokeniser &tokeniser, FileWriter &writer);
 Gtoken grammar();
 Gtoken rule();
 Gtoken expression();

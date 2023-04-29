@@ -24,6 +24,7 @@ public:
     bool getErrorState();
     Gtoken getTokenFileError();
     Gtoken getGrammarFileError();
+    std::string errorToString(Error err);
 private:
     void firstPass();
     void collectFirstSetInfo();

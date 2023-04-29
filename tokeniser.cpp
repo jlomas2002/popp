@@ -1,5 +1,6 @@
 #include <iostream>
 #include <cctype>
+#include <fstream>
 #include "tokeniser.hpp"
 #include "gparser.hpp"
 using namespace std;
@@ -17,7 +18,6 @@ bool operator==(const Gtoken &a, const Gtoken &b){
     return a.lexeme == b.lexeme;
 }
 
-
 Tokeniser::Tokeniser(string grammar, string tokensInput){
   Tokeniser::grammar.append(grammar);
   Tokeniser::index = 0; //Current position in grammar string
@@ -30,7 +30,7 @@ Tokeniser::Tokeniser(string grammar, string tokensInput){
 
   if (tokensInput != ""){
     Gtoken checkErrorTok = extractRegexes(tokensInput);
-    if (checkErrorTok.type == ERROR){
+    if (checkErrorTok.type == Error_Type){
       erroneous = true;
       tokenFileError = checkErrorTok;
     }
@@ -86,11 +86,32 @@ Gtoken Tokeniser::getGrammarFileError(){
   return grammarFileError;
 }
 
+string Tokeniser::errorToString(Error err){
+    switch(err){
+        case RedefinedElement : return "Redefined element"; break;
+        case RedefinedToken: return "Redefined token"; break;
+        case RedefinedNonTerminal: return "Redefined non terminal"; break;
+        case UnexpectedEOF: return "Unexpected EOF"; break;
+        case UnknownCharacter: return "Unknown character"; break;
+        case UndefinedToken: return "Undefined token"; break;
+        case ExpectedEquals: return "Expected equals"; break;
+        case ExpectedSemiColon: return "Expected semi colon"; break;
+        case ExpectedNonTerminal: return "Expected non terminal"; break;
+        case ExpectedCurlyBracket: return "Expected closing curly bracket"; break;
+        case ExpectedSquareBracket: return "Expected closing square bracket"; break;
+        case ExpectedNormalBracket: return "Expected closing normal bracket"; break;
+        case InvalidRegexId: return "Invalid regex"; break;
+        case NONE: return "No error"; break;
+
+        default: return "Unknown error"; break;
+    }
+}
+
 void Tokeniser::firstPass(){
   collectFirstSetInfo(); 
   Gtoken checkErrorTok = collectListOfNonTerminals();
 
-  if (checkErrorTok.type == ERROR){
+  if (checkErrorTok.type == Error_Type){
     erroneous = true;
     grammarFileError = checkErrorTok;
 
@@ -168,7 +189,7 @@ int Tokeniser::incrementIndex(string input){
 Gtoken Tokeniser::makeErrorToken(Error err, string lex){
   Gtoken token;
 
-  token.type = ERROR;
+  token.type = Error_Type;
   token.lexeme = lex;
   token.lineNum = lineNum;
   token.pos = pos;
@@ -211,7 +232,6 @@ Gtoken Tokeniser::extractRegexes(string input){
 
     //First extract the name of the token, can begin with a letter or _ char
     if (input.at(index) == '_' || isalpha(input.at(index))){
-      int startPos = pos;
       id += input.at(index);
       if (incrementIndex(input) != 0) return makeErrorToken(UnexpectedEOF, "");
     }
@@ -267,8 +287,7 @@ Gtoken Tokeniser::extractRegexes(string input){
       token.lineNum = lineNum;
       token.error = NONE;
       return token;
-  }
-
+    }
   }
   Gtoken tok;
   tok.error = NONE;
@@ -446,7 +465,7 @@ void Tokeniser::collectFirstSetInfo(){
     bool checkOutsideBracket = false;
 
     while (!(token.type == Symbol && token.lexeme == ";")){
-      if (token.type == ERROR || token.type == END_OF_GRAMMAR){
+      if (token.type == Error_Type || token.type == END_OF_GRAMMAR){
         allFirstSetInfo.push_back(info);
         return;
       }
@@ -500,6 +519,8 @@ FirstSetInfo Tokeniser::findFirstSetInfo(Gtoken t){
       return info;
     }
   }
+  FirstSetInfo f;
+  return f;
 }
 
 //The current vector of terminals may contain non terminals

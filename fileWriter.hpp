@@ -1,6 +1,5 @@
 #ifndef WRITER_HPP
 #define WRITER_HPP
-#include <fstream>
 #include <string>
 #include <vector>
 #include <map>
@@ -19,6 +18,7 @@ enum Mode {
     ElseIf_NonTerminal,
     ElseIf_Token,
     Scope_End,
+    TerminalCheck_End,
     Else_Expr,
     Else_Fact_Terminal,
     Else_Fact_Token,
@@ -33,6 +33,8 @@ enum OutputStringType {
     getNextToken,
     peekNextToken,
     scopeEnd,
+    addActionComment,
+    pythonPass,
     callNonTerminal,
     ifHeader_terminal,
     ifHeader_nonTerminal,
@@ -43,12 +45,13 @@ enum OutputStringType {
     elseHeader,
     whileHeader_begin,
     ifHeader_begin,
-    defineStartTerminals_begin,
-    defineStartTokens_begin,
-    defineStartTerminals_list,
-    defineStartTokens_list,
-    defineStartTerminals_end,
-    defineStartTokens_end,
+    defineFirstTerminals_begin,
+    defineFirstTokens_begin,
+    defineFirstTerminals_list,
+    defineFirstTokens_list,
+    defineFirstTerminals_end,
+    defineFirstTokens_end,
+    listEnd,
     statement_terminalCheck,
     statement_tokenCheck,
     statement_nonTerminalCheck_terminal,
@@ -57,20 +60,28 @@ enum OutputStringType {
     statement_tokenCheck_last,
     statement_nonTerminalCheck_terminal_last,
     statement_nonTerminalCheck_token_last,
-    errorComment,
+    errorString_begin,
+    errorString_append,
+    errorString_end,
+    errorOutput,
+    exitWithError,
+    parserIncludes,
+    parserMain,
 
     lexer_initFunction,
     lexer_peekNextFunction,
-    lexer_getNextFunction_header,
-    lexer_includeRegex,
+    lexer_skipWhitespace,
+    lexer_includes,
     lexer_regexDefintion,
     lexer_matchDeclaration,
     lexer_searchCode,
+    lexer_returnNextChar,
     lexer_headerFile,
 
     typeEnumDefinition_begin,
     typeEnumDefinition_end,
     tokenDefinition,
+    tokenDefinitionIncludes,
 };
 
 
@@ -82,15 +93,22 @@ struct SubsequentCodeInfo { //contains information required to correctly format 
 
 class FileWriter {
 public:
-    FileWriter(std::string fileName, std::string lang);
+    FileWriter(std::string lang);
     ~FileWriter();
     void writeText(std::string text, Mode mode);
-    void fileSetup(std::vector<FirstSetInfo> allFirstSetInfo, std::set<std::string> allTokens, std::string tokenFile, std::vector<TokenRegex> tokenRegexes);
+    void fileSetup(std::vector<FirstSetInfo> allFirstSetInfo, std::set<std::string> allTokens, std::vector<TokenRegex> tokenRegexes, std::string projectName);
     void addStartTerminal(Gtoken token);
+    void createMain(std::string startFunc);
+    std::string getParserText();
+    std::string getLexerText();
+    std::string getTokDefText();
+    std::string getParserHeaderText();
+    std::string getLexerHeaderText();
 private:
     FirstSetInfo getFirstSetInfo(std::string);
-    void createLexer(bool makeTemplate, std::vector<TokenRegex> tokenRegexes);
+    void createLexer(std::vector<TokenRegex> tokenRegexes);
     void createTokenDef(std::set<std::string> allTokenTypes);
+    void createParserHeader();
     std::string formatString(std::string base, std::string text);
     std::string indentString();
     std::string createConditionStatement();
@@ -102,8 +120,13 @@ private:
     std::vector<FirstSetInfo> allFirstSetInfo;
     SubsequentCodeInfo subCodeInfo;
     int indent; //defines how many spaces to use as the current indentation level
-    std::string fileName;
     std::map<OutputStringType, std::string> *language;
+    std::string projectName;
+    std::string parserText;
+    std::string lexerText;
+    std::string tokDefText;
+    std::string parserHeaderText;
+    std::string lexerHeaderText;
 };
 
 #endif

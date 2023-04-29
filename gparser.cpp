@@ -3,29 +3,41 @@
 #include "gparser.hpp"
 using namespace std;
 
-Tokeniser t("", "");
-FileWriter fw("", "");
+Tokeniser *t = new Tokeniser("", "");
+FileWriter *fw = new FileWriter("");
 //Flag required so to of the same terminal checks aren't written to the file
-bool startTerminal = true;
-bool veryFirstElement = true;
+bool startTerminal;
+bool veryFirstElement;
+
+string startFunc;
 
 int bracketTracker = 0;
 
-Gtoken parseGrammar(Tokeniser &tokeniser, FileWriter writer){
-    t = tokeniser;
-    fw = writer;
-    return grammar();
+Gtoken parseGrammar(Tokeniser &tokeniser, FileWriter &writer){
+    t = &tokeniser;
+    fw = &writer;
+    startTerminal = true;
+    veryFirstElement = true;
+    startFunc = "";
+
+    Gtoken tok = grammar();
+    fw->createMain(startFunc);
+    return tok;
 }
 
 Gtoken grammar(){
-    Gtoken tok = t.peekNextToken();
-    while ((tok.type == Non_Terminal)){
-        fw.writeText(tok.lexeme, Func_Begin);
-        t.getNextToken();
+    Gtoken tok = t->peekNextToken();
+    while (tok.type == Non_Terminal){
+        if (startFunc == ""){
+            startFunc = tok.lexeme;
+        }
+
+        fw->writeText(tok.lexeme, Func_Begin);
+        t->getNextToken();
         tok = rule();
-        if (tok.type == ERROR) return tok;
+        if (tok.type == Error_Type) return tok;
         startTerminal = true;
-        tok = t.peekNextToken();
+        tok = t->peekNextToken();
     }
 
     if (tok.type != END_OF_GRAMMAR){
@@ -33,34 +45,34 @@ Gtoken grammar(){
         if (tok.error ==  ExpectedSemiColon || tok.error == UnknownCharacter){
             return tok;
         }
-        return t.makeErrorToken(ExpectedNonTerminal, tok.lexeme);
+        return t->makeErrorToken(ExpectedNonTerminal, tok.lexeme);
      }
 
      return tok;
 }
 
 Gtoken rule(){
-    Gtoken tok = t.getNextToken();
-    if (tok.type == ERROR) return tok;
+    Gtoken tok = t->getNextToken();
+    if (tok.type == Error_Type) return tok;
 
     bracketTracker = 0;
     if (tok.lexeme == "=" && tok.type == Symbol){
         veryFirstElement = true;
         tok = expression();
-        if (tok.type == ERROR) return tok;
+        if (tok.type == Error_Type) return tok;
     }
     else{
         //ERROR
-        return t.makeErrorToken(ExpectedEquals, tok.lexeme);
+        return t->makeErrorToken(ExpectedEquals, tok.lexeme);
     }
 
-    tok = t.getNextToken();
+    tok = t->getNextToken();
     if(tok.lexeme == ";" && tok.type == Symbol){
-        fw.writeText("", Func_End);
+        fw->writeText("", Func_End);
     }
     else{
         //ERROR
-        return t.makeErrorToken(ExpectedSemiColon, tok.lexeme);
+        return t->makeErrorToken(ExpectedSemiColon, tok.lexeme);
     }
 
     return tok;
@@ -70,84 +82,84 @@ Gtoken expression(){
     startTerminal = true;
     Gtoken tok;
 
-    tok = t.peekNextToken();
+    tok = t->peekNextToken();
 
     if (tok.type == Terminal || tok.type == Non_Terminal || tok.type == Token_Type){
-        fw.addStartTerminal(tok);
+        fw->addStartTerminal(tok);
 
         if (veryFirstElement){
-            fw.writeText("", Peek_NextTok);
+            fw->writeText("", Peek_NextTok);
             veryFirstElement = false;
         }
 
         if (tok.type == Terminal){
-            fw.writeText(tok.lexeme, If_Begin_Terminal);
-            fw.writeText("", Get_NextTok); //To consume the peeked token
+            fw->writeText(tok.lexeme, If_Begin_Terminal);
+            fw->writeText("", Get_NextTok); //To consume the peeked token
         }
 
         else if (tok.type == Token_Type){
-            fw.writeText(tok.lexeme, If_Begin_Token);
-            fw.writeText("", Get_NextTok); //To consume the peeked token
+            fw->writeText(tok.lexeme, If_Begin_Token);
+            fw->writeText("", Get_NextTok); //To consume the peeked token
         }
 
         else if (tok.type == Non_Terminal){
             startTerminal = false;
-            fw.writeText(tok.lexeme, If_Begin_NonTerminal);
+            fw->writeText(tok.lexeme, If_Begin_NonTerminal);
         }
 
         tok = term();
-        if (tok.type == ERROR) return tok;
-        fw.writeText("", Scope_End);
+        if (tok.type == Error_Type) return tok;
+        fw->writeText("", Scope_End);
     }
 
     else{
         veryFirstElement = false;
         tok = term();
-        if (tok.type == ERROR) return tok;
+        if (tok.type == Error_Type) return tok;
     }
 
-    tok = t.peekNextToken();
+    tok = t->peekNextToken();
     while (tok.lexeme == "|" && tok.type == Symbol){
-        t.getNextToken();
+        t->getNextToken();
 
-        tok = t.peekNextToken();
+        tok = t->peekNextToken();
         if (tok.type == Terminal || tok.type == Non_Terminal || tok.type == Token_Type){
-            fw.addStartTerminal(tok);
+            fw->addStartTerminal(tok);
 
             if (tok.type == Terminal){
                 startTerminal = true;
                 
-                fw.writeText(tok.lexeme, ElseIf_Terminal);
-                fw.writeText("", Get_NextTok); //To consume the peeked token
+                fw->writeText(tok.lexeme, ElseIf_Terminal);
+                fw->writeText("", Get_NextTok); //To consume the peeked token
             }
 
             else if (tok.type == Token_Type){
                 startTerminal = true;
 
-                fw.writeText(tok.lexeme, ElseIf_Token);
-                fw.writeText("", Get_NextTok); //To consume the peeked token
+                fw->writeText(tok.lexeme, ElseIf_Token);
+                fw->writeText("", Get_NextTok); //To consume the peeked token
             }
 
             else if (tok.type == Non_Terminal){
                 startTerminal = false;
-                fw.writeText(tok.lexeme, ElseIf_NonTerminal);
+                fw->writeText(tok.lexeme, ElseIf_NonTerminal);
             }
 
             tok = term();
-            if (tok.type == ERROR) return tok;
-            fw.writeText("", Scope_End);
+            if (tok.type == Error_Type) return tok;
+            fw->writeText("", Scope_End);
         }
         else{
             tok = term();
-            if (tok.type == ERROR) return tok;
+            if (tok.type == Error_Type) return tok;
         }
 
-        tok = t.peekNextToken();
+        tok = t->peekNextToken();
     }
 
     if (!bracketTracker){
-        fw.writeText("", Else_Expr);
-        fw.writeText("", Scope_End);
+        fw->writeText("", Else_Expr);
+        fw->writeText("", Scope_End);
      }
 
     return tok;
@@ -157,19 +169,19 @@ Gtoken expression(){
 Gtoken term(){
     Gtoken tok;
     tok = factor();
-    if (tok.type == ERROR) return tok;
-    tok = t.peekNextToken();
+    if (tok.type == Error_Type) return tok;
+    tok = t->peekNextToken();
     while ((tok.type == Symbol && (tok.lexeme == "{" || tok.lexeme == "[" || tok.lexeme == "(")) || tok.type == Terminal || tok.type == Non_Terminal || tok.type == Token_Type){
         tok = factor();
-        if (tok.type == ERROR) return tok;
-        tok = t.peekNextToken();
+        if (tok.type == Error_Type) return tok;
+        tok = t->peekNextToken();
     }
 
     return tok;
 }
 
 Gtoken factor(){
-    Gtoken tok = t.getNextToken();
+    Gtoken tok = t->getNextToken();
 
     if (tok.type == Terminal || tok.type == Token_Type){
         if (startTerminal){
@@ -177,55 +189,55 @@ Gtoken factor(){
         }
 
         else{
-            fw.writeText("", Get_NextTok);
+            fw->writeText("", Get_NextTok);
 
             if (tok.type == Terminal){
-                fw.writeText(tok.lexeme, If_Begin_Terminal);
-                fw.writeText("", Scope_End);
-                fw.writeText(tok.lexeme, Else_Fact_Terminal);
+                fw->writeText(tok.lexeme, If_Begin_Terminal);
+                fw->writeText("", TerminalCheck_End);
+                fw->writeText(tok.lexeme, Else_Fact_Terminal);
             }
             else{
-                fw.writeText(tok.lexeme, If_Begin_Token);
-                fw.writeText("", Scope_End);
-                fw.writeText(tok.lexeme, Else_Fact_Token);
+                fw->writeText(tok.lexeme, If_Begin_Token);
+                fw->writeText("", TerminalCheck_End);
+                fw->writeText(tok.lexeme, Else_Fact_Token);
             }
-            fw.writeText("", Scope_End);
+            fw->writeText("", Scope_End);
         }
     }
 
     else if (tok.type == Non_Terminal){
-        fw.writeText(tok.lexeme, NonTerminal_Seen);
+        fw->writeText(tok.lexeme, NonTerminal_Seen);
     }
 
     else if(tok.type == Symbol && tok.lexeme == "{"){
         bracketTracker++;
 
-        fw.writeText("", Bracket_Begin);
+        fw->writeText("", Bracket_Begin);
         tok = expression();
-        if (tok.type == ERROR) return tok;
+        if (tok.type == Error_Type) return tok;
         
-        tok = t.getNextToken();
+        tok = t->getNextToken();
 
         if (tok.type == Symbol && tok.lexeme == "}"){
-            fw.writeText("", CurlyBracket_End);
+            fw->writeText("", CurlyBracket_End);
 
             bracketTracker--;
         }
 
         else{
             //ERROR
-            return t.makeErrorToken(ExpectedCurlyBracket, tok.lexeme);     
+            return t->makeErrorToken(ExpectedCurlyBracket, tok.lexeme);
         } 
     } 
 
     else if(tok.type == Symbol && tok.lexeme == "("){
         bracketTracker++;
 
-        fw.writeText("", Peek_NextTok);
+        fw->writeText("", Peek_NextTok);
         tok = expression();
-        if (tok.type == ERROR) return tok;
+        if (tok.type == Error_Type) return tok;
 
-        tok = t.getNextToken();
+        tok = t->getNextToken();
 
         if (tok.type == Symbol && tok.lexeme == ")"){
             bracketTracker--;
@@ -233,30 +245,30 @@ Gtoken factor(){
 
         else{
             //ERROR
-            return t.makeErrorToken(ExpectedNormalBracket, tok.lexeme); 
+            return t->makeErrorToken(ExpectedNormalBracket, tok.lexeme);
         } 
     }
 
     else if(tok.type == Symbol && tok.lexeme == "["){
         bracketTracker++;
-        fw.writeText("", Bracket_Begin);
+        fw->writeText("", Bracket_Begin);
         tok = expression();
-        if (tok.type == ERROR) return tok;
+        if (tok.type == Error_Type) return tok;
 
-        tok = t.getNextToken();
+        tok = t->getNextToken();
 
         if (tok.type == Symbol && tok.lexeme == "]"){
-            fw.writeText("", SquareBracket_End);
+            fw->writeText("", SquareBracket_End);
 
             bracketTracker--;
         }
 
         else{
             //ERROR
-            return t.makeErrorToken(ExpectedSquareBracket, tok.lexeme); 
+            return t->makeErrorToken(ExpectedSquareBracket, tok.lexeme);
         } 
     }
-    else if (tok.type == ERROR){
+    else if (tok.type == Error_Type){
         //ERROR
         return tok;
     }

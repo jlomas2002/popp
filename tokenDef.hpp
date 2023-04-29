@@ -9,8 +9,7 @@ enum Type {
   Non_Terminal,
   Symbol,
   Token_Type,
-
-  ERROR,
+  Error_Type,
   END_OF_GRAMMAR,
 };
 
@@ -37,18 +36,6 @@ enum Error {
   NONE //Default of no error
 };
  
-//  std::string typeToString(Type t){
-//   switch(t)
-//   {
-//       case Terminal  : std::cout << "Terminal\n";   break;
-//       case Non_Terminal  : std::cout << "Non Terminal\n";   break;
-//       case Symbol  : std::cout << "Symbol\n";   break;
-//       case Token_Type  : std::cout << "Token\n";   break;
-//       case ERROR  : std::cout << "Error\n";   break;
-//       case END_OF_GRAMMAR  : std::cout << "End Of Grammar\n";   break;
-//   }
-// }
-
 //Tokens in a ebnf grammar file
 struct Gtoken {
   Type type;

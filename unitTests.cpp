@@ -54,7 +54,7 @@ void generateTestData(string filename, string &fileInput, vector<FirstSetInfo> &
         getline(fileFirstSets, line);
 
         int pos = line.find(",");
-        while (pos != string::npos){
+        while (pos != int(string::npos)){
             Gtoken t;
             t.lexeme = line.substr(0, pos);
             info.firstTerminals.insert(t);
@@ -66,7 +66,7 @@ void generateTestData(string filename, string &fileInput, vector<FirstSetInfo> &
         getline(fileFirstSets, line);
 
         pos = line.find(",");
-        while (pos != string::npos){
+        while (pos != int(string::npos)){
             Gtoken t;
             t.lexeme = line.substr(0, pos);
             info.firstTokens.insert(t);
@@ -195,7 +195,7 @@ void tokeniserTests(){
             cout<<"ERROR: Testing error grammar "<<filename<<" file, error indicated for token file.\n";
         }
 
-        else if (gramFileErr.type != ERROR){
+        else if (gramFileErr.type != Error_Type){
             cout<<"ERROR: Testing error grammar "<<filename<<" type not set to error.\n";
         }
 
@@ -257,7 +257,7 @@ void tokeniserTests(){
             cout<<"ERROR: Testing error tokens "<<filename<<" file, error indicated for grammar file.\n";
         }
 
-        else if (tokFileErr.type != ERROR){
+        else if (tokFileErr.type != Error_Type){
             cout<<"ERROR: Testing error tokens "<<filename<<" type not set to error.\n";
         }
 
@@ -318,7 +318,7 @@ void tokeniserTests(){
         cout<<"ERROR: Testing redef across files, token file should have no error as its processed first.\n";
     }
 
-    else if (gramFileErr.type != ERROR){
+    else if (gramFileErr.type != Error_Type){
         cout<<"ERROR: Testing redef across files, grammar file doesn't have an error.\n";
     }
 
@@ -363,12 +363,12 @@ void parserTests(){
         file.close();
 
         Tokeniser tokeniser(fileInput, "");
-        FileWriter fw("DELETEME", "c++");
-        fw.fileSetup(tokeniser.getAllFirstSetInfo(), tokeniser.getListOfTokens(), "", tokeniser.getTokenRegexes());
+        FileWriter fw("cpp");
+        fw.fileSetup(tokeniser.getAllFirstSetInfo(), tokeniser.getListOfTokens(), tokeniser.getTokenRegexes(), "DELETEME");
 
         Gtoken tok = parseGrammar(tokeniser, fw);
 
-        if (tok.type == ERROR){
+        if (tok.type == Error_Type){
             cout<<"ERROR: Testing valid "<<filename<<" file, error incorrectly detected in parser.\n";
         }
         else if (tokeniser.getErrorState()){
@@ -392,14 +392,14 @@ void parserTests(){
         }
         file.close();
         Tokeniser tokeniser(fileInput, "");
-        FileWriter fw("DELETEME", "c++");
+        FileWriter fw("cpp");
 
-        fw.fileSetup(tokeniser.getAllFirstSetInfo(), tokeniser.getListOfTokens(), "", tokeniser.getTokenRegexes());
+        fw.fileSetup(tokeniser.getAllFirstSetInfo(), tokeniser.getListOfTokens(), tokeniser.getTokenRegexes(), "DELETEME");
 
 
         Gtoken tok = parseGrammar(tokeniser, fw);
 
-        if (tok.type != ERROR){
+        if (tok.type != Error_Type){
             cout<<"ERROR: Testing error grammar "<<filename<<" file, type not set to error.\n";
         }
         else if (tokeniser.getErrorState()){
@@ -453,12 +453,12 @@ void parserTests(){
     Gtoken tokFileErr = tokeniser.getTokenFileError();
     Gtoken gramFileErr = tokeniser.getGrammarFileError();
 
-    FileWriter fw("DELETEME", "c++");
-    fw.fileSetup(tokeniser.getAllFirstSetInfo(), tokeniser.getListOfTokens(), "", tokeniser.getTokenRegexes());
+    FileWriter fw("cpp");
+    fw.fileSetup(tokeniser.getAllFirstSetInfo(), tokeniser.getListOfTokens(), tokeniser.getTokenRegexes(), "DELETEME");
 
     Gtoken tok = parseGrammar(tokeniser, fw);
 
-    if (tok.type != ERROR){
+    if (tok.type != Error_Type){
         cout<<"ERROR: Testing unknown token, type not set to error.\n";
     }
     else if (tokeniser.getErrorState()){
