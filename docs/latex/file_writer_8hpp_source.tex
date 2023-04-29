@@ -1,0 +1,140 @@
+\hypertarget{file_writer_8hpp_source}{}\doxysection{file\+Writer.\+hpp}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ WRITER\_HPP}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ WRITER\_HPP}}
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ <string>}}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <vector>}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <map>}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ "{}tokenDef.hpp"{}}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{keyword}{enum}\ Mode\ \{}
+\DoxyCodeLine{00009\ \ \ \ \ Func\_Begin,}
+\DoxyCodeLine{00010\ \ \ \ \ Func\_End,}
+\DoxyCodeLine{00011\ \ \ \ \ NonTerminal\_Seen,}
+\DoxyCodeLine{00012\ \ \ \ \ Get\_NextTok,}
+\DoxyCodeLine{00013\ \ \ \ \ Get\_NextTok\_Commented,}
+\DoxyCodeLine{00014\ \ \ \ \ Peek\_NextTok,}
+\DoxyCodeLine{00015\ \ \ \ \ If\_Begin\_Terminal,}
+\DoxyCodeLine{00016\ \ \ \ \ If\_Begin\_NonTerminal,}
+\DoxyCodeLine{00017\ \ \ \ \ If\_Begin\_Token,}
+\DoxyCodeLine{00018\ \ \ \ \ ElseIf\_Terminal,}
+\DoxyCodeLine{00019\ \ \ \ \ ElseIf\_NonTerminal,}
+\DoxyCodeLine{00020\ \ \ \ \ ElseIf\_Token,}
+\DoxyCodeLine{00021\ \ \ \ \ Scope\_End,}
+\DoxyCodeLine{00022\ \ \ \ \ TerminalCheck\_End,}
+\DoxyCodeLine{00023\ \ \ \ \ Else\_Expr,}
+\DoxyCodeLine{00024\ \ \ \ \ Else\_Fact\_Terminal,}
+\DoxyCodeLine{00025\ \ \ \ \ Else\_Fact\_Token,}
+\DoxyCodeLine{00026\ \ \ \ \ Bracket\_Begin,}
+\DoxyCodeLine{00027\ \ \ \ \ CurlyBracket\_End,}
+\DoxyCodeLine{00028\ \ \ \ \ SquareBracket\_End,}
+\DoxyCodeLine{00029\ \};}
+\DoxyCodeLine{00030\ }
+\DoxyCodeLine{00031\ \textcolor{keyword}{enum}\ OutputStringType\ \{}
+\DoxyCodeLine{00032\ \ \ \ \ functionHeader,}
+\DoxyCodeLine{00033\ \ \ \ \ tokDeclaration,}
+\DoxyCodeLine{00034\ \ \ \ \ getNextToken,}
+\DoxyCodeLine{00035\ \ \ \ \ getNextToken\_commented,}
+\DoxyCodeLine{00036\ \ \ \ \ peekNextToken,}
+\DoxyCodeLine{00037\ \ \ \ \ scopeEnd,}
+\DoxyCodeLine{00038\ \ \ \ \ addActionComment,}
+\DoxyCodeLine{00039\ \ \ \ \ pythonPass,}
+\DoxyCodeLine{00040\ \ \ \ \ callNonTerminal,}
+\DoxyCodeLine{00041\ \ \ \ \ ifHeader\_terminal,}
+\DoxyCodeLine{00042\ \ \ \ \ ifHeader\_nonTerminal,}
+\DoxyCodeLine{00043\ \ \ \ \ ifHeader\_token,}
+\DoxyCodeLine{00044\ \ \ \ \ elseIfHeader\_terminal,}
+\DoxyCodeLine{00045\ \ \ \ \ elseIfHeader\_nonTerminal,}
+\DoxyCodeLine{00046\ \ \ \ \ elseIfHeader\_token,}
+\DoxyCodeLine{00047\ \ \ \ \ elseHeader,}
+\DoxyCodeLine{00048\ \ \ \ \ whileHeader\_begin,}
+\DoxyCodeLine{00049\ \ \ \ \ ifHeader\_begin,}
+\DoxyCodeLine{00050\ \ \ \ \ defineFirstTerminals\_begin,}
+\DoxyCodeLine{00051\ \ \ \ \ defineFirstTokens\_begin,}
+\DoxyCodeLine{00052\ \ \ \ \ defineFirstTerminals\_list,}
+\DoxyCodeLine{00053\ \ \ \ \ defineFirstTokens\_list,}
+\DoxyCodeLine{00054\ \ \ \ \ defineFirstTerminals\_end,}
+\DoxyCodeLine{00055\ \ \ \ \ defineFirstTokens\_end,}
+\DoxyCodeLine{00056\ \ \ \ \ listEnd,}
+\DoxyCodeLine{00057\ \ \ \ \ statement\_terminalCheck,}
+\DoxyCodeLine{00058\ \ \ \ \ statement\_tokenCheck,}
+\DoxyCodeLine{00059\ \ \ \ \ statement\_nonTerminalCheck\_terminal,}
+\DoxyCodeLine{00060\ \ \ \ \ statement\_nonTerminalCheck\_token,}
+\DoxyCodeLine{00061\ \ \ \ \ statement\_terminalCheck\_last,}
+\DoxyCodeLine{00062\ \ \ \ \ statement\_tokenCheck\_last,}
+\DoxyCodeLine{00063\ \ \ \ \ statement\_nonTerminalCheck\_terminal\_last,}
+\DoxyCodeLine{00064\ \ \ \ \ statement\_nonTerminalCheck\_token\_last,}
+\DoxyCodeLine{00065\ \ \ \ \ errorComment,}
+\DoxyCodeLine{00066\ \ \ \ \ errorString\_begin,}
+\DoxyCodeLine{00067\ \ \ \ \ errorString\_append,}
+\DoxyCodeLine{00068\ \ \ \ \ errorString\_end,}
+\DoxyCodeLine{00069\ \ \ \ \ errorOutput,}
+\DoxyCodeLine{00070\ \ \ \ \ exitWithError,}
+\DoxyCodeLine{00071\ \ \ \ \ parserIncludes,}
+\DoxyCodeLine{00072\ \ \ \ \ parserMain,}
+\DoxyCodeLine{00073\ }
+\DoxyCodeLine{00074\ \ \ \ \ lexer\_initFunction,}
+\DoxyCodeLine{00075\ \ \ \ \ lexer\_peekNextFunction,}
+\DoxyCodeLine{00076\ \ \ \ \ lexer\_skipWhitespace,}
+\DoxyCodeLine{00077\ \ \ \ \ lexer\_includes,}
+\DoxyCodeLine{00078\ \ \ \ \ lexer\_regexDefintion,}
+\DoxyCodeLine{00079\ \ \ \ \ lexer\_matchDeclaration,}
+\DoxyCodeLine{00080\ \ \ \ \ lexer\_searchCode,}
+\DoxyCodeLine{00081\ \ \ \ \ lexer\_returnNextChar,}
+\DoxyCodeLine{00082\ \ \ \ \ lexer\_headerFile,}
+\DoxyCodeLine{00083\ }
+\DoxyCodeLine{00084\ \ \ \ \ typeEnumDefinition\_begin,}
+\DoxyCodeLine{00085\ \ \ \ \ typeEnumDefinition\_end,}
+\DoxyCodeLine{00086\ \ \ \ \ tokenDefinition,}
+\DoxyCodeLine{00087\ \ \ \ \ tokenDefinitionIncludes,}
+\DoxyCodeLine{00088\ \};}
+\DoxyCodeLine{00089\ }
+\DoxyCodeLine{00090\ }
+\DoxyCodeLine{00091\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_expression_block_info}{ExpressionBlockInfo}}\ \{\ \textcolor{comment}{//contains\ information\ required\ to\ correctly\ format\ if/while\ loops\ for\ []\ and\ \{\}}}
+\DoxyCodeLine{00092\ \ \ \ \ std::vector<std::vector<Gtoken>>\ firstSet;}
+\DoxyCodeLine{00093\ \ \ \ \ std::vector<std::string>\ code;\ \textcolor{comment}{//code\ to\ come\ after\ the\ if/while\ loop}}
+\DoxyCodeLine{00094\ \};}
+\DoxyCodeLine{00095\ }
+\DoxyCodeLine{00096\ }
+\DoxyCodeLine{00097\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_file_writer}{FileWriter}}\ \{}
+\DoxyCodeLine{00098\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00099\ \ \ \ \ \mbox{\hyperlink{class_file_writer}{FileWriter}}(std::string\ lang);}
+\DoxyCodeLine{00100\ \ \ \ \ \mbox{\hyperlink{class_file_writer}{\string~FileWriter}}();}
+\DoxyCodeLine{00101\ \ \ \ \ \textcolor{keywordtype}{void}\ writeText(std::string\ text,\ Mode\ mode);}
+\DoxyCodeLine{00102\ \ \ \ \ \textcolor{keywordtype}{void}\ fileSetup(std::vector<FirstSetInfo>\ allFirstSetInfo,\ std::set<std::string>\ allTokens,\ std::vector<TokenRegex>\ tokenRegexes,\ std::string\ projectName);}
+\DoxyCodeLine{00103\ \ \ \ \ \textcolor{keywordtype}{void}\ addFirstElement(\mbox{\hyperlink{struct_gtoken}{Gtoken}}\ token);}
+\DoxyCodeLine{00104\ \ \ \ \ \textcolor{keywordtype}{void}\ createMain(std::string\ startFunc);}
+\DoxyCodeLine{00105\ \ \ \ \ std::string\ getParserText();}
+\DoxyCodeLine{00106\ \ \ \ \ std::string\ getLexerText();}
+\DoxyCodeLine{00107\ \ \ \ \ std::string\ getTokDefText();}
+\DoxyCodeLine{00108\ \ \ \ \ std::string\ getParserHeaderText();}
+\DoxyCodeLine{00109\ \ \ \ \ std::string\ getLexerHeaderText();}
+\DoxyCodeLine{00110\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00111\ \ \ \ \ \mbox{\hyperlink{struct_first_set_info}{FirstSetInfo}}\ getFirstSetInfo(std::string);}
+\DoxyCodeLine{00112\ \ \ \ \ \textcolor{keywordtype}{void}\ createLexer(std::vector<TokenRegex>\ tokenRegexes);}
+\DoxyCodeLine{00113\ \ \ \ \ \textcolor{keywordtype}{void}\ createTokenDef(std::set<std::string>\ allTokenTypes);}
+\DoxyCodeLine{00114\ \ \ \ \ \textcolor{keywordtype}{void}\ createParserHeader();}
+\DoxyCodeLine{00115\ \ \ \ \ std::string\ formatString(std::string\ base,\ std::string\ text);}
+\DoxyCodeLine{00116\ \ \ \ \ std::string\ indentString();}
+\DoxyCodeLine{00117\ \ \ \ \ std::string\ createConditionStatement();}
+\DoxyCodeLine{00118\ \ \ \ \ std::string\ createElseCode();}
+\DoxyCodeLine{00119\ \ \ \ \ \textcolor{keywordtype}{void}\ appendCode(std::string);}
+\DoxyCodeLine{00120\ \ \ \ \ \textcolor{keywordtype}{void}\ writeFuncToParserFile();}
+\DoxyCodeLine{00121\ \ \ \ \ \textcolor{keywordtype}{void}\ addNewExprBlock();}
+\DoxyCodeLine{00122\ }
+\DoxyCodeLine{00123\ \ \ \ \ std::vector<FirstSetInfo>\ allFirstSetInfo;}
+\DoxyCodeLine{00124\ \ \ \ \ \mbox{\hyperlink{struct_expression_block_info}{ExpressionBlockInfo}}\ exprBlockInfo;}
+\DoxyCodeLine{00125\ \ \ \ \ \textcolor{keywordtype}{int}\ indent;\ \textcolor{comment}{//defines\ how\ many\ spaces\ to\ use\ as\ the\ current\ indentation\ level}}
+\DoxyCodeLine{00126\ \ \ \ \ std::map<OutputStringType,\ std::string>\ *language;}
+\DoxyCodeLine{00127\ \ \ \ \ std::string\ projectName;}
+\DoxyCodeLine{00128\ \ \ \ \ std::string\ parserText;}
+\DoxyCodeLine{00129\ \ \ \ \ std::string\ lexerText;}
+\DoxyCodeLine{00130\ \ \ \ \ std::string\ tokDefText;}
+\DoxyCodeLine{00131\ \ \ \ \ std::string\ parserHeaderText;}
+\DoxyCodeLine{00132\ \ \ \ \ std::string\ lexerHeaderText;}
+\DoxyCodeLine{00133\ \};}
+\DoxyCodeLine{00134\ }
+\DoxyCodeLine{00135\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

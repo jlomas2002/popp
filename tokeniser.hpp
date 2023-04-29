@@ -15,6 +15,8 @@ class Tokeniser {
 public:
     /**
         * Constructor which creates a new Tokeniser.
+        * 
+        * 
         * Performs a first pass over the grammar to collect the first set of each non terminal and detect errors.
         * Extracts any regexes from the tokens string and stores them.
         *

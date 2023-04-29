@@ -1,0 +1,67 @@
+\hypertarget{token_def_8hpp_source}{}\doxysection{token\+Def.\+hpp}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ TOKENDEF\_HPP}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ TOKENDEF\_HPP}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <string>}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <set>}}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00007\ \textcolor{keyword}{enum}\ Type\ \{}
+\DoxyCodeLine{00008\ \ \ \ \ Terminal,}
+\DoxyCodeLine{00009\ \ \ \ \ Non\_Terminal,}
+\DoxyCodeLine{00010\ \ \ \ \ Symbol,}
+\DoxyCodeLine{00011\ \ \ \ \ Token\_Type,}
+\DoxyCodeLine{00012\ \ \ \ \ Error\_Type,}
+\DoxyCodeLine{00013\ \ \ \ \ END\_OF\_GRAMMAR,}
+\DoxyCodeLine{00014\ \};}
+\DoxyCodeLine{00015\ }
+\DoxyCodeLine{00016\ \textcolor{keyword}{enum}\ Error\ \{}
+\DoxyCodeLine{00017\ \ \ \ \ \textcolor{comment}{//Dealt\ with\ by\ tokeniser}}
+\DoxyCodeLine{00018\ \ \ \ \ RedefinedElement,}
+\DoxyCodeLine{00019\ \ \ \ \ RedefinedNonTerminal,}
+\DoxyCodeLine{00020\ \ \ \ \ RedefinedToken,}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00022\ \ \ \ \ \textcolor{comment}{//Dealt\ with\ by\ parser}}
+\DoxyCodeLine{00023\ \ \ \ \ UnexpectedEOF,\ \textcolor{comment}{//Grammar\ string\ suddenly\ ends\ when\ it\ shouldn't}}
+\DoxyCodeLine{00024\ \ \ \ \ UnknownCharacter,}
+\DoxyCodeLine{00025\ \ \ \ \ UndefinedToken,}
+\DoxyCodeLine{00026\ \ \ \ \ ExpectedNonTerminal,}
+\DoxyCodeLine{00027\ \ \ \ \ ExpectedEquals,}
+\DoxyCodeLine{00028\ \ \ \ \ ExpectedSemiColon,}
+\DoxyCodeLine{00029\ \ \ \ \ ExpectedCurlyBracket,}
+\DoxyCodeLine{00030\ \ \ \ \ ExpectedNormalBracket,}
+\DoxyCodeLine{00031\ \ \ \ \ ExpectedSquareBracket,}
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00033\ \ \ \ \ \textcolor{comment}{//Token\ only\ errors}}
+\DoxyCodeLine{00034\ \ \ \ \ InvalidRegexId,}
+\DoxyCodeLine{00035\ }
+\DoxyCodeLine{00036\ \ \ \ \ NONE\ \textcolor{comment}{//Default\ of\ no\ error}}
+\DoxyCodeLine{00037\ \};}
+\DoxyCodeLine{00038\ \ }
+\DoxyCodeLine{00039\ \textcolor{comment}{//Tokens\ in\ a\ ebnf\ grammar\ file}}
+\DoxyCodeLine{00040\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_gtoken}{Gtoken}}\ \{}
+\DoxyCodeLine{00041\ \ \ \ \ Type\ type;}
+\DoxyCodeLine{00042\ \ \ \ \ std::string\ lexeme;}
+\DoxyCodeLine{00043\ \ \ \ \ \textcolor{keywordtype}{int}\ lineNum;}
+\DoxyCodeLine{00044\ \ \ \ \ \textcolor{keywordtype}{int}\ pos;\ \textcolor{comment}{//Position\ on\ line}}
+\DoxyCodeLine{00045\ \ \ \ \ Error\ error;}
+\DoxyCodeLine{00046\ \};}
+\DoxyCodeLine{00047\ }
+\DoxyCodeLine{00048\ }
+\DoxyCodeLine{00049\ \textcolor{comment}{//Stores\ the\ name\ of\ a\ non\ terminal,\ and\ a\ set\ of\ all\ of\ the\ terminals\ that\ can\ start\ it}}
+\DoxyCodeLine{00050\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_first_set_info}{FirstSetInfo}}\{}
+\DoxyCodeLine{00051\ \ \ \ \ \mbox{\hyperlink{struct_gtoken}{Gtoken}}\ nonTerminal;}
+\DoxyCodeLine{00052\ \ \ \ \ std::set<Gtoken>\ firstTerminals;}
+\DoxyCodeLine{00053\ \ \ \ \ std::set<Gtoken>\ firstTokens;}
+\DoxyCodeLine{00054\ \};}
+\DoxyCodeLine{00055\ }
+\DoxyCodeLine{00056\ \textcolor{comment}{//Stores\ the\ name\ of\ a\ token\ and\ its\ corresponding\ regex}}
+\DoxyCodeLine{00057\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_token_regex}{TokenRegex}}\ \{}
+\DoxyCodeLine{00058\ \ \ \ \ std::string\ name;}
+\DoxyCodeLine{00059\ \ \ \ \ std::string\ regex;}
+\DoxyCodeLine{00060\ \};}
+\DoxyCodeLine{00061\ }
+\DoxyCodeLine{00062\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

@@ -1,0 +1,74 @@
+\hypertarget{class_tokeniser}{}\doxysection{Tokeniser Class Reference}
+\label{class_tokeniser}\index{Tokeniser@{Tokeniser}}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_tokeniser_a786b3daaa4bc7a4b46c5a16ff757744e}{Tokeniser}} (std\+::string grammar, std\+::string tokens)
+\item 
+\mbox{\hyperlink{class_tokeniser_a1a47471de4dcd10b915792520f27f245}{$\sim$\+Tokeniser}} ()
+\item 
+\mbox{\Hypertarget{class_tokeniser_a64bdfcebfdb56f067062a442505985b6}\label{class_tokeniser_a64bdfcebfdb56f067062a442505985b6}} 
+\mbox{\hyperlink{struct_gtoken}{Gtoken}} {\bfseries peek\+Next\+Token} ()
+\item 
+\mbox{\Hypertarget{class_tokeniser_a31a25f7604665fb584d10f9b04bb066c}\label{class_tokeniser_a31a25f7604665fb584d10f9b04bb066c}} 
+\mbox{\hyperlink{struct_gtoken}{Gtoken}} {\bfseries get\+Next\+Token} ()
+\item 
+\mbox{\Hypertarget{class_tokeniser_a2fc737eb60dd3175cf387b8d16e091bb}\label{class_tokeniser_a2fc737eb60dd3175cf387b8d16e091bb}} 
+\mbox{\hyperlink{struct_gtoken}{Gtoken}} {\bfseries make\+Error\+Token} (Error err, std\+::string lex)
+\item 
+\mbox{\Hypertarget{class_tokeniser_a7d23107f1077cc4ad8dbdcf9d9234973}\label{class_tokeniser_a7d23107f1077cc4ad8dbdcf9d9234973}} 
+std\+::vector$<$ \mbox{\hyperlink{struct_first_set_info}{First\+Set\+Info}} $>$ {\bfseries get\+All\+First\+Set\+Info} ()
+\item 
+\mbox{\Hypertarget{class_tokeniser_a3c950cae937e9820368032a0233c2d4e}\label{class_tokeniser_a3c950cae937e9820368032a0233c2d4e}} 
+std\+::set$<$ std\+::string $>$ {\bfseries get\+List\+Of\+Tokens} ()
+\item 
+\mbox{\Hypertarget{class_tokeniser_af95160b9ca1abe6a3c34e047b19b44cb}\label{class_tokeniser_af95160b9ca1abe6a3c34e047b19b44cb}} 
+std\+::vector$<$ \mbox{\hyperlink{struct_token_regex}{Token\+Regex}} $>$ {\bfseries get\+Token\+Regexes} ()
+\item 
+\mbox{\Hypertarget{class_tokeniser_a8bd96847baaa455024328d2d4c88e299}\label{class_tokeniser_a8bd96847baaa455024328d2d4c88e299}} 
+bool {\bfseries get\+Error\+State} ()
+\item 
+\mbox{\Hypertarget{class_tokeniser_a1a3f9e7c29c1dae200cb2c1e8c3b1958}\label{class_tokeniser_a1a3f9e7c29c1dae200cb2c1e8c3b1958}} 
+\mbox{\hyperlink{struct_gtoken}{Gtoken}} {\bfseries get\+Token\+File\+Error} ()
+\item 
+\mbox{\Hypertarget{class_tokeniser_a74093565e629d12e914b341447a817bb}\label{class_tokeniser_a74093565e629d12e914b341447a817bb}} 
+\mbox{\hyperlink{struct_gtoken}{Gtoken}} {\bfseries get\+Grammar\+File\+Error} ()
+\item 
+\mbox{\Hypertarget{class_tokeniser_a52f574dc9f201ae1033a192dcd26c480}\label{class_tokeniser_a52f574dc9f201ae1033a192dcd26c480}} 
+std\+::string {\bfseries error\+To\+String} (Error err)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{class_tokeniser_a786b3daaa4bc7a4b46c5a16ff757744e}\label{class_tokeniser_a786b3daaa4bc7a4b46c5a16ff757744e}} 
+\index{Tokeniser@{Tokeniser}!Tokeniser@{Tokeniser}}
+\index{Tokeniser@{Tokeniser}!Tokeniser@{Tokeniser}}
+\doxysubsubsection{\texorpdfstring{Tokeniser()}{Tokeniser()}}
+{\footnotesize\ttfamily Tokeniser\+::\+Tokeniser (\begin{DoxyParamCaption}\item[{std\+::string}]{grammar,  }\item[{std\+::string}]{tokens }\end{DoxyParamCaption})}
+
+Constructor which creates a new \mbox{\hyperlink{class_tokeniser}{Tokeniser}}.
+
+Performs a first pass over the grammar to collect the first set of each non terminal and detect errors. Extracts any regexes from the tokens string and stores them.
+
+
+\begin{DoxyParams}{Parameters}
+{\em grammar} & A string storing the grammar to tokenise. \\
+\hline
+{\em tokens} & A string storing any defimitions of tokens. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A new tokeniser. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_tokeniser_a1a47471de4dcd10b915792520f27f245}\label{class_tokeniser_a1a47471de4dcd10b915792520f27f245}} 
+\index{Tokeniser@{Tokeniser}!````~Tokeniser@{$\sim$Tokeniser}}
+\index{````~Tokeniser@{$\sim$Tokeniser}!Tokeniser@{Tokeniser}}
+\doxysubsubsection{\texorpdfstring{$\sim$Tokeniser()}{~Tokeniser()}}
+{\footnotesize\ttfamily Tokeniser\+::$\sim$\+Tokeniser (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\hyperlink{class_tokeniser}{Tokeniser}} destructor. 
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+tokeniser.\+hpp\item 
+tokeniser.\+cpp\end{DoxyCompactItemize}

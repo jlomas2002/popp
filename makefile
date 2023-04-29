@@ -1,7 +1,7 @@
 CC = g++
 CFLAGS = -Wall -std=c++17
 SRCS = main.cpp tokeniser.cpp gparser.cpp fileWriter.cpp
-TARGET = parcelona
+TARGET = popp
 
 all: $(TARGET)
 
