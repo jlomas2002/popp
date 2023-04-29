@@ -6,7 +6,7 @@ using namespace std;
 Tokeniser *t = new Tokeniser("", "");
 FileWriter *fw = new FileWriter("");
 //Flag required so to of the same terminal checks aren't written to the file
-bool startTerminal;
+bool firstTerminal;
 bool veryFirstElement;
 
 string startFunc;
@@ -16,7 +16,7 @@ int bracketTracker = 0;
 Gtoken parseGrammar(Tokeniser &tokeniser, FileWriter &writer){
     t = &tokeniser;
     fw = &writer;
-    startTerminal = true;
+    firstTerminal = true;
     veryFirstElement = true;
     startFunc = "";
 
@@ -36,7 +36,7 @@ Gtoken grammar(){
         t->getNextToken();
         tok = rule();
         if (tok.type == Error_Type) return tok;
-        startTerminal = true;
+        firstTerminal = true;
         tok = t->peekNextToken();
     }
 
@@ -46,7 +46,7 @@ Gtoken grammar(){
             return tok;
         }
         return t->makeErrorToken(ExpectedNonTerminal, tok.lexeme);
-     }
+    }
 
      return tok;
 }
@@ -79,13 +79,13 @@ Gtoken rule(){
 }
 
 Gtoken expression(){
-    startTerminal = true;
+    firstTerminal = true;
     Gtoken tok;
 
     tok = t->peekNextToken();
 
     if (tok.type == Terminal || tok.type == Non_Terminal || tok.type == Token_Type){
-        fw->addStartTerminal(tok);
+        fw->addFirstElement(tok);
 
         if (veryFirstElement){
             fw->writeText("", Peek_NextTok);
@@ -94,16 +94,16 @@ Gtoken expression(){
 
         if (tok.type == Terminal){
             fw->writeText(tok.lexeme, If_Begin_Terminal);
-            fw->writeText("", Get_NextTok); //To consume the peeked token
+            fw->writeText("", Get_NextTok_Commented); //To consume the peeked token
         }
 
         else if (tok.type == Token_Type){
             fw->writeText(tok.lexeme, If_Begin_Token);
-            fw->writeText("", Get_NextTok); //To consume the peeked token
+            fw->writeText("", Get_NextTok_Commented); //To consume the peeked token
         }
 
         else if (tok.type == Non_Terminal){
-            startTerminal = false;
+            firstTerminal = false;
             fw->writeText(tok.lexeme, If_Begin_NonTerminal);
         }
 
@@ -124,24 +124,24 @@ Gtoken expression(){
 
         tok = t->peekNextToken();
         if (tok.type == Terminal || tok.type == Non_Terminal || tok.type == Token_Type){
-            fw->addStartTerminal(tok);
+            fw->addFirstElement(tok);
 
             if (tok.type == Terminal){
-                startTerminal = true;
+                firstTerminal = true;
                 
                 fw->writeText(tok.lexeme, ElseIf_Terminal);
-                fw->writeText("", Get_NextTok); //To consume the peeked token
+                fw->writeText("", Get_NextTok_Commented); //To consume the peeked token
             }
 
             else if (tok.type == Token_Type){
-                startTerminal = true;
+                firstTerminal = true;
 
                 fw->writeText(tok.lexeme, ElseIf_Token);
-                fw->writeText("", Get_NextTok); //To consume the peeked token
+                fw->writeText("", Get_NextTok_Commented); //To consume the peeked token
             }
 
             else if (tok.type == Non_Terminal){
-                startTerminal = false;
+                firstTerminal = false;
                 fw->writeText(tok.lexeme, ElseIf_NonTerminal);
             }
 
@@ -160,7 +160,7 @@ Gtoken expression(){
     if (!bracketTracker){
         fw->writeText("", Else_Expr);
         fw->writeText("", Scope_End);
-     }
+    }
 
     return tok;
 
@@ -184,8 +184,8 @@ Gtoken factor(){
     Gtoken tok = t->getNextToken();
 
     if (tok.type == Terminal || tok.type == Token_Type){
-        if (startTerminal){
-            startTerminal = false;
+        if (firstTerminal){
+            firstTerminal = false;
         }
 
         else{
@@ -276,5 +276,3 @@ Gtoken factor(){
     return tok;
 
 }
-
-

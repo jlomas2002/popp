@@ -110,7 +110,7 @@ void firstSetTests(){
             }
 
             else if (firstSet.firstTerminals != correctFirstSets[i].firstTerminals){
-                cout<<"ERROR: Testing "<<filename<<" file, incorrect set of starting terminals for non terminal: "<<correctFirstSets[i].nonTerminal.lexeme<<"\n";
+                cout<<"ERROR: Testing "<<filename<<" file, incorrect set of first terminals for non terminal: "<<correctFirstSets[i].nonTerminal.lexeme<<"\n";
                 cout<<"Expected: ";
                 for (auto t : correctFirstSets[i].firstTerminals){
                     cout<<t.lexeme<<", ";
@@ -124,7 +124,7 @@ void firstSetTests(){
             }
 
             else if (firstSet.firstTokens != correctFirstSets[i].firstTokens){
-                cout<<"ERROR: Testing "<<filename<<" file, incorrect set of starting tokens for non terminal: "<<correctFirstSets[i].nonTerminal.lexeme<<"\n";
+                cout<<"ERROR: Testing "<<filename<<" file, incorrect set of first tokens for non terminal: "<<correctFirstSets[i].nonTerminal.lexeme<<"\n";
                 cout<<"Expected: ";
                 for (auto t : correctFirstSets[i].firstTokens){
                     cout<<t.lexeme<<", ";

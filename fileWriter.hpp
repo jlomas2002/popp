@@ -10,6 +10,7 @@ enum Mode {
     Func_End,
     NonTerminal_Seen,
     Get_NextTok,
+    Get_NextTok_Commented,
     Peek_NextTok,
     If_Begin_Terminal,
     If_Begin_NonTerminal,
@@ -31,6 +32,7 @@ enum OutputStringType {
     functionHeader,
     tokDeclaration,
     getNextToken,
+    getNextToken_commented,
     peekNextToken,
     scopeEnd,
     addActionComment,
@@ -60,6 +62,7 @@ enum OutputStringType {
     statement_tokenCheck_last,
     statement_nonTerminalCheck_terminal_last,
     statement_nonTerminalCheck_token_last,
+    errorComment,
     errorString_begin,
     errorString_append,
     errorString_end,
@@ -85,8 +88,8 @@ enum OutputStringType {
 };
 
 
-struct SubsequentCodeInfo { //contains information required to correctly format if/while loops for [] and {}
-    std::vector<std::vector<Gtoken>> startTokens;
+struct ExpressionBlockInfo { //contains information required to correctly format if/while loops for [] and {}
+    std::vector<std::vector<Gtoken>> firstSet;
     std::vector<std::string> code; //code to come after the if/while loop
 };
 
@@ -97,7 +100,7 @@ public:
     ~FileWriter();
     void writeText(std::string text, Mode mode);
     void fileSetup(std::vector<FirstSetInfo> allFirstSetInfo, std::set<std::string> allTokens, std::vector<TokenRegex> tokenRegexes, std::string projectName);
-    void addStartTerminal(Gtoken token);
+    void addFirstElement(Gtoken token);
     void createMain(std::string startFunc);
     std::string getParserText();
     std::string getLexerText();
@@ -115,10 +118,10 @@ private:
     std::string createElseCode();
     void appendCode(std::string);
     void writeFuncToParserFile();
-    void addNewSubCode();
+    void addNewExprBlock();
 
     std::vector<FirstSetInfo> allFirstSetInfo;
-    SubsequentCodeInfo subCodeInfo;
+    ExpressionBlockInfo exprBlockInfo;
     int indent; //defines how many spaces to use as the current indentation level
     std::map<OutputStringType, std::string> *language;
     std::string projectName;
