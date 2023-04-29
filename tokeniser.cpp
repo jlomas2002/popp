@@ -18,7 +18,7 @@ bool operator==(const Gtoken &a, const Gtoken &b){
     return a.lexeme == b.lexeme;
 }
 
-Tokeniser::Tokeniser(string grammar, string tokensInput){
+Tokeniser::Tokeniser(string grammar, string tokens){
     Tokeniser::grammar.append(grammar);
     Tokeniser::index = 0; //Current position in grammar string
     Tokeniser::lineNum = 1;
@@ -28,8 +28,8 @@ Tokeniser::Tokeniser(string grammar, string tokensInput){
     tokenFileExists = false;
     erroneous = false;
 
-    if (tokensInput != ""){
-        Gtoken checkErrorTok = extractRegexes(tokensInput);
+    if (tokens != ""){
+        Gtoken checkErrorTok = extractRegexes(tokens);
         if (checkErrorTok.type == Error_Type){
             erroneous = true;
             tokenFileError = checkErrorTok;
@@ -49,7 +49,7 @@ Tokeniser::Tokeniser(string grammar, string tokensInput){
 
 
     //This serves as a first pass to collect necessary information about the grammar
-     firstPass();
+    firstPass();
     secondPass = true;
 
     Tokeniser::index = 0;

@@ -13,7 +13,19 @@ extern std::set<char> reservedSymbols;
 
 class Tokeniser {
 public:
-    Tokeniser(std::string grammar, std::string tokensInput);
+    /**
+        * Constructor which creates a new Tokeniser.
+        * Performs a first pass over the grammar to collect the first set of each non terminal and detect errors.
+        * Extracts any regexes from the tokens string and stores them.
+        *
+        * @param grammar A string storing the grammar to tokenise.
+        * @param tokens A string storing any defimitions of tokens.
+        * @return A new tokeniser.
+    */
+    Tokeniser(std::string grammar, std::string tokens);
+    /**
+     * Tokeniser destructor.
+    */
     ~Tokeniser();
     Gtoken peekNextToken();
     Gtoken getNextToken();

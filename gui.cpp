@@ -131,7 +131,7 @@ GUI::GUI(QWidget *parent) : QMainWindow(parent){
     saveGrammar_button = new QPushButton;
     connect(saveGrammar_button, &QPushButton::clicked, this, &GUI::saveGrammarFile);
     //Add icon for button
-    QIcon saveAsIcon("C:/Users/Jloma/Documents/UniYr3/parcelona/qtIcons/saveFileAs.png");
+    QIcon saveAsIcon("C:/Users/Jloma/Documents/UniYr3/popp/qtIcons/saveFileAs.png");
     saveGrammar_button->setIcon(saveAsIcon);
     saveGrammar_button->setIconSize(QSize(16, 16));
     saveGrammar_button->setToolTip("Save grammar as");
@@ -141,7 +141,7 @@ GUI::GUI(QWidget *parent) : QMainWindow(parent){
     grammarHelp_button = new QPushButton();
     connect(grammarHelp_button, &QPushButton::clicked, this, &GUI::displayGrammarHelp);
     //Add icon for button
-    QIcon helpIcon("C:/Users/Jloma/Documents/UniYr3/parcelona/qtIcons/help.png");
+    QIcon helpIcon("C:/Users/Jloma/Documents/UniYr3/popp/qtIcons/help.png");
     grammarHelp_button->setIcon(helpIcon);
     grammarHelp_button->setIconSize(QSize(16, 16));
     grammarHelp_button->setToolTip("Click me for help!");
@@ -223,7 +223,7 @@ GUI::GUI(QWidget *parent) : QMainWindow(parent){
     saveOutputFile_button = new QPushButton();
     connect(saveOutputFile_button, &QPushButton::clicked, this, &GUI::saveOutputFile);
     //Add icon for button
-    QIcon saveIcon("C:/Users/Jloma/Documents/UniYr3/parcelona/qtIcons/saveFile.png");
+    QIcon saveIcon("C:/Users/Jloma/Documents/UniYr3/popp/qtIcons/saveFile.png");
     saveOutputFile_button->setIcon(saveIcon);
     saveOutputFile_button->setIconSize(QSize(16, 16));
     saveOutputFile_button->setToolTip("Save file");

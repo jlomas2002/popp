@@ -35,8 +35,8 @@ int main(int argc, char* argv[]) {
         ifstream fileReader(grammarFilename);
 
         //check if grammar file is txt file
-        string extension = grammarFilename.substr(grammarFilename.length() - 4);
-        if (grammarFilename.length() < 5 || extension != ".txt"){ //filename too short or doesn't have .txt extension
+        string ext = grammarFilename.substr(grammarFilename.length() - 4);
+        if (grammarFilename.length() < 5 || ext != ".txt"){ //filename too short or doesn't have .txt extension
             cout<<"The grammar file must have a .txt extension"<<endl;
             return 1;
         }
@@ -55,24 +55,9 @@ int main(int argc, char* argv[]) {
             fileReader.close();
         }
 
-        vector<string>validLangs = {"cpp", "python", "java"};
-        //check output lang is valid
-        bool valid = false;
-        for (string lang : validLangs){
-            if (chosenLang == lang){
-                valid = true;
-            }
-        }
-
-        if (!valid){
-            cout<<"The requested output language is not valid."<<endl;
-            cout<<"This argument must be one of the following: cpp, python, java."<<endl;
-            return 1;
-        }
-
         string tokens = "";
-        string extension = tokensFilename.substr(tokensFilename.length() - 4);
-        if ((tokensFilename.length() < 5 || extension != ".txt") && tokensFilename != "None"){ //filename too short or doesn't have .txt extension
+        ext = tokensFilename.substr(tokensFilename.length() - 4);
+        if ((tokensFilename.length() < 5 || ext != ".txt") && tokensFilename != "None"){ //filename too short or doesn't have .txt extension
             cout<<"The token file must have a .txt extension"<<endl;
             return 1;
         }
@@ -93,6 +78,21 @@ int main(int argc, char* argv[]) {
             }
         }
 
+        vector<string>validLangs = {"cpp", "python", "java"};
+        //check output lang is valid
+        bool valid = false;
+        for (string lang : validLangs){
+            if (chosenLang == lang){
+                valid = true;
+            }
+        }
+
+        if (!valid){
+            cout<<"The requested output language is not valid."<<endl;
+            cout<<"This argument must be one of the following: cpp, python, java."<<endl;
+            return 1;
+        }
+
         Tokeniser tokeniser(grammar, tokens);
         if (tokeniser.getErrorState()){
             string errorFeedback = "";
@@ -109,8 +109,8 @@ int main(int argc, char* argv[]) {
                 errorFeedback += ", found " + errorTok.lexeme + " in token definition " + to_string(errorTok.lineNum) + " at position " + to_string(errorTok.pos--) + ".\n";
             
             }
-            errorFeedback += "See gitlab page https://gitlab.com/jlomas/parcelona on how to define grammar and tokens.";
-            cout<<errorFeedback
+            errorFeedback += "See gitlab page https://gitlab.com/jlomas/popp on how to define grammar and tokens.";
+            cout<<errorFeedback;
             return 1;
         }
 
@@ -135,11 +135,13 @@ int main(int argc, char* argv[]) {
 
         string parserFilename = projectName + "Parser" + extension;
         string lexerFilename = projectName + "Lexer" + extension;
-        string tokDefFilename;
+        string tokDefFilename = "";
+        string parserHeaderFilename = "";
+        string lexerHeaderFilename = "";
         if (chosenLang == "cpp"){
             tokDefFilename = projectName + "TokDefintion" + headerExtension;
-            string parserHeaderFilename = projectName + "Parser" + headerExtension;
-            string lexerHeaderFilename = projectName + "Lexer" + headerExtension;
+            parserHeaderFilename = projectName + "Parser" + headerExtension;
+            lexerHeaderFilename = projectName + "Lexer" + headerExtension;
         }
         else{
             tokDefFilename = projectName + "TokDefintion" + extension;
@@ -148,28 +150,28 @@ int main(int argc, char* argv[]) {
 
         if (tok.type != Error_Type){
             ofstream parserFile;
-            parserFile.open(parserFilename.toStdString(), ios_base::out);
+            parserFile.open(parserFilename, ios_base::out);
             parserFile<<fileWriter.getParserText();
             parserFile.close();
 
             ofstream lexerFile;
-            lexerFile.open(lexerFilename.toStdString(), ios_base::out);
+            lexerFile.open(lexerFilename, ios_base::out);
             lexerFile<<fileWriter.getLexerText();
             lexerFile.close();
 
             ofstream tokDefFile;
-            tokDefFile.open(tokDefFilename.toStdString(), ios_base::out);
+            tokDefFile.open(tokDefFilename, ios_base::out);
             tokDefFile<<fileWriter.getTokDefText();
             tokDefFile.close();
 
             if (chosenLang == "cpp"){
                 ofstream parserHeaderFile;
-                parserHeaderFile.open(parserHeaderFilename.toStdString(), ios_base::out);
+                parserHeaderFile.open(parserHeaderFilename, ios_base::out);
                 parserHeaderFile<<fileWriter.getParserHeaderText();
                 parserHeaderFile.close();
 
                 ofstream lexerHeaderFile;
-                lexerHeaderFile.open(lexerHeaderFilename.toStdString(), ios_base::out);
+                lexerHeaderFile.open(lexerHeaderFilename, ios_base::out);
                 lexerHeaderFile<<fileWriter.getLexerHeaderText();
                 lexerHeaderFile.close();
             }
@@ -180,9 +182,9 @@ int main(int argc, char* argv[]) {
             errorFeedback += tokeniser.errorToString(tok.error);
             errorFeedback += ", found " + tok.lexeme + " in rule " + to_string(tok.lineNum) + " at position " + to_string(tok.pos--) + ".\n";
 
-            errorFeedback += "See gitlab page https://gitlab.com/jlomas/parcelona on how to define grammar and tokens.";
+            errorFeedback += "See gitlab page https://gitlab.com/jlomas/popp on how to define grammar and tokens.";
             cout<<errorFeedback;
-            return;
+            return 1;
         }
     }
 
