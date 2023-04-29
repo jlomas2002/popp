@@ -1,6 +1,6 @@
 CC = g++
 CFLAGS = -Wall -std=c++17
-SRCS = unitTests.cpp tokeniser.cpp gparser.cpp fileWriter.cpp
+SRCS = src/unitTests.cpp src/tokeniser.cpp src/gparser.cpp src/fileWriter.cpp
 TARGET = poppUnitTests
 
 all: $(TARGET)

@@ -1,6 +1,6 @@
 CC = g++
 CFLAGS = -Wall -std=c++17
-SRCS = main.cpp tokeniser.cpp gparser.cpp fileWriter.cpp
+SRCS = src/main.cpp src/tokeniser.cpp src/gparser.cpp src/fileWriter.cpp
 TARGET = popp
 
 all: $(TARGET)

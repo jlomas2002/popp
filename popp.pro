@@ -17,8 +17,8 @@ CONFIG += c++17
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 # Input
-HEADERS += fileWriter.hpp gparser.hpp tokenDef.hpp tokeniser.hpp gui.hpp
-SOURCES += fileWriter.cpp gparser.cpp main.cpp tokeniser.cpp gui.cpp
+HEADERS += src/fileWriter.hpp src/gparser.hpp src/tokenDef.hpp src/tokeniser.hpp src/gui.hpp
+SOURCES += src/fileWriter.cpp src/gparser.cpp src/main.cpp src/tokeniser.cpp src/gui.cpp
 
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
