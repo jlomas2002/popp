@@ -4,6 +4,10 @@
 #include <string>
 #include <set>
 
+/**
+ * @brief Represents the different types of token in a grammar file.
+ * 
+ */
 enum Type {
     Terminal,
     Non_Terminal,
@@ -13,6 +17,10 @@ enum Type {
     END_OF_GRAMMAR,
 };
 
+/**
+ * @brief Represents the different types of error that can be seen in a grammar or token file.
+ * 
+ */
 enum Error {
     //Dealt with by tokeniser
     RedefinedElement,
@@ -20,7 +28,7 @@ enum Error {
     RedefinedToken,
 
     //Dealt with by parser
-    UnexpectedEOF, //Grammar string suddenly ends when it shouldn't
+    UnexpectedEOF, //Itring suddenly ends when it shouldn't
     UnknownCharacter,
     UndefinedToken,
     ExpectedNonTerminal,
@@ -30,13 +38,16 @@ enum Error {
     ExpectedNormalBracket,
     ExpectedSquareBracket,
 
-    //Token only errors
+    //Token file only errors
     InvalidRegexId,
 
     NONE //Default of no error
 };
  
-//Tokens in a ebnf grammar file
+/**
+ * @brief Stores information about a token
+ * 
+ */
 struct Gtoken {
     Type type;
     std::string lexeme;
@@ -45,15 +56,20 @@ struct Gtoken {
     Error error;
 };
 
-
-//Stores the name of a non terminal, and a set of all of the terminals that can start it
+/**
+ * @brief Stores the first set of a non terminal, represented by a set of terminals and a set of tokens that can begin the non terminal.
+ * 
+ */
 struct FirstSetInfo{
     Gtoken nonTerminal;
     std::set<Gtoken> firstTerminals;
     std::set<Gtoken> firstTokens;
 };
 
-//Stores the name of a token and its corresponding regex
+/**
+ * @brief Stores the name of a token and its corresponding regex.
+ * 
+ */
 struct TokenRegex {
     std::string name;
     std::string regex;

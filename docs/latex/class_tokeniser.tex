@@ -1,43 +1,47 @@
 \hypertarget{class_tokeniser}{}\doxysection{Tokeniser Class Reference}
 \label{class_tokeniser}\index{Tokeniser@{Tokeniser}}
+
+
+\mbox{\hyperlink{class_tokeniser}{Tokeniser}} -\/ object handles all lexical analyses of grammars and token inputs.  
+
+
+
+
+{\ttfamily \#include $<$tokeniser.\+hpp$>$}
+
 \doxysubsection*{Public Member Functions}
 \begin{DoxyCompactItemize}
 \item 
 \mbox{\hyperlink{class_tokeniser_a786b3daaa4bc7a4b46c5a16ff757744e}{Tokeniser}} (std\+::string grammar, std\+::string tokens)
-\item 
+\begin{DoxyCompactList}\small\item\em Constructor which creates a new \mbox{\hyperlink{class_tokeniser}{Tokeniser}}. \end{DoxyCompactList}\item 
 \mbox{\hyperlink{class_tokeniser_a1a47471de4dcd10b915792520f27f245}{$\sim$\+Tokeniser}} ()
 \item 
-\mbox{\Hypertarget{class_tokeniser_a64bdfcebfdb56f067062a442505985b6}\label{class_tokeniser_a64bdfcebfdb56f067062a442505985b6}} 
-\mbox{\hyperlink{struct_gtoken}{Gtoken}} {\bfseries peek\+Next\+Token} ()
-\item 
-\mbox{\Hypertarget{class_tokeniser_a31a25f7604665fb584d10f9b04bb066c}\label{class_tokeniser_a31a25f7604665fb584d10f9b04bb066c}} 
-\mbox{\hyperlink{struct_gtoken}{Gtoken}} {\bfseries get\+Next\+Token} ()
-\item 
-\mbox{\Hypertarget{class_tokeniser_a2fc737eb60dd3175cf387b8d16e091bb}\label{class_tokeniser_a2fc737eb60dd3175cf387b8d16e091bb}} 
-\mbox{\hyperlink{struct_gtoken}{Gtoken}} {\bfseries make\+Error\+Token} (Error err, std\+::string lex)
-\item 
-\mbox{\Hypertarget{class_tokeniser_a7d23107f1077cc4ad8dbdcf9d9234973}\label{class_tokeniser_a7d23107f1077cc4ad8dbdcf9d9234973}} 
-std\+::vector$<$ \mbox{\hyperlink{struct_first_set_info}{First\+Set\+Info}} $>$ {\bfseries get\+All\+First\+Set\+Info} ()
-\item 
-\mbox{\Hypertarget{class_tokeniser_a3c950cae937e9820368032a0233c2d4e}\label{class_tokeniser_a3c950cae937e9820368032a0233c2d4e}} 
-std\+::set$<$ std\+::string $>$ {\bfseries get\+List\+Of\+Tokens} ()
-\item 
-\mbox{\Hypertarget{class_tokeniser_af95160b9ca1abe6a3c34e047b19b44cb}\label{class_tokeniser_af95160b9ca1abe6a3c34e047b19b44cb}} 
-std\+::vector$<$ \mbox{\hyperlink{struct_token_regex}{Token\+Regex}} $>$ {\bfseries get\+Token\+Regexes} ()
-\item 
-\mbox{\Hypertarget{class_tokeniser_a8bd96847baaa455024328d2d4c88e299}\label{class_tokeniser_a8bd96847baaa455024328d2d4c88e299}} 
-bool {\bfseries get\+Error\+State} ()
-\item 
-\mbox{\Hypertarget{class_tokeniser_a1a3f9e7c29c1dae200cb2c1e8c3b1958}\label{class_tokeniser_a1a3f9e7c29c1dae200cb2c1e8c3b1958}} 
-\mbox{\hyperlink{struct_gtoken}{Gtoken}} {\bfseries get\+Token\+File\+Error} ()
-\item 
-\mbox{\Hypertarget{class_tokeniser_a74093565e629d12e914b341447a817bb}\label{class_tokeniser_a74093565e629d12e914b341447a817bb}} 
-\mbox{\hyperlink{struct_gtoken}{Gtoken}} {\bfseries get\+Grammar\+File\+Error} ()
-\item 
-\mbox{\Hypertarget{class_tokeniser_a52f574dc9f201ae1033a192dcd26c480}\label{class_tokeniser_a52f574dc9f201ae1033a192dcd26c480}} 
-std\+::string {\bfseries error\+To\+String} (Error err)
-\end{DoxyCompactItemize}
+\mbox{\hyperlink{struct_gtoken}{Gtoken}} \mbox{\hyperlink{class_tokeniser_a64bdfcebfdb56f067062a442505985b6}{peek\+Next\+Token}} ()
+\begin{DoxyCompactList}\small\item\em Returns the next token in the input doesn\textquotesingle{}t consume it. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{struct_gtoken}{Gtoken}} \mbox{\hyperlink{class_tokeniser_a31a25f7604665fb584d10f9b04bb066c}{get\+Next\+Token}} ()
+\begin{DoxyCompactList}\small\item\em Returns the next token and consumes it from the input string. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{struct_gtoken}{Gtoken}} \mbox{\hyperlink{class_tokeniser_a2fc737eb60dd3175cf387b8d16e091bb}{make\+Error\+Token}} (Error err, std\+::string lex)
+\begin{DoxyCompactList}\small\item\em Creates a token assigned to an error type and returns it. \end{DoxyCompactList}\item 
+std\+::vector$<$ \mbox{\hyperlink{struct_first_set_info}{First\+Set\+Info}} $>$ \mbox{\hyperlink{class_tokeniser_a7d23107f1077cc4ad8dbdcf9d9234973}{get\+All\+First\+Set\+Info}} ()
+\begin{DoxyCompactList}\small\item\em Returns the vector that stores the first set for each nonterminal. \end{DoxyCompactList}\item 
+std\+::set$<$ std\+::string $>$ \mbox{\hyperlink{class_tokeniser_a3c950cae937e9820368032a0233c2d4e}{get\+List\+Of\+Tokens}} ()
+\begin{DoxyCompactList}\small\item\em Returns the set of all lexical token ids from the tokens input. \end{DoxyCompactList}\item 
+std\+::vector$<$ \mbox{\hyperlink{struct_token_regex}{Token\+Regex}} $>$ \mbox{\hyperlink{class_tokeniser_af95160b9ca1abe6a3c34e047b19b44cb}{get\+Token\+Regexes}} ()
+\begin{DoxyCompactList}\small\item\em Returns the vector of structs which store a token id and its regex. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{class_tokeniser_a8bd96847baaa455024328d2d4c88e299}{get\+Error\+State}} ()
+\begin{DoxyCompactList}\small\item\em Returns whether an error was detected in the grammar or tokens by the tokeniser. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{struct_gtoken}{Gtoken}} \mbox{\hyperlink{class_tokeniser_a1a3f9e7c29c1dae200cb2c1e8c3b1958}{get\+Token\+File\+Error}} ()
+\begin{DoxyCompactList}\small\item\em Returns the token representing an error in the tokens input. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{struct_gtoken}{Gtoken}} \mbox{\hyperlink{class_tokeniser_a74093565e629d12e914b341447a817bb}{get\+Grammar\+File\+Error}} ()
+\begin{DoxyCompactList}\small\item\em Returns the token representing an error in the grammar input. \end{DoxyCompactList}\item 
+std\+::string \mbox{\hyperlink{class_tokeniser_a52f574dc9f201ae1033a192dcd26c480}{error\+To\+String}} (Error err)
+\begin{DoxyCompactList}\small\item\em Utility function to convert an error enum to a string. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
+
+\doxysubsection{Detailed Description}
+\mbox{\hyperlink{class_tokeniser}{Tokeniser}} -\/ object handles all lexical analyses of grammars and token inputs. 
+
+Also collects information about grammar such as the first set of each terminal. 
 
 \doxysubsection{Constructor \& Destructor Documentation}
 \mbox{\Hypertarget{class_tokeniser_a786b3daaa4bc7a4b46c5a16ff757744e}\label{class_tokeniser_a786b3daaa4bc7a4b46c5a16ff757744e}} 
@@ -46,7 +50,9 @@ std\+::string {\bfseries error\+To\+String} (Error err)
 \doxysubsubsection{\texorpdfstring{Tokeniser()}{Tokeniser()}}
 {\footnotesize\ttfamily Tokeniser\+::\+Tokeniser (\begin{DoxyParamCaption}\item[{std\+::string}]{grammar,  }\item[{std\+::string}]{tokens }\end{DoxyParamCaption})}
 
-Constructor which creates a new \mbox{\hyperlink{class_tokeniser}{Tokeniser}}.
+
+
+Constructor which creates a new \mbox{\hyperlink{class_tokeniser}{Tokeniser}}. 
 
 Performs a first pass over the grammar to collect the first set of each non terminal and detect errors. Extracts any regexes from the tokens string and stores them.
 
@@ -67,6 +73,153 @@ A new tokeniser.
 {\footnotesize\ttfamily Tokeniser\+::$\sim$\+Tokeniser (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
 
 \mbox{\hyperlink{class_tokeniser}{Tokeniser}} destructor. 
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_tokeniser_a52f574dc9f201ae1033a192dcd26c480}\label{class_tokeniser_a52f574dc9f201ae1033a192dcd26c480}} 
+\index{Tokeniser@{Tokeniser}!errorToString@{errorToString}}
+\index{errorToString@{errorToString}!Tokeniser@{Tokeniser}}
+\doxysubsubsection{\texorpdfstring{errorToString()}{errorToString()}}
+{\footnotesize\ttfamily string Tokeniser\+::error\+To\+String (\begin{DoxyParamCaption}\item[{Error}]{err }\end{DoxyParamCaption})}
+
+
+
+Utility function to convert an error enum to a string. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em err} & The error enum. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The enum in string form. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_tokeniser_a7d23107f1077cc4ad8dbdcf9d9234973}\label{class_tokeniser_a7d23107f1077cc4ad8dbdcf9d9234973}} 
+\index{Tokeniser@{Tokeniser}!getAllFirstSetInfo@{getAllFirstSetInfo}}
+\index{getAllFirstSetInfo@{getAllFirstSetInfo}!Tokeniser@{Tokeniser}}
+\doxysubsubsection{\texorpdfstring{getAllFirstSetInfo()}{getAllFirstSetInfo()}}
+{\footnotesize\ttfamily vector$<$ \mbox{\hyperlink{struct_first_set_info}{First\+Set\+Info}} $>$ Tokeniser\+::get\+All\+First\+Set\+Info (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Returns the vector that stores the first set for each nonterminal. 
+
+\begin{DoxyReturn}{Returns}
+std\+::vector$<$\+First\+Set\+Info$>$ 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_tokeniser_a8bd96847baaa455024328d2d4c88e299}\label{class_tokeniser_a8bd96847baaa455024328d2d4c88e299}} 
+\index{Tokeniser@{Tokeniser}!getErrorState@{getErrorState}}
+\index{getErrorState@{getErrorState}!Tokeniser@{Tokeniser}}
+\doxysubsubsection{\texorpdfstring{getErrorState()}{getErrorState()}}
+{\footnotesize\ttfamily bool Tokeniser\+::get\+Error\+State (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Returns whether an error was detected in the grammar or tokens by the tokeniser. 
+
+\begin{DoxyReturn}{Returns}
+true 
+
+false 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_tokeniser_a74093565e629d12e914b341447a817bb}\label{class_tokeniser_a74093565e629d12e914b341447a817bb}} 
+\index{Tokeniser@{Tokeniser}!getGrammarFileError@{getGrammarFileError}}
+\index{getGrammarFileError@{getGrammarFileError}!Tokeniser@{Tokeniser}}
+\doxysubsubsection{\texorpdfstring{getGrammarFileError()}{getGrammarFileError()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{struct_gtoken}{Gtoken}} Tokeniser\+::get\+Grammar\+File\+Error (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Returns the token representing an error in the grammar input. 
+
+\begin{DoxyReturn}{Returns}
+\mbox{\hyperlink{struct_gtoken}{Gtoken}} 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_tokeniser_a3c950cae937e9820368032a0233c2d4e}\label{class_tokeniser_a3c950cae937e9820368032a0233c2d4e}} 
+\index{Tokeniser@{Tokeniser}!getListOfTokens@{getListOfTokens}}
+\index{getListOfTokens@{getListOfTokens}!Tokeniser@{Tokeniser}}
+\doxysubsubsection{\texorpdfstring{getListOfTokens()}{getListOfTokens()}}
+{\footnotesize\ttfamily set$<$ string $>$ Tokeniser\+::get\+List\+Of\+Tokens (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Returns the set of all lexical token ids from the tokens input. 
+
+\begin{DoxyReturn}{Returns}
+std\+::set$<$std\+::string$>$ 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_tokeniser_a31a25f7604665fb584d10f9b04bb066c}\label{class_tokeniser_a31a25f7604665fb584d10f9b04bb066c}} 
+\index{Tokeniser@{Tokeniser}!getNextToken@{getNextToken}}
+\index{getNextToken@{getNextToken}!Tokeniser@{Tokeniser}}
+\doxysubsubsection{\texorpdfstring{getNextToken()}{getNextToken()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{struct_gtoken}{Gtoken}} Tokeniser\+::get\+Next\+Token (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Returns the next token and consumes it from the input string. 
+
+\begin{DoxyReturn}{Returns}
+\mbox{\hyperlink{struct_gtoken}{Gtoken}} 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_tokeniser_a1a3f9e7c29c1dae200cb2c1e8c3b1958}\label{class_tokeniser_a1a3f9e7c29c1dae200cb2c1e8c3b1958}} 
+\index{Tokeniser@{Tokeniser}!getTokenFileError@{getTokenFileError}}
+\index{getTokenFileError@{getTokenFileError}!Tokeniser@{Tokeniser}}
+\doxysubsubsection{\texorpdfstring{getTokenFileError()}{getTokenFileError()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{struct_gtoken}{Gtoken}} Tokeniser\+::get\+Token\+File\+Error (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Returns the token representing an error in the tokens input. 
+
+\begin{DoxyReturn}{Returns}
+\mbox{\hyperlink{struct_gtoken}{Gtoken}} 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_tokeniser_af95160b9ca1abe6a3c34e047b19b44cb}\label{class_tokeniser_af95160b9ca1abe6a3c34e047b19b44cb}} 
+\index{Tokeniser@{Tokeniser}!getTokenRegexes@{getTokenRegexes}}
+\index{getTokenRegexes@{getTokenRegexes}!Tokeniser@{Tokeniser}}
+\doxysubsubsection{\texorpdfstring{getTokenRegexes()}{getTokenRegexes()}}
+{\footnotesize\ttfamily vector$<$ \mbox{\hyperlink{struct_token_regex}{Token\+Regex}} $>$ Tokeniser\+::get\+Token\+Regexes (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Returns the vector of structs which store a token id and its regex. 
+
+\begin{DoxyReturn}{Returns}
+std\+::vector$<$\+Token\+Regex$>$ 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_tokeniser_a2fc737eb60dd3175cf387b8d16e091bb}\label{class_tokeniser_a2fc737eb60dd3175cf387b8d16e091bb}} 
+\index{Tokeniser@{Tokeniser}!makeErrorToken@{makeErrorToken}}
+\index{makeErrorToken@{makeErrorToken}!Tokeniser@{Tokeniser}}
+\doxysubsubsection{\texorpdfstring{makeErrorToken()}{makeErrorToken()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{struct_gtoken}{Gtoken}} Tokeniser\+::make\+Error\+Token (\begin{DoxyParamCaption}\item[{Error}]{err,  }\item[{std\+::string}]{lex }\end{DoxyParamCaption})}
+
+
+
+Creates a token assigned to an error type and returns it. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em err} & The error enum that was detected. \\
+\hline
+{\em lex} & The lexeme generated when the error was found. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+\mbox{\hyperlink{struct_gtoken}{Gtoken}} that represents the error found. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_tokeniser_a64bdfcebfdb56f067062a442505985b6}\label{class_tokeniser_a64bdfcebfdb56f067062a442505985b6}} 
+\index{Tokeniser@{Tokeniser}!peekNextToken@{peekNextToken}}
+\index{peekNextToken@{peekNextToken}!Tokeniser@{Tokeniser}}
+\doxysubsubsection{\texorpdfstring{peekNextToken()}{peekNextToken()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{struct_gtoken}{Gtoken}} Tokeniser\+::peek\+Next\+Token (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Returns the next token in the input doesn\textquotesingle{}t consume it. 
+
+\begin{DoxyReturn}{Returns}
+\mbox{\hyperlink{struct_gtoken}{Gtoken}} 
+\end{DoxyReturn}
+
 
 The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
 \item 

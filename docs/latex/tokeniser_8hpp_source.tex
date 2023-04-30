@@ -14,51 +14,62 @@
 \DoxyCodeLine{00011\ }
 \DoxyCodeLine{00012\ \textcolor{keyword}{extern}\ std::set<char>\ reservedSymbols;}
 \DoxyCodeLine{00013\ }
-\DoxyCodeLine{00014\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_tokeniser}{Tokeniser}}\ \{}
-\DoxyCodeLine{00015\ \textcolor{keyword}{public}:}
-\DoxyCodeLine{00027\ \ \ \ \ \mbox{\hyperlink{class_tokeniser}{Tokeniser}}(std::string\ grammar,\ std::string\ tokens);}
-\DoxyCodeLine{00031\ \ \ \ \ \mbox{\hyperlink{class_tokeniser_a1a47471de4dcd10b915792520f27f245}{\string~Tokeniser}}();}
-\DoxyCodeLine{00032\ \ \ \ \ \mbox{\hyperlink{struct_gtoken}{Gtoken}}\ peekNextToken();}
-\DoxyCodeLine{00033\ \ \ \ \ \mbox{\hyperlink{struct_gtoken}{Gtoken}}\ getNextToken();}
-\DoxyCodeLine{00034\ \ \ \ \ \mbox{\hyperlink{struct_gtoken}{Gtoken}}\ makeErrorToken(Error\ err,\ std::string\ lex);}
-\DoxyCodeLine{00035\ \ \ \ \ std::vector<FirstSetInfo>\ getAllFirstSetInfo();}
-\DoxyCodeLine{00036\ \ \ \ \ std::set<std::string>\ getListOfTokens();}
-\DoxyCodeLine{00037\ \ \ \ \ std::vector<TokenRegex>\ getTokenRegexes();}
-\DoxyCodeLine{00038\ \ \ \ \ \textcolor{keywordtype}{bool}\ getErrorState();}
-\DoxyCodeLine{00039\ \ \ \ \ \mbox{\hyperlink{struct_gtoken}{Gtoken}}\ getTokenFileError();}
-\DoxyCodeLine{00040\ \ \ \ \ \mbox{\hyperlink{struct_gtoken}{Gtoken}}\ getGrammarFileError();}
-\DoxyCodeLine{00041\ \ \ \ \ std::string\ errorToString(Error\ err);}
-\DoxyCodeLine{00042\ \textcolor{keyword}{private}:}
-\DoxyCodeLine{00043\ \ \ \ \ \textcolor{keywordtype}{void}\ firstPass();}
-\DoxyCodeLine{00044\ \ \ \ \ \textcolor{keywordtype}{void}\ collectFirstSetInfo();}
-\DoxyCodeLine{00045\ \ \ \ \ \textcolor{keywordtype}{void}\ parseExpr(\mbox{\hyperlink{struct_first_set_info}{FirstSetInfo}}\ \&firstSetInfo);}
-\DoxyCodeLine{00046\ \ \ \ \ \textcolor{keywordtype}{void}\ skipUntilBar();}
-\DoxyCodeLine{00047\ \ \ \ \ \mbox{\hyperlink{struct_gtoken}{Gtoken}}\ collectListOfNonTerminals();}
-\DoxyCodeLine{00048\ \ \ \ \ \textcolor{keywordtype}{void}\ refineFirstSetInfo(\mbox{\hyperlink{struct_first_set_info}{FirstSetInfo}}\ \&returnInfo,\ \mbox{\hyperlink{struct_first_set_info}{FirstSetInfo}}\ \&currentInfo);}
-\DoxyCodeLine{00049\ \ \ \ \ \mbox{\hyperlink{struct_first_set_info}{FirstSetInfo}}\ findFirstSetInfo(\mbox{\hyperlink{struct_gtoken}{Gtoken}}\ t);}
-\DoxyCodeLine{00050\ \ \ \ \ \textcolor{keywordtype}{int}\ incrementIndex(std::string\ input);}
-\DoxyCodeLine{00051\ \ \ \ \ Error\ checkUndefinedError(std::string\ \textcolor{keywordtype}{id});}
-\DoxyCodeLine{00052\ \ \ \ \ \mbox{\hyperlink{struct_gtoken}{Gtoken}}\ extractRegexes(std::string\ input);}
-\DoxyCodeLine{00053\ }
-\DoxyCodeLine{00054\ \ \ \ \ std::vector<FirstSetInfo>\ allFirstSetInfo;}
-\DoxyCodeLine{00055\ \ \ \ \ std::set<std::string>\ listOfNonTerminals;}
-\DoxyCodeLine{00056\ \ \ \ \ std::set<std::string>\ listOfTokens;}
-\DoxyCodeLine{00057\ \ \ \ \ std::vector<TokenRegex>\ tokenRegexes;}
-\DoxyCodeLine{00058\ }
-\DoxyCodeLine{00059\ \ \ \ \ std::string\ grammar;}
-\DoxyCodeLine{00060\ }
-\DoxyCodeLine{00061\ \ \ \ \ \textcolor{keywordtype}{int}\ pos;}
-\DoxyCodeLine{00062\ \ \ \ \ \textcolor{keywordtype}{int}\ lineNum;}
-\DoxyCodeLine{00063\ \ \ \ \ \textcolor{keywordtype}{int}\ index;}
-\DoxyCodeLine{00064\ \ \ \ \ \textcolor{keywordtype}{bool}\ tokenFileExists;}
-\DoxyCodeLine{00065\ \ \ \ \ \textcolor{keywordtype}{bool}\ secondPass;}
-\DoxyCodeLine{00066\ }
-\DoxyCodeLine{00067\ \ \ \ \ \textcolor{keywordtype}{bool}\ erroneous;}
-\DoxyCodeLine{00068\ \ \ \ \ \mbox{\hyperlink{struct_gtoken}{Gtoken}}\ tokenFileError;}
-\DoxyCodeLine{00069\ \ \ \ \ \mbox{\hyperlink{struct_gtoken}{Gtoken}}\ grammarFileError;}
-\DoxyCodeLine{00070\ \ \ \ \ }
-\DoxyCodeLine{00071\ \};}
-\DoxyCodeLine{00072\ }
-\DoxyCodeLine{00073\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00019\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_tokeniser}{Tokeniser}}\ \{}
+\DoxyCodeLine{00020\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00032\ \ \ \ \ \mbox{\hyperlink{class_tokeniser}{Tokeniser}}(std::string\ grammar,\ std::string\ tokens);}
+\DoxyCodeLine{00036\ \ \ \ \ \mbox{\hyperlink{class_tokeniser_a1a47471de4dcd10b915792520f27f245}{\string~Tokeniser}}();}
+\DoxyCodeLine{00042\ \ \ \ \ \mbox{\hyperlink{struct_gtoken}{Gtoken}}\ \mbox{\hyperlink{class_tokeniser_a64bdfcebfdb56f067062a442505985b6}{peekNextToken}}();}
+\DoxyCodeLine{00048\ \ \ \ \ \mbox{\hyperlink{struct_gtoken}{Gtoken}}\ \mbox{\hyperlink{class_tokeniser_a31a25f7604665fb584d10f9b04bb066c}{getNextToken}}();}
+\DoxyCodeLine{00056\ \ \ \ \ \mbox{\hyperlink{struct_gtoken}{Gtoken}}\ \mbox{\hyperlink{class_tokeniser_a2fc737eb60dd3175cf387b8d16e091bb}{makeErrorToken}}(Error\ err,\ std::string\ lex);}
+\DoxyCodeLine{00062\ \ \ \ \ std::vector<FirstSetInfo>\ \mbox{\hyperlink{class_tokeniser_a7d23107f1077cc4ad8dbdcf9d9234973}{getAllFirstSetInfo}}();}
+\DoxyCodeLine{00068\ \ \ \ \ std::set<std::string>\ \mbox{\hyperlink{class_tokeniser_a3c950cae937e9820368032a0233c2d4e}{getListOfTokens}}();}
+\DoxyCodeLine{00074\ \ \ \ \ std::vector<TokenRegex>\ \mbox{\hyperlink{class_tokeniser_af95160b9ca1abe6a3c34e047b19b44cb}{getTokenRegexes}}();}
+\DoxyCodeLine{00081\ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{class_tokeniser_a8bd96847baaa455024328d2d4c88e299}{getErrorState}}();}
+\DoxyCodeLine{00087\ \ \ \ \ \mbox{\hyperlink{struct_gtoken}{Gtoken}}\ \mbox{\hyperlink{class_tokeniser_a1a3f9e7c29c1dae200cb2c1e8c3b1958}{getTokenFileError}}();}
+\DoxyCodeLine{00093\ \ \ \ \ \mbox{\hyperlink{struct_gtoken}{Gtoken}}\ \mbox{\hyperlink{class_tokeniser_a74093565e629d12e914b341447a817bb}{getGrammarFileError}}();}
+\DoxyCodeLine{00100\ \ \ \ \ std::string\ \mbox{\hyperlink{class_tokeniser_a52f574dc9f201ae1033a192dcd26c480}{errorToString}}(Error\ err);}
+\DoxyCodeLine{00101\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00106\ \ \ \ \ \textcolor{keywordtype}{void}\ firstPass();}
+\DoxyCodeLine{00111\ \ \ \ \ \textcolor{keywordtype}{void}\ collectFirstSetInfo();}
+\DoxyCodeLine{00117\ \ \ \ \ \mbox{\hyperlink{struct_gtoken}{Gtoken}}\ collectListOfNonTerminals();}
+\DoxyCodeLine{00124\ \ \ \ \ \textcolor{keywordtype}{void}\ refineFirstSetInfo(\mbox{\hyperlink{struct_first_set_info}{FirstSetInfo}}\ \&returnInfo,\ \mbox{\hyperlink{struct_first_set_info}{FirstSetInfo}}\ \&currentInfo);}
+\DoxyCodeLine{00131\ \ \ \ \ \mbox{\hyperlink{struct_first_set_info}{FirstSetInfo}}\ findFirstSetInfo(\mbox{\hyperlink{struct_gtoken}{Gtoken}}\ t);}
+\DoxyCodeLine{00138\ \ \ \ \ \textcolor{keywordtype}{int}\ incrementIndex(std::string\ input);}
+\DoxyCodeLine{00145\ \ \ \ \ Error\ checkUndefinedError(std::string\ \textcolor{keywordtype}{id});}
+\DoxyCodeLine{00152\ \ \ \ \ \mbox{\hyperlink{struct_gtoken}{Gtoken}}\ extractRegexes(std::string\ input);}
+\DoxyCodeLine{00153\ }
+\DoxyCodeLine{00154\ \ \ \ \ \textcolor{comment}{//Stores\ the\ first\ set\ of\ each\ non\ terminal\ in\ a\ grammar.}}
+\DoxyCodeLine{00155\ \ \ \ \ std::vector<FirstSetInfo>\ allFirstSetInfo;}
+\DoxyCodeLine{00156\ \ \ \ \ \textcolor{comment}{//Stores\ a\ set\ of\ all\ the\ non\ terminals\ in\ a\ grammar.}}
+\DoxyCodeLine{00157\ \ \ \ \ std::set<std::string>\ listOfNonTerminals;}
+\DoxyCodeLine{00158\ \ \ \ \ \textcolor{comment}{//Stores\ a\ set\ of\ all\ the\ token\ ids\ in\ a\ token\ file.}}
+\DoxyCodeLine{00159\ \ \ \ \ std::set<std::string>\ listOfTokens;}
+\DoxyCodeLine{00160\ \ \ \ \ \textcolor{comment}{//Stores\ a\ vector\ of\ a\ tokens\ id\ and\ its\ regex.}}
+\DoxyCodeLine{00161\ \ \ \ \ std::vector<TokenRegex>\ tokenRegexes;}
+\DoxyCodeLine{00162\ }
+\DoxyCodeLine{00163\ \ \ \ \ \textcolor{comment}{//Stores\ the\ grammar\ input}}
+\DoxyCodeLine{00164\ \ \ \ \ std::string\ grammar;}
+\DoxyCodeLine{00165\ }
+\DoxyCodeLine{00166\ \ \ \ \ \textcolor{comment}{//Stores\ the\ current\ position\ in\ the\ current\ rule\ of\ the\ grammar.}}
+\DoxyCodeLine{00167\ \ \ \ \ \textcolor{keywordtype}{int}\ pos;}
+\DoxyCodeLine{00168\ \ \ \ \ \textcolor{comment}{//Stores\ the\ current\ rule\ number\ of\ the\ grammr.}}
+\DoxyCodeLine{00169\ \ \ \ \ \textcolor{keywordtype}{int}\ lineNum;}
+\DoxyCodeLine{00170\ \ \ \ \ \textcolor{comment}{//Stores\ the\ current\ index\ when\ processing\ grammar.}}
+\DoxyCodeLine{00171\ \ \ \ \ \textcolor{keywordtype}{int}\ index;}
+\DoxyCodeLine{00172\ \ \ \ \ \textcolor{comment}{//Bool\ storing\ if\ a\ user\ has\ defined\ tokens.}}
+\DoxyCodeLine{00173\ \ \ \ \ \textcolor{keywordtype}{bool}\ tokenFileExists;}
+\DoxyCodeLine{00174\ \ \ \ \ \textcolor{comment}{//Stores\ whether\ the\ grammar\ has\ already\ been\ processed\ once.}}
+\DoxyCodeLine{00175\ \ \ \ \ \textcolor{keywordtype}{bool}\ secondPass;}
+\DoxyCodeLine{00176\ }
+\DoxyCodeLine{00177\ \ \ \ \ \textcolor{comment}{//Stores\ whether\ an\ error\ was\ detected\ in\ grammar\ or\ tokens\ input.}}
+\DoxyCodeLine{00178\ \ \ \ \ \textcolor{keywordtype}{bool}\ erroneous;}
+\DoxyCodeLine{00179\ \ \ \ \ \textcolor{comment}{//Token\ representing\ an\ error\ in\ tokens\ input.}}
+\DoxyCodeLine{00180\ \ \ \ \ \mbox{\hyperlink{struct_gtoken}{Gtoken}}\ tokenFileError;}
+\DoxyCodeLine{00181\ \ \ \ \ \textcolor{comment}{//Token\ representing\ an\ error\ in\ grammar\ input.}}
+\DoxyCodeLine{00182\ \ \ \ \ \mbox{\hyperlink{struct_gtoken}{Gtoken}}\ grammarFileError;}
+\DoxyCodeLine{00183\ \ \ \ \ }
+\DoxyCodeLine{00184\ \};}
+\DoxyCodeLine{00185\ }
+\DoxyCodeLine{00186\ \textcolor{preprocessor}{\#endif}}
 
 \end{DoxyCode}

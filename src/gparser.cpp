@@ -5,12 +5,15 @@ using namespace std;
 
 Tokeniser *t = new Tokeniser("", "");
 FileWriter *fw = new FileWriter("");
-//Flag required so to of the same terminal checks aren't written to the file
+
+//Flag required so two of the same terminal checks aren't written to the file
 bool firstTerminal;
 bool veryFirstElement;
 
+//Stores the non terminal representing the start symbol.
 string startFunc;
 
+//If not zro, we are inside a bracket.
 int bracketTracker = 0;
 
 Gtoken parseGrammar(Tokeniser &tokeniser, FileWriter &writer){
@@ -41,7 +44,7 @@ Gtoken grammar(){
     }
 
     if (tok.type != END_OF_GRAMMAR){
-         //ERROR
+        //ERROR
         if (tok.error ==  ExpectedSemiColon || tok.error == UnknownCharacter){
             return tok;
         }

@@ -6,72 +6,77 @@
 \DoxyCodeLine{00003\ }
 \DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <QtWidgets>}}
 \DoxyCodeLine{00005\ }
-\DoxyCodeLine{00006\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_g_u_i}{GUI}}\ :\ \textcolor{keyword}{public}\ QMainWindow}
-\DoxyCodeLine{00007\ \{}
-\DoxyCodeLine{00008\ \ \ \ \ Q\_OBJECT}
-\DoxyCodeLine{00009\ \textcolor{keyword}{public}:}
-\DoxyCodeLine{00010\ \ \ \ \ \mbox{\hyperlink{class_g_u_i}{GUI}}(QWidget\ *parent\ =\ \textcolor{keyword}{nullptr});}
-\DoxyCodeLine{00011\ }
-\DoxyCodeLine{00012\ \textcolor{keyword}{private}:}
-\DoxyCodeLine{00013\ \ \ \ \ QString\ projectName;}
-\DoxyCodeLine{00014\ \ \ \ \ QString\ chosenLang;}
-\DoxyCodeLine{00015\ }
-\DoxyCodeLine{00016\ \ \ \ \ QWidget\ *centralWidget;}
-\DoxyCodeLine{00017\ \ \ \ \ QVBoxLayout\ *mainLayout;}
-\DoxyCodeLine{00018\ }
-\DoxyCodeLine{00019\ \ \ \ \ QLabel\ *optionsLabel;}
-\DoxyCodeLine{00020\ \ \ \ \ QLabel\ *projectLabel;}
-\DoxyCodeLine{00021\ \ \ \ \ QLineEdit\ *projectNameInput;}
-\DoxyCodeLine{00022\ \ \ \ \ QLabel\ *fileUploadLabel;}
-\DoxyCodeLine{00023\ \ \ \ \ QPushButton\ *gramFileSelect\_button;}
-\DoxyCodeLine{00024\ \ \ \ \ QPushButton\ *tokFileSelect\_button;}
-\DoxyCodeLine{00025\ \ \ \ \ QLabel\ *languageOptionsLabel;}
-\DoxyCodeLine{00026\ \ \ \ \ QButtonGroup\ *languageOptions;}
-\DoxyCodeLine{00027\ \ \ \ \ QRadioButton\ *optionJava;}
-\DoxyCodeLine{00028\ \ \ \ \ QRadioButton\ *optionCpp;}
-\DoxyCodeLine{00029\ \ \ \ \ QRadioButton\ *optionPy;}
-\DoxyCodeLine{00030\ \ \ \ \ QPushButton\ *createParser\_button;}
-\DoxyCodeLine{00031\ \ \ \ \ QWidget\ *optionsWidget;}
-\DoxyCodeLine{00032\ }
-\DoxyCodeLine{00033\ \ \ \ \ QLabel\ *inputLabel;}
-\DoxyCodeLine{00034\ \ \ \ \ QLabel\ *grammarLabel;}
-\DoxyCodeLine{00035\ \ \ \ \ QPushButton\ *grammarHelp\_button;}
-\DoxyCodeLine{00036\ \ \ \ \ QPushButton\ *saveGrammar\_button;}
-\DoxyCodeLine{00037\ \ \ \ \ QTextEdit\ *grammarDisplay;}
-\DoxyCodeLine{00038\ \ \ \ \ QLabel\ *tokensLabel;}
-\DoxyCodeLine{00039\ \ \ \ \ QPushButton\ *tokensHelp\_button;}
-\DoxyCodeLine{00040\ \ \ \ \ QPushButton\ *saveTokens\_button;}
-\DoxyCodeLine{00041\ \ \ \ \ QTextEdit\ *tokensDisplay;}
-\DoxyCodeLine{00042\ \ \ \ \ QTextBrowser\ *errorDisplay;}
-\DoxyCodeLine{00043\ \ \ \ \ QWidget\ *inputWidget;}
-\DoxyCodeLine{00044\ }
-\DoxyCodeLine{00045\ \ \ \ \ QLabel\ *outputLabel;}
-\DoxyCodeLine{00046\ \ \ \ \ QTextEdit\ *parserDisplay;}
-\DoxyCodeLine{00047\ \ \ \ \ QTextEdit\ *lexerDisplay;}
-\DoxyCodeLine{00048\ \ \ \ \ QTextEdit\ *tokDefDisplay;}
-\DoxyCodeLine{00049\ \ \ \ \ QTextEdit\ *parserHeaderDisplay;}
-\DoxyCodeLine{00050\ \ \ \ \ QTextEdit\ *lexerHeaderDisplay;}
-\DoxyCodeLine{00051\ \ \ \ \ QTabWidget\ *outputFilesTabbed;}
-\DoxyCodeLine{00052\ \ \ \ \ QTextEdit\ *testString;}
-\DoxyCodeLine{00053\ \ \ \ \ QPushButton\ *runTestString\_button;}
-\DoxyCodeLine{00054\ \ \ \ \ QTextBrowser\ *testStringOutput;}
-\DoxyCodeLine{00055\ \ \ \ \ QPushButton\ *saveOutputFile\_button;}
-\DoxyCodeLine{00056\ \ \ \ \ QWidget\ *outputWidget;}
-\DoxyCodeLine{00057\ }
-\DoxyCodeLine{00058\ }
-\DoxyCodeLine{00059\ \textcolor{keyword}{public}\ slots:}
-\DoxyCodeLine{00060\ \ \ \ \ \textcolor{keywordtype}{void}\ selectGrammarFile();}
-\DoxyCodeLine{00061\ \ \ \ \ \textcolor{keywordtype}{void}\ selectTokensFile();}
-\DoxyCodeLine{00062\ \ \ \ \ \textcolor{keywordtype}{void}\ saveGrammarFile();}
-\DoxyCodeLine{00063\ \ \ \ \ \textcolor{keywordtype}{void}\ displayGrammarHelp();}
-\DoxyCodeLine{00064\ \ \ \ \ \textcolor{keywordtype}{void}\ saveTokensFile();}
-\DoxyCodeLine{00065\ \ \ \ \ \textcolor{keywordtype}{void}\ displayTokensHelp();}
-\DoxyCodeLine{00066\ \ \ \ \ \textcolor{keywordtype}{void}\ saveOutputFile();}
-\DoxyCodeLine{00067\ \ \ \ \ \textcolor{keywordtype}{void}\ createParser();}
-\DoxyCodeLine{00068\ \ \ \ \ \textcolor{keywordtype}{void}\ runTestString();}
-\DoxyCodeLine{00069\ \};}
-\DoxyCodeLine{00070\ }
-\DoxyCodeLine{00071\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ GUI\_HPP}}
-\DoxyCodeLine{00072\ }
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00011\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_g_u_i}{GUI}}\ :\ \textcolor{keyword}{public}\ QMainWindow}
+\DoxyCodeLine{00012\ \{}
+\DoxyCodeLine{00013\ \ \ \ \ Q\_OBJECT}
+\DoxyCodeLine{00014\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00015\ \ \ \ \ \mbox{\hyperlink{class_g_u_i}{GUI}}(QWidget\ *parent\ =\ \textcolor{keyword}{nullptr});}
+\DoxyCodeLine{00016\ }
+\DoxyCodeLine{00017\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00018\ \ \ \ \ QString\ projectName;}
+\DoxyCodeLine{00019\ \ \ \ \ QString\ chosenLang;}
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00021\ \ \ \ \ QWidget\ *centralWidget;}
+\DoxyCodeLine{00022\ \ \ \ \ QVBoxLayout\ *mainLayout;}
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00024\ \ \ \ \ \textcolor{comment}{//Widgets\ for\ control\ panel}}
+\DoxyCodeLine{00025\ \ \ \ \ QLabel\ *optionsLabel;}
+\DoxyCodeLine{00026\ \ \ \ \ QLabel\ *projectLabel;}
+\DoxyCodeLine{00027\ \ \ \ \ QLineEdit\ *projectNameInput;}
+\DoxyCodeLine{00028\ \ \ \ \ QLabel\ *fileUploadLabel;}
+\DoxyCodeLine{00029\ \ \ \ \ QPushButton\ *gramFileSelect\_button;}
+\DoxyCodeLine{00030\ \ \ \ \ QPushButton\ *tokFileSelect\_button;}
+\DoxyCodeLine{00031\ \ \ \ \ QLabel\ *languageOptionsLabel;}
+\DoxyCodeLine{00032\ \ \ \ \ QButtonGroup\ *languageOptions;}
+\DoxyCodeLine{00033\ \ \ \ \ QRadioButton\ *optionJava;}
+\DoxyCodeLine{00034\ \ \ \ \ QRadioButton\ *optionCpp;}
+\DoxyCodeLine{00035\ \ \ \ \ QRadioButton\ *optionPy;}
+\DoxyCodeLine{00036\ \ \ \ \ QPushButton\ *createParser\_button;}
+\DoxyCodeLine{00037\ \ \ \ \ QWidget\ *optionsWidget;}
+\DoxyCodeLine{00038\ }
+\DoxyCodeLine{00039\ \ \ \ \ \textcolor{comment}{//Widgets\ for\ input\ section}}
+\DoxyCodeLine{00040\ \ \ \ \ QLabel\ *inputLabel;}
+\DoxyCodeLine{00041\ \ \ \ \ QLabel\ *grammarLabel;}
+\DoxyCodeLine{00042\ \ \ \ \ QPushButton\ *grammarHelp\_button;}
+\DoxyCodeLine{00043\ \ \ \ \ QPushButton\ *saveGrammar\_button;}
+\DoxyCodeLine{00044\ \ \ \ \ QTextEdit\ *grammarDisplay;}
+\DoxyCodeLine{00045\ \ \ \ \ QLabel\ *tokensLabel;}
+\DoxyCodeLine{00046\ \ \ \ \ QPushButton\ *tokensHelp\_button;}
+\DoxyCodeLine{00047\ \ \ \ \ QPushButton\ *saveTokens\_button;}
+\DoxyCodeLine{00048\ \ \ \ \ QTextEdit\ *tokensDisplay;}
+\DoxyCodeLine{00049\ \ \ \ \ QTextBrowser\ *errorDisplay;}
+\DoxyCodeLine{00050\ \ \ \ \ QWidget\ *inputWidget;}
+\DoxyCodeLine{00051\ }
+\DoxyCodeLine{00052\ \ \ \ \ \textcolor{comment}{//Widgets\ for\ output\ section}}
+\DoxyCodeLine{00053\ \ \ \ \ QLabel\ *outputLabel;}
+\DoxyCodeLine{00054\ \ \ \ \ QTextEdit\ *parserDisplay;}
+\DoxyCodeLine{00055\ \ \ \ \ QTextEdit\ *lexerDisplay;}
+\DoxyCodeLine{00056\ \ \ \ \ QTextEdit\ *tokDefDisplay;}
+\DoxyCodeLine{00057\ \ \ \ \ QTextEdit\ *parserHeaderDisplay;}
+\DoxyCodeLine{00058\ \ \ \ \ QTextEdit\ *lexerHeaderDisplay;}
+\DoxyCodeLine{00059\ \ \ \ \ QTabWidget\ *outputFilesTabbed;}
+\DoxyCodeLine{00060\ \ \ \ \ QLabel\ *testStringLabel;}
+\DoxyCodeLine{00061\ \ \ \ \ QTextEdit\ *testString;}
+\DoxyCodeLine{00062\ \ \ \ \ QPushButton\ *runTestString\_button;}
+\DoxyCodeLine{00063\ \ \ \ \ QTextBrowser\ *testStringOutput;}
+\DoxyCodeLine{00064\ \ \ \ \ QPushButton\ *saveOutputFile\_button;}
+\DoxyCodeLine{00065\ \ \ \ \ QWidget\ *outputWidget;}
+\DoxyCodeLine{00066\ }
+\DoxyCodeLine{00067\ }
+\DoxyCodeLine{00068\ \textcolor{keyword}{public}\ slots:}
+\DoxyCodeLine{00073\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_g_u_i_a6be60e033f02b21c74fb6bc4fb2063ce}{selectGrammarFile}}();}
+\DoxyCodeLine{00078\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_g_u_i_a8a94c615b461a8fde37f66c0b5c511ea}{selectTokensFile}}();}
+\DoxyCodeLine{00083\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_g_u_i_a65948a958b3235d31fef21c2dcee08ec}{saveGrammarFile}}();}
+\DoxyCodeLine{00084\ \ \ \ \ \textcolor{keywordtype}{void}\ displayGrammarHelp();}
+\DoxyCodeLine{00089\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_g_u_i_a6f8da868099e969ad20961ce68dcd4b1}{saveTokensFile}}();}
+\DoxyCodeLine{00090\ \ \ \ \ \textcolor{keywordtype}{void}\ displayTokensHelp();}
+\DoxyCodeLine{00095\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_g_u_i_a96b6e829ff888ee3557c937b08c03a6f}{saveOutputFile}}();}
+\DoxyCodeLine{00100\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_g_u_i_aecf7e32011e752585506a5430e17410d}{createParser}}();}
+\DoxyCodeLine{00105\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_g_u_i_a2c4cd4a08c987b121d865351cb26e23e}{runTestString}}();}
+\DoxyCodeLine{00106\ \};}
+\DoxyCodeLine{00107\ }
+\DoxyCodeLine{00108\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ GUI\_HPP}}
+\DoxyCodeLine{00109\ }
 
 \end{DoxyCode}

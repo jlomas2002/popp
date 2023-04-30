@@ -80,138 +80,155 @@ $(function() {
 <div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="preprocessor">#include &lt;map&gt;</span></div>
 <div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="preprocessor">#include &quot;tokenDef.hpp&quot;</span></div>
 <div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span> </div>
-<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="keyword">enum</span> Mode {</div>
-<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span>    Func_Begin,</div>
-<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span>    Func_End,</div>
-<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span>    NonTerminal_Seen,</div>
-<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span>    Get_NextTok,</div>
-<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span>    Get_NextTok_Commented,</div>
-<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span>    Peek_NextTok,</div>
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span>    If_Begin_Terminal,</div>
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span>    If_Begin_NonTerminal,</div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span>    If_Begin_Token,</div>
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>    ElseIf_Terminal,</div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>    ElseIf_NonTerminal,</div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>    ElseIf_Token,</div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>    Scope_End,</div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>    TerminalCheck_End,</div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>    Else_Expr,</div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>    Else_Fact_Terminal,</div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>    Else_Fact_Token,</div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>    Bracket_Begin,</div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>    CurlyBracket_End,</div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>    SquareBracket_End,</div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>};</div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span> </div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span><span class="keyword">enum</span> OutputStringType {</div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>    functionHeader,</div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>    tokDeclaration,</div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>    getNextToken,</div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>    getNextToken_commented,</div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>    peekNextToken,</div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>    scopeEnd,</div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>    addActionComment,</div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>    pythonPass,</div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>    callNonTerminal,</div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>    ifHeader_terminal,</div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>    ifHeader_nonTerminal,</div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>    ifHeader_token,</div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>    elseIfHeader_terminal,</div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>    elseIfHeader_nonTerminal,</div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>    elseIfHeader_token,</div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>    elseHeader,</div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>    whileHeader_begin,</div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>    ifHeader_begin,</div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>    defineFirstTerminals_begin,</div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>    defineFirstTokens_begin,</div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>    defineFirstTerminals_list,</div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>    defineFirstTokens_list,</div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>    defineFirstTerminals_end,</div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>    defineFirstTokens_end,</div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>    listEnd,</div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>    statement_terminalCheck,</div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>    statement_tokenCheck,</div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>    statement_nonTerminalCheck_terminal,</div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>    statement_nonTerminalCheck_token,</div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>    statement_terminalCheck_last,</div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>    statement_tokenCheck_last,</div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>    statement_nonTerminalCheck_terminal_last,</div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>    statement_nonTerminalCheck_token_last,</div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>    errorComment,</div>
-<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>    errorString_begin,</div>
-<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>    errorString_append,</div>
-<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>    errorString_end,</div>
-<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>    errorOutput,</div>
-<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>    exitWithError,</div>
-<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>    parserIncludes,</div>
-<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>    parserMain,</div>
-<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span> </div>
-<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>    lexer_initFunction,</div>
-<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>    lexer_peekNextFunction,</div>
-<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>    lexer_skipWhitespace,</div>
-<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>    lexer_includes,</div>
-<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>    lexer_regexDefintion,</div>
-<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>    lexer_matchDeclaration,</div>
-<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>    lexer_searchCode,</div>
-<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>    lexer_returnNextChar,</div>
-<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>    lexer_headerFile,</div>
-<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span> </div>
-<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>    typeEnumDefinition_begin,</div>
-<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>    typeEnumDefinition_end,</div>
-<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>    tokenDefinition,</div>
-<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>    tokenDefinitionIncludes,</div>
-<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>};</div>
-<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span> </div>
-<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span> </div>
-<div class="line"><a id="l00091" name="l00091"></a><span class="lineno"><a class="line" href="struct_expression_block_info.html">   91</a></span><span class="keyword">struct </span><a class="code hl_struct" href="struct_expression_block_info.html">ExpressionBlockInfo</a> { <span class="comment">//contains information required to correctly format if/while loops for [] and {}</span></div>
-<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>    std::vector&lt;std::vector&lt;Gtoken&gt;&gt; firstSet;</div>
-<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>    std::vector&lt;std::string&gt; code; <span class="comment">//code to come after the if/while loop</span></div>
-<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>};</div>
-<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span> </div>
-<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span> </div>
-<div class="line"><a id="l00097" name="l00097"></a><span class="lineno"><a class="line" href="class_file_writer.html">   97</a></span><span class="keyword">class </span><a class="code hl_class" href="class_file_writer.html">FileWriter</a> {</div>
-<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span><span class="keyword">public</span>:</div>
-<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>    <a class="code hl_class" href="class_file_writer.html">FileWriter</a>(std::string lang);</div>
-<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>    <a class="code hl_class" href="class_file_writer.html">~FileWriter</a>();</div>
-<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>    <span class="keywordtype">void</span> writeText(std::string text, Mode mode);</div>
-<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>    <span class="keywordtype">void</span> fileSetup(std::vector&lt;FirstSetInfo&gt; allFirstSetInfo, std::set&lt;std::string&gt; allTokens, std::vector&lt;TokenRegex&gt; tokenRegexes, std::string projectName);</div>
-<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>    <span class="keywordtype">void</span> addFirstElement(<a class="code hl_struct" href="struct_gtoken.html">Gtoken</a> token);</div>
-<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>    <span class="keywordtype">void</span> createMain(std::string startFunc);</div>
-<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>    std::string getParserText();</div>
-<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>    std::string getLexerText();</div>
-<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>    std::string getTokDefText();</div>
-<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>    std::string getParserHeaderText();</div>
-<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>    std::string getLexerHeaderText();</div>
-<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span><span class="keyword">private</span>:</div>
-<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>    <a class="code hl_struct" href="struct_first_set_info.html">FirstSetInfo</a> getFirstSetInfo(std::string);</div>
-<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>    <span class="keywordtype">void</span> createLexer(std::vector&lt;TokenRegex&gt; tokenRegexes);</div>
-<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>    <span class="keywordtype">void</span> createTokenDef(std::set&lt;std::string&gt; allTokenTypes);</div>
-<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>    <span class="keywordtype">void</span> createParserHeader();</div>
-<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>    std::string formatString(std::string base, std::string text);</div>
-<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>    std::string indentString();</div>
-<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>    std::string createConditionStatement();</div>
-<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>    std::string createElseCode();</div>
-<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>    <span class="keywordtype">void</span> appendCode(std::string);</div>
-<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>    <span class="keywordtype">void</span> writeFuncToParserFile();</div>
-<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>    <span class="keywordtype">void</span> addNewExprBlock();</div>
-<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span> </div>
-<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>    std::vector&lt;FirstSetInfo&gt; allFirstSetInfo;</div>
-<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>    <a class="code hl_struct" href="struct_expression_block_info.html">ExpressionBlockInfo</a> exprBlockInfo;</div>
-<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>    <span class="keywordtype">int</span> indent; <span class="comment">//defines how many spaces to use as the current indentation level</span></div>
-<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>    std::map&lt;OutputStringType, std::string&gt; *language;</div>
-<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span>    std::string projectName;</div>
-<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>    std::string parserText;</div>
-<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>    std::string lexerText;</div>
-<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>    std::string tokDefText;</div>
-<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span>    std::string parserHeaderText;</div>
-<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span>    std::string lexerHeaderText;</div>
-<div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span>};</div>
-<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span> </div>
-<div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span><span class="preprocessor">#endif</span></div>
-<div class="ttc" id="aclass_file_writer_html"><div class="ttname"><a href="class_file_writer.html">FileWriter</a></div><div class="ttdef"><b>Definition:</b> fileWriter.hpp:97</div></div>
-<div class="ttc" id="astruct_expression_block_info_html"><div class="ttname"><a href="struct_expression_block_info.html">ExpressionBlockInfo</a></div><div class="ttdef"><b>Definition:</b> fileWriter.hpp:91</div></div>
-<div class="ttc" id="astruct_first_set_info_html"><div class="ttname"><a href="struct_first_set_info.html">FirstSetInfo</a></div><div class="ttdef"><b>Definition:</b> tokenDef.hpp:50</div></div>
-<div class="ttc" id="astruct_gtoken_html"><div class="ttname"><a href="struct_gtoken.html">Gtoken</a></div><div class="ttdef"><b>Definition:</b> tokenDef.hpp:40</div></div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="keyword">enum</span> Mode {</div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span>    Func_Begin,</div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span>    Func_End,</div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span>    NonTerminal_Seen,</div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span>    Get_NextTok,</div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span>    Get_NextTok_Commented,</div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>    Peek_NextTok,</div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>    If_Begin_Terminal,</div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>    If_Begin_NonTerminal,</div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>    If_Begin_Token,</div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>    ElseIf_Terminal,</div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>    ElseIf_NonTerminal,</div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>    ElseIf_Token,</div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>    Scope_End,</div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>    TerminalCheck_End,</div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>    Else_Expr,</div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>    Else_Fact_Terminal,</div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>    Else_Fact_Token,</div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>    Bracket_Begin,</div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>    CurlyBracket_End,</div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>    SquareBracket_End,</div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>};</div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span> </div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span><span class="keyword">enum</span> OutputStringType {</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>    functionHeader,</div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>    tokDeclaration,</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>    getNextToken,</div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>    getNextToken_commented,</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>    peekNextToken,</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>    scopeEnd,</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>    addActionComment,</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>    pythonPass,</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>    callNonTerminal,</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>    ifHeader_terminal,</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>    ifHeader_nonTerminal,</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>    ifHeader_token,</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>    elseIfHeader_terminal,</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>    elseIfHeader_nonTerminal,</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>    elseIfHeader_token,</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>    elseHeader,</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>    whileHeader_begin,</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>    ifHeader_begin,</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>    defineFirstTerminals_begin,</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>    defineFirstTokens_begin,</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>    defineFirstTerminals_list,</div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>    defineFirstTokens_list,</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>    defineFirstTerminals_end,</div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>    defineFirstTokens_end,</div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>    listEnd,</div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>    statement_terminalCheck,</div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>    statement_tokenCheck,</div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>    statement_nonTerminalCheck_terminal,</div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>    statement_nonTerminalCheck_token,</div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>    statement_terminalCheck_last,</div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>    statement_tokenCheck_last,</div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>    statement_nonTerminalCheck_terminal_last,</div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>    statement_nonTerminalCheck_token_last,</div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>    errorComment,</div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>    errorString_begin,</div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>    errorString_append,</div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>    errorString_end,</div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>    errorOutput,</div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>    exitWithError,</div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>    parserIncludes,</div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>    parserMain,</div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span> </div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>    lexer_initFunction,</div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>    lexer_peekNextFunction,</div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>    lexer_skipWhitespace,</div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>    lexer_includes,</div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>    lexer_regexDefintion,</div>
+<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>    lexer_matchDeclaration,</div>
+<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>    lexer_searchCode,</div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>    lexer_returnNextChar,</div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>    lexer_headerFile,</div>
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span> </div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>    typeEnumDefinition_begin,</div>
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>    typeEnumDefinition_end,</div>
+<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>    tokenDefinition,</div>
+<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>    tokenDefinitionIncludes,</div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>};</div>
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span> </div>
+<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span> </div>
+<div class="line"><a id="l00105" name="l00105"></a><span class="lineno"><a class="line" href="struct_expression_block_info.html">  105</a></span><span class="keyword">struct </span><a class="code hl_struct" href="struct_expression_block_info.html">ExpressionBlockInfo</a> { </div>
+<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>    std::vector&lt;std::vector&lt;Gtoken&gt;&gt; firstSet;</div>
+<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>    std::vector&lt;std::string&gt; code; </div>
+<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>};</div>
+<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span> </div>
+<div class="line"><a id="l00114" name="l00114"></a><span class="lineno"><a class="line" href="class_file_writer.html">  114</a></span><span class="keyword">class </span><a class="code hl_class" href="class_file_writer.html">FileWriter</a> {</div>
+<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span><span class="keyword">public</span>:</div>
+<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>    <a class="code hl_class" href="class_file_writer.html">FileWriter</a>(std::string lang);</div>
+<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>    <a class="code hl_class" href="class_file_writer.html">~FileWriter</a>();</div>
+<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="class_file_writer.html#ac1365a6de7b1cb06586e0baff44f2778">writeText</a>(std::string text, Mode mode);</div>
+<div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="class_file_writer.html#a66556f0c56d8113c35a24768105a1eb6">fileSetup</a>(std::vector&lt;FirstSetInfo&gt; allFirstSetInfo, std::set&lt;std::string&gt; allTokens, std::vector&lt;TokenRegex&gt; tokenRegexes, std::string projectName);</div>
+<div class="line"><a id="l00144" name="l00144"></a><span class="lineno">  144</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="class_file_writer.html#a33e73c28dd40354fa75af9a2b88e3525">addFirstElement</a>(<a class="code hl_struct" href="struct_gtoken.html">Gtoken</a> token);</div>
+<div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="class_file_writer.html#ad0bab2e983f376de34866dfecab4e99a">createMain</a>(std::string startFunc);</div>
+<div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span>    std::string <a class="code hl_function" href="class_file_writer.html#acc388914b20102fedb1196689a754cb4">getParserText</a>();</div>
+<div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span>    std::string <a class="code hl_function" href="class_file_writer.html#afffa657aa1f436833d7babf691ec3e3f">getLexerText</a>();</div>
+<div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span>    std::string <a class="code hl_function" href="class_file_writer.html#a7b258ddc569b67c2244820bceabb31e9">getTokDefText</a>();</div>
+<div class="line"><a id="l00174" name="l00174"></a><span class="lineno">  174</span>    std::string <a class="code hl_function" href="class_file_writer.html#a77c3a2819b1b468e20ae225f7134c106">getParserHeaderText</a>();</div>
+<div class="line"><a id="l00180" name="l00180"></a><span class="lineno">  180</span>    std::string <a class="code hl_function" href="class_file_writer.html#ad76128bb79111fa2084e48aa26cd2801">getLexerHeaderText</a>();</div>
+<div class="line"><a id="l00181" name="l00181"></a><span class="lineno">  181</span><span class="keyword">private</span>:</div>
+<div class="line"><a id="l00182" name="l00182"></a><span class="lineno">  182</span>    <a class="code hl_struct" href="struct_first_set_info.html">FirstSetInfo</a> getFirstSetInfo(std::string);</div>
+<div class="line"><a id="l00183" name="l00183"></a><span class="lineno">  183</span>    <span class="keywordtype">void</span> createLexer(std::vector&lt;TokenRegex&gt; tokenRegexes);</div>
+<div class="line"><a id="l00184" name="l00184"></a><span class="lineno">  184</span>    <span class="keywordtype">void</span> createTokenDef(std::set&lt;std::string&gt; allTokenTypes);</div>
+<div class="line"><a id="l00185" name="l00185"></a><span class="lineno">  185</span>    <span class="keywordtype">void</span> createParserHeader();</div>
+<div class="line"><a id="l00186" name="l00186"></a><span class="lineno">  186</span> </div>
+<div class="line"><a id="l00187" name="l00187"></a><span class="lineno">  187</span>    <span class="comment">//Replaces {0} in base string with the text string.</span></div>
+<div class="line"><a id="l00188" name="l00188"></a><span class="lineno">  188</span>    std::string formatString(std::string base, std::string text);</div>
+<div class="line"><a id="l00189" name="l00189"></a><span class="lineno">  189</span>    <span class="comment">//Returns a string of spaces with length specified by index.</span></div>
+<div class="line"><a id="l00190" name="l00190"></a><span class="lineno">  190</span>    std::string indentString();</div>
+<div class="line"><a id="l00191" name="l00191"></a><span class="lineno">  191</span>    <span class="comment">//Creates the body of if statement or while loop when an opening bracket seen in grammar.</span></div>
+<div class="line"><a id="l00192" name="l00192"></a><span class="lineno">  192</span>    std::string createConditionStatement();</div>
+<div class="line"><a id="l00193" name="l00193"></a><span class="lineno">  193</span>    std::string createElseCode();</div>
+<div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span>    <span class="comment">//Adds code of the current expression to the previous expression.</span></div>
+<div class="line"><a id="l00195" name="l00195"></a><span class="lineno">  195</span>    <span class="keywordtype">void</span> appendCode(std::string);</div>
+<div class="line"><a id="l00196" name="l00196"></a><span class="lineno">  196</span>    <span class="keywordtype">void</span> writeFuncToParserFile();</div>
+<div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span>    <span class="keywordtype">void</span> addNewExprBlock();</div>
+<div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span> </div>
+<div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span>    std::vector&lt;FirstSetInfo&gt; allFirstSetInfo;</div>
+<div class="line"><a id="l00200" name="l00200"></a><span class="lineno">  200</span>    <a class="code hl_struct" href="struct_expression_block_info.html">ExpressionBlockInfo</a> exprBlockInfo;</div>
+<div class="line"><a id="l00201" name="l00201"></a><span class="lineno">  201</span>    <span class="keywordtype">int</span> indent; <span class="comment">//Defines how many spaces to use as the current indentation level</span></div>
+<div class="line"><a id="l00202" name="l00202"></a><span class="lineno">  202</span>    std::map&lt;OutputStringType, std::string&gt; *language;</div>
+<div class="line"><a id="l00203" name="l00203"></a><span class="lineno">  203</span> </div>
+<div class="line"><a id="l00204" name="l00204"></a><span class="lineno">  204</span>    <span class="comment">//Stores the name of the project - used to name output files.</span></div>
+<div class="line"><a id="l00205" name="l00205"></a><span class="lineno">  205</span>    std::string projectName;</div>
+<div class="line"><a id="l00206" name="l00206"></a><span class="lineno">  206</span> </div>
+<div class="line"><a id="l00207" name="l00207"></a><span class="lineno">  207</span>    <span class="comment">//Strings to store output code.</span></div>
+<div class="line"><a id="l00208" name="l00208"></a><span class="lineno">  208</span>    std::string parserText;</div>
+<div class="line"><a id="l00209" name="l00209"></a><span class="lineno">  209</span>    std::string lexerText;</div>
+<div class="line"><a id="l00210" name="l00210"></a><span class="lineno">  210</span>    std::string tokDefText;</div>
+<div class="line"><a id="l00211" name="l00211"></a><span class="lineno">  211</span>    std::string parserHeaderText;</div>
+<div class="line"><a id="l00212" name="l00212"></a><span class="lineno">  212</span>    std::string lexerHeaderText;</div>
+<div class="line"><a id="l00213" name="l00213"></a><span class="lineno">  213</span>};</div>
+<div class="line"><a id="l00214" name="l00214"></a><span class="lineno">  214</span> </div>
+<div class="line"><a id="l00215" name="l00215"></a><span class="lineno">  215</span><span class="preprocessor">#endif</span></div>
+<div class="ttc" id="aclass_file_writer_html"><div class="ttname"><a href="class_file_writer.html">FileWriter</a></div><div class="ttdoc">Handles all of the output to generated files.</div><div class="ttdef"><b>Definition:</b> fileWriter.hpp:114</div></div>
+<div class="ttc" id="aclass_file_writer_html_a33e73c28dd40354fa75af9a2b88e3525"><div class="ttname"><a href="class_file_writer.html#a33e73c28dd40354fa75af9a2b88e3525">FileWriter::addFirstElement</a></div><div class="ttdeci">void addFirstElement(Gtoken token)</div><div class="ttdoc">Adds a Gtoken to the first set of the current expression.</div><div class="ttdef"><b>Definition:</b> fileWriter.cpp:1015</div></div>
+<div class="ttc" id="aclass_file_writer_html_a66556f0c56d8113c35a24768105a1eb6"><div class="ttname"><a href="class_file_writer.html#a66556f0c56d8113c35a24768105a1eb6">FileWriter::fileSetup</a></div><div class="ttdeci">void fileSetup(std::vector&lt; FirstSetInfo &gt; allFirstSetInfo, std::set&lt; std::string &gt; allTokens, std::vector&lt; TokenRegex &gt; tokenRegexes, std::string projectName)</div><div class="ttdoc">Generates start of parser and any other files, e.g lexer.</div><div class="ttdef"><b>Definition:</b> fileWriter.cpp:931</div></div>
+<div class="ttc" id="aclass_file_writer_html_a77c3a2819b1b468e20ae225f7134c106"><div class="ttname"><a href="class_file_writer.html#a77c3a2819b1b468e20ae225f7134c106">FileWriter::getParserHeaderText</a></div><div class="ttdeci">std::string getParserHeaderText()</div><div class="ttdoc">Returns the code of the output parser header.</div><div class="ttdef"><b>Definition:</b> fileWriter.cpp:735</div></div>
+<div class="ttc" id="aclass_file_writer_html_a7b258ddc569b67c2244820bceabb31e9"><div class="ttname"><a href="class_file_writer.html#a7b258ddc569b67c2244820bceabb31e9">FileWriter::getTokDefText</a></div><div class="ttdeci">std::string getTokDefText()</div><div class="ttdoc">Returns the code of the output token definition.</div><div class="ttdef"><b>Definition:</b> fileWriter.cpp:731</div></div>
+<div class="ttc" id="aclass_file_writer_html_ac1365a6de7b1cb06586e0baff44f2778"><div class="ttname"><a href="class_file_writer.html#ac1365a6de7b1cb06586e0baff44f2778">FileWriter::writeText</a></div><div class="ttdeci">void writeText(std::string text, Mode mode)</div><div class="ttdoc">Writes text to parser file depending on the mode.</div><div class="ttdef"><b>Definition:</b> fileWriter.cpp:1135</div></div>
+<div class="ttc" id="aclass_file_writer_html_acc388914b20102fedb1196689a754cb4"><div class="ttname"><a href="class_file_writer.html#acc388914b20102fedb1196689a754cb4">FileWriter::getParserText</a></div><div class="ttdeci">std::string getParserText()</div><div class="ttdoc">Returns the code of the output parser.</div><div class="ttdef"><b>Definition:</b> fileWriter.cpp:723</div></div>
+<div class="ttc" id="aclass_file_writer_html_ad0bab2e983f376de34866dfecab4e99a"><div class="ttname"><a href="class_file_writer.html#ad0bab2e983f376de34866dfecab4e99a">FileWriter::createMain</a></div><div class="ttdeci">void createMain(std::string startFunc)</div><div class="ttdoc">Creates the main function to be included in the parser.</div><div class="ttdef"><b>Definition:</b> fileWriter.cpp:903</div></div>
+<div class="ttc" id="aclass_file_writer_html_ad76128bb79111fa2084e48aa26cd2801"><div class="ttname"><a href="class_file_writer.html#ad76128bb79111fa2084e48aa26cd2801">FileWriter::getLexerHeaderText</a></div><div class="ttdeci">std::string getLexerHeaderText()</div><div class="ttdoc">Returns the code of the output lexer header.</div><div class="ttdef"><b>Definition:</b> fileWriter.cpp:739</div></div>
+<div class="ttc" id="aclass_file_writer_html_afffa657aa1f436833d7babf691ec3e3f"><div class="ttname"><a href="class_file_writer.html#afffa657aa1f436833d7babf691ec3e3f">FileWriter::getLexerText</a></div><div class="ttdeci">std::string getLexerText()</div><div class="ttdoc">Returns the code of the output lexer.</div><div class="ttdef"><b>Definition:</b> fileWriter.cpp:727</div></div>
+<div class="ttc" id="astruct_expression_block_info_html"><div class="ttname"><a href="struct_expression_block_info.html">ExpressionBlockInfo</a></div><div class="ttdoc">Stores a new block of code for each expression A new expression is created at the start of a rule or ...</div><div class="ttdef"><b>Definition:</b> fileWriter.hpp:105</div></div>
+<div class="ttc" id="astruct_first_set_info_html"><div class="ttname"><a href="struct_first_set_info.html">FirstSetInfo</a></div><div class="ttdoc">Stores the first set of a non terminal, represented by a set of terminals and a set of tokens that ca...</div><div class="ttdef"><b>Definition:</b> tokenDef.hpp:63</div></div>
+<div class="ttc" id="astruct_gtoken_html"><div class="ttname"><a href="struct_gtoken.html">Gtoken</a></div><div class="ttdoc">Stores information about a token.</div><div class="ttdef"><b>Definition:</b> tokenDef.hpp:51</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

@@ -5,9 +5,8 @@
 #include "tokeniser.hpp"
 #include "fileWriter.hpp"
 
-//Grammar Parser
-
-//parse functions
+//These functions perform parsing of the grammar.
+//They form a recursive descent parser.
 Gtoken parseGrammar(Tokeniser &tokeniser, FileWriter &writer);
 Gtoken grammar();
 Gtoken rule();

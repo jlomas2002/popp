@@ -8,15 +8,16 @@
 using namespace std;
 
 int main(int argc, char* argv[]) {
-      if (argc == 1){ //open up gui
-          //setup qt app and create the main window
+      if (argc == 1){ //Then open up gui
+          
+          //Setup qt app and create the main window
           QApplication app(argc, argv);
           GUI userInterface;
           userInterface.show();
 
           return app.exec();
       }
-      else{
+      else{ //Run on command line
         if (argc != 5){
             cout<<"Incorrect number of arguments. Either supply 0 to use the GUI, or 4 to run on the command line.\n"<<endl;
             cout<<"USAGE: ./parcelona projectName targetLanguage grammarFile tokensFile.\n"<<endl; 
@@ -26,22 +27,22 @@ int main(int argc, char* argv[]) {
             cout<<"TokensFile is either a path to a .txt file conating any lexical tokens, or NONE if no file is required."<< endl;
             return 1;
         }
-        //Simply creates the parser file in the same directory
+
         string projectName = argv[1];
-        string chosenLang = argv[2]; //output language
+        string chosenLang = argv[2];
         string grammarFilename = argv[3];
         string tokensFilename = argv[4];
 
         ifstream fileReader(grammarFilename);
 
-        //check if grammar file is txt file
+        //Check if grammar file is txt file
         string ext = grammarFilename.substr(grammarFilename.length() - 4);
         if (grammarFilename.length() < 5 || ext != ".txt"){ //filename too short or doesn't have .txt extension
             cout<<"The grammar file must have a .txt extension"<<endl;
             return 1;
         }
 
-        //check file can be opened/exists
+        //Check file can be opened/exists
         string grammar;
         if (fileReader.fail()){
             cout<<"The provided grammar file could not be opened."<<endl;
@@ -64,12 +65,13 @@ int main(int argc, char* argv[]) {
 
         if (tokensFilename != "None"){
             ifstream tokenFileReader(tokensFilename);
-            //check file can be opened/exists
+            //Check file can be opened/exists
             if (tokenFileReader.fail()){
                 cout<<"The provided tokens file could not be opened."<<endl;
                 return 1;
             }
             else{
+                //Read in tokens
                 string line;
                 while(getline (tokenFileReader, line)){
                     tokens.append(line);
@@ -79,7 +81,7 @@ int main(int argc, char* argv[]) {
         }
 
         vector<string>validLangs = {"cpp", "python", "java"};
-        //check output lang is valid
+        //Check output lang is valid
         bool valid = false;
         for (string lang : validLangs){
             if (chosenLang == lang){
@@ -147,7 +149,8 @@ int main(int argc, char* argv[]) {
             tokDefFilename = projectName + "TokDefintion" + extension;
         }
 
-
+        
+        //Generate output files
         if (tok.type != Error_Type){
             ofstream parserFile;
             parserFile.open(parserFilename, ios_base::out);

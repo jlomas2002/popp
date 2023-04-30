@@ -1,38 +1,196 @@
 \hypertarget{class_file_writer}{}\doxysection{File\+Writer Class Reference}
 \label{class_file_writer}\index{FileWriter@{FileWriter}}
+
+
+Handles all of the output to generated files.  
+
+
+
+
+{\ttfamily \#include $<$file\+Writer.\+hpp$>$}
+
 \doxysubsection*{Public Member Functions}
 \begin{DoxyCompactItemize}
 \item 
+\mbox{\hyperlink{class_file_writer_a7e355076d6b5c8633ba950cac49c65e1}{File\+Writer}} (std\+::string lang)
+\begin{DoxyCompactList}\small\item\em Constructor -\/ Sets the pointer to the target language specified by lang. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_file_writer_ac1365a6de7b1cb06586e0baff44f2778}{write\+Text}} (std\+::string text, Mode mode)
+\begin{DoxyCompactList}\small\item\em Writes text to parser file depending on the mode. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_file_writer_a66556f0c56d8113c35a24768105a1eb6}{file\+Setup}} (std\+::vector$<$ \mbox{\hyperlink{struct_first_set_info}{First\+Set\+Info}} $>$ all\+First\+Set\+Info, std\+::set$<$ std\+::string $>$ all\+Tokens, std\+::vector$<$ \mbox{\hyperlink{struct_token_regex}{Token\+Regex}} $>$ token\+Regexes, std\+::string project\+Name)
+\begin{DoxyCompactList}\small\item\em Generates start of parser and any other files, e.\+g lexer. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_file_writer_a33e73c28dd40354fa75af9a2b88e3525}{add\+First\+Element}} (\mbox{\hyperlink{struct_gtoken}{Gtoken}} token)
+\begin{DoxyCompactList}\small\item\em Adds a \mbox{\hyperlink{struct_gtoken}{Gtoken}} to the first set of the current expression. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_file_writer_ad0bab2e983f376de34866dfecab4e99a}{create\+Main}} (std\+::string start\+Func)
+\begin{DoxyCompactList}\small\item\em Creates the main function to be included in the parser. \end{DoxyCompactList}\item 
+std\+::string \mbox{\hyperlink{class_file_writer_acc388914b20102fedb1196689a754cb4}{get\+Parser\+Text}} ()
+\begin{DoxyCompactList}\small\item\em Returns the code of the output parser. \end{DoxyCompactList}\item 
+std\+::string \mbox{\hyperlink{class_file_writer_afffa657aa1f436833d7babf691ec3e3f}{get\+Lexer\+Text}} ()
+\begin{DoxyCompactList}\small\item\em Returns the code of the output lexer. \end{DoxyCompactList}\item 
+std\+::string \mbox{\hyperlink{class_file_writer_a7b258ddc569b67c2244820bceabb31e9}{get\+Tok\+Def\+Text}} ()
+\begin{DoxyCompactList}\small\item\em Returns the code of the output token definition. \end{DoxyCompactList}\item 
+std\+::string \mbox{\hyperlink{class_file_writer_a77c3a2819b1b468e20ae225f7134c106}{get\+Parser\+Header\+Text}} ()
+\begin{DoxyCompactList}\small\item\em Returns the code of the output parser header. \end{DoxyCompactList}\item 
+std\+::string \mbox{\hyperlink{class_file_writer_ad76128bb79111fa2084e48aa26cd2801}{get\+Lexer\+Header\+Text}} ()
+\begin{DoxyCompactList}\small\item\em Returns the code of the output lexer header. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Handles all of the output to generated files. 
+
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
 \mbox{\Hypertarget{class_file_writer_a7e355076d6b5c8633ba950cac49c65e1}\label{class_file_writer_a7e355076d6b5c8633ba950cac49c65e1}} 
-{\bfseries File\+Writer} (std\+::string lang)
-\item 
-\mbox{\Hypertarget{class_file_writer_ac1365a6de7b1cb06586e0baff44f2778}\label{class_file_writer_ac1365a6de7b1cb06586e0baff44f2778}} 
-void {\bfseries write\+Text} (std\+::string text, Mode mode)
-\item 
-\mbox{\Hypertarget{class_file_writer_a66556f0c56d8113c35a24768105a1eb6}\label{class_file_writer_a66556f0c56d8113c35a24768105a1eb6}} 
-void {\bfseries file\+Setup} (std\+::vector$<$ \mbox{\hyperlink{struct_first_set_info}{First\+Set\+Info}} $>$ all\+First\+Set\+Info, std\+::set$<$ std\+::string $>$ all\+Tokens, std\+::vector$<$ \mbox{\hyperlink{struct_token_regex}{Token\+Regex}} $>$ token\+Regexes, std\+::string project\+Name)
-\item 
+\index{FileWriter@{FileWriter}!FileWriter@{FileWriter}}
+\index{FileWriter@{FileWriter}!FileWriter@{FileWriter}}
+\doxysubsubsection{\texorpdfstring{FileWriter()}{FileWriter()}}
+{\footnotesize\ttfamily File\+Writer\+::\+File\+Writer (\begin{DoxyParamCaption}\item[{std\+::string}]{lang }\end{DoxyParamCaption})}
+
+
+
+Constructor -\/ Sets the pointer to the target language specified by lang. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em lang} & The language output files are written in. \\
+\hline
+\end{DoxyParams}
+
+
+\doxysubsection{Member Function Documentation}
 \mbox{\Hypertarget{class_file_writer_a33e73c28dd40354fa75af9a2b88e3525}\label{class_file_writer_a33e73c28dd40354fa75af9a2b88e3525}} 
-void {\bfseries add\+First\+Element} (\mbox{\hyperlink{struct_gtoken}{Gtoken}} token)
-\item 
+\index{FileWriter@{FileWriter}!addFirstElement@{addFirstElement}}
+\index{addFirstElement@{addFirstElement}!FileWriter@{FileWriter}}
+\doxysubsubsection{\texorpdfstring{addFirstElement()}{addFirstElement()}}
+{\footnotesize\ttfamily void File\+Writer\+::add\+First\+Element (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_gtoken}{Gtoken}}}]{token }\end{DoxyParamCaption})}
+
+
+
+Adds a \mbox{\hyperlink{struct_gtoken}{Gtoken}} to the first set of the current expression. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em token} & The token to be added. \\
+\hline
+\end{DoxyParams}
 \mbox{\Hypertarget{class_file_writer_ad0bab2e983f376de34866dfecab4e99a}\label{class_file_writer_ad0bab2e983f376de34866dfecab4e99a}} 
-void {\bfseries create\+Main} (std\+::string start\+Func)
-\item 
-\mbox{\Hypertarget{class_file_writer_acc388914b20102fedb1196689a754cb4}\label{class_file_writer_acc388914b20102fedb1196689a754cb4}} 
-std\+::string {\bfseries get\+Parser\+Text} ()
-\item 
-\mbox{\Hypertarget{class_file_writer_afffa657aa1f436833d7babf691ec3e3f}\label{class_file_writer_afffa657aa1f436833d7babf691ec3e3f}} 
-std\+::string {\bfseries get\+Lexer\+Text} ()
-\item 
-\mbox{\Hypertarget{class_file_writer_a7b258ddc569b67c2244820bceabb31e9}\label{class_file_writer_a7b258ddc569b67c2244820bceabb31e9}} 
-std\+::string {\bfseries get\+Tok\+Def\+Text} ()
-\item 
-\mbox{\Hypertarget{class_file_writer_a77c3a2819b1b468e20ae225f7134c106}\label{class_file_writer_a77c3a2819b1b468e20ae225f7134c106}} 
-std\+::string {\bfseries get\+Parser\+Header\+Text} ()
-\item 
+\index{FileWriter@{FileWriter}!createMain@{createMain}}
+\index{createMain@{createMain}!FileWriter@{FileWriter}}
+\doxysubsubsection{\texorpdfstring{createMain()}{createMain()}}
+{\footnotesize\ttfamily void File\+Writer\+::create\+Main (\begin{DoxyParamCaption}\item[{std\+::string}]{start\+Func }\end{DoxyParamCaption})}
+
+
+
+Creates the main function to be included in the parser. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em start\+Func} & The name of the function to be called in main. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_file_writer_a66556f0c56d8113c35a24768105a1eb6}\label{class_file_writer_a66556f0c56d8113c35a24768105a1eb6}} 
+\index{FileWriter@{FileWriter}!fileSetup@{fileSetup}}
+\index{fileSetup@{fileSetup}!FileWriter@{FileWriter}}
+\doxysubsubsection{\texorpdfstring{fileSetup()}{fileSetup()}}
+{\footnotesize\ttfamily void File\+Writer\+::file\+Setup (\begin{DoxyParamCaption}\item[{std\+::vector$<$ \mbox{\hyperlink{struct_first_set_info}{First\+Set\+Info}} $>$}]{all\+First\+Set\+Info,  }\item[{std\+::set$<$ std\+::string $>$}]{all\+Tokens,  }\item[{std\+::vector$<$ \mbox{\hyperlink{struct_token_regex}{Token\+Regex}} $>$}]{token\+Regexes,  }\item[{std\+::string}]{project\+Name }\end{DoxyParamCaption})}
+
+
+
+Generates start of parser and any other files, e.\+g lexer. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em all\+First\+Set\+Info} & List of each non terminal and its first set \\
+\hline
+{\em all\+Tokens} & Set of token names \\
+\hline
+{\em token\+Regexes} & Vector of tokens and their correspondin regexes \\
+\hline
+{\em project\+Name} & Name of project \\
+\hline
+\end{DoxyParams}
 \mbox{\Hypertarget{class_file_writer_ad76128bb79111fa2084e48aa26cd2801}\label{class_file_writer_ad76128bb79111fa2084e48aa26cd2801}} 
-std\+::string {\bfseries get\+Lexer\+Header\+Text} ()
-\end{DoxyCompactItemize}
+\index{FileWriter@{FileWriter}!getLexerHeaderText@{getLexerHeaderText}}
+\index{getLexerHeaderText@{getLexerHeaderText}!FileWriter@{FileWriter}}
+\doxysubsubsection{\texorpdfstring{getLexerHeaderText()}{getLexerHeaderText()}}
+{\footnotesize\ttfamily string File\+Writer\+::get\+Lexer\+Header\+Text (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Returns the code of the output lexer header. 
+
+\begin{DoxyReturn}{Returns}
+std\+::string 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_file_writer_afffa657aa1f436833d7babf691ec3e3f}\label{class_file_writer_afffa657aa1f436833d7babf691ec3e3f}} 
+\index{FileWriter@{FileWriter}!getLexerText@{getLexerText}}
+\index{getLexerText@{getLexerText}!FileWriter@{FileWriter}}
+\doxysubsubsection{\texorpdfstring{getLexerText()}{getLexerText()}}
+{\footnotesize\ttfamily string File\+Writer\+::get\+Lexer\+Text (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Returns the code of the output lexer. 
+
+\begin{DoxyReturn}{Returns}
+std\+::string 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_file_writer_a77c3a2819b1b468e20ae225f7134c106}\label{class_file_writer_a77c3a2819b1b468e20ae225f7134c106}} 
+\index{FileWriter@{FileWriter}!getParserHeaderText@{getParserHeaderText}}
+\index{getParserHeaderText@{getParserHeaderText}!FileWriter@{FileWriter}}
+\doxysubsubsection{\texorpdfstring{getParserHeaderText()}{getParserHeaderText()}}
+{\footnotesize\ttfamily string File\+Writer\+::get\+Parser\+Header\+Text (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Returns the code of the output parser header. 
+
+\begin{DoxyReturn}{Returns}
+std\+::string 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_file_writer_acc388914b20102fedb1196689a754cb4}\label{class_file_writer_acc388914b20102fedb1196689a754cb4}} 
+\index{FileWriter@{FileWriter}!getParserText@{getParserText}}
+\index{getParserText@{getParserText}!FileWriter@{FileWriter}}
+\doxysubsubsection{\texorpdfstring{getParserText()}{getParserText()}}
+{\footnotesize\ttfamily string File\+Writer\+::get\+Parser\+Text (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Returns the code of the output parser. 
+
+\begin{DoxyReturn}{Returns}
+std\+::string 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_file_writer_a7b258ddc569b67c2244820bceabb31e9}\label{class_file_writer_a7b258ddc569b67c2244820bceabb31e9}} 
+\index{FileWriter@{FileWriter}!getTokDefText@{getTokDefText}}
+\index{getTokDefText@{getTokDefText}!FileWriter@{FileWriter}}
+\doxysubsubsection{\texorpdfstring{getTokDefText()}{getTokDefText()}}
+{\footnotesize\ttfamily string File\+Writer\+::get\+Tok\+Def\+Text (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Returns the code of the output token definition. 
+
+\begin{DoxyReturn}{Returns}
+std\+::string 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_file_writer_ac1365a6de7b1cb06586e0baff44f2778}\label{class_file_writer_ac1365a6de7b1cb06586e0baff44f2778}} 
+\index{FileWriter@{FileWriter}!writeText@{writeText}}
+\index{writeText@{writeText}!FileWriter@{FileWriter}}
+\doxysubsubsection{\texorpdfstring{writeText()}{writeText()}}
+{\footnotesize\ttfamily void File\+Writer\+::write\+Text (\begin{DoxyParamCaption}\item[{std\+::string}]{text,  }\item[{Mode}]{mode }\end{DoxyParamCaption})}
+
+
+
+Writes text to parser file depending on the mode. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em text} & Normally some variable string used in the output code. \\
+\hline
+{\em mode} & Determines the pattern of code generated. \\
+\hline
+\end{DoxyParams}
 
 
 The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}

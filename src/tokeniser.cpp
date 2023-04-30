@@ -14,6 +14,7 @@ bool operator<(const Gtoken &a, const Gtoken &b){
     return a.lexeme < b.lexeme;
 }
 
+//So tokens in a set can be compared for equality
 bool operator==(const Gtoken &a, const Gtoken &b){
     return a.lexeme == b.lexeme;
 }
@@ -197,7 +198,7 @@ Gtoken Tokeniser::makeErrorToken(Error err, string lex){
     return token;
 }
 
-//For a given token file, this extracts the regexes that describe the tokens
+
 Gtoken Tokeniser::extractRegexes(string input){
     index = 0;
     lineNum = 0;
@@ -210,6 +211,7 @@ Gtoken Tokeniser::extractRegexes(string input){
         lineNum++;
         pos = 1;
     
+        //If end of tokens input
         if (index >= int(input.length())){
             token.type = END_OF_GRAMMAR;
             token.lexeme = "";
@@ -280,6 +282,7 @@ Gtoken Tokeniser::extractRegexes(string input){
 
         listOfTokens.insert(id);
 
+        //If end of tokens input
         if (incrementIndex(input) != 0){
             token.type = END_OF_GRAMMAR;
             token.lexeme = "";
@@ -294,7 +297,6 @@ Gtoken Tokeniser::extractRegexes(string input){
 }
 
 
-//Returns the next token in the grammar file, but doesn't consume it
 Gtoken Tokeniser::peekNextToken(){
     int tmpIndex = index;
     int tmpLinenum = lineNum;
@@ -310,7 +312,6 @@ Gtoken Tokeniser::peekNextToken(){
     return token; 
 }
 
-//Returns the next token in the grammar file, and consumes it
 Gtoken Tokeniser::getNextToken(){
 
     //Check if reached end of grammar
@@ -326,7 +327,7 @@ Gtoken Tokeniser::getNextToken(){
         return token;
     }
 
-  //Skip over white space
+    //Skip over white space
     while (isspace(grammar.at(index))){
         if (incrementIndex(grammar) != 0){
             Gtoken token;
@@ -337,7 +338,7 @@ Gtoken Tokeniser::getNextToken(){
             token.pos = pos;
             token.error = NONE;
 
-        return token;
+            return token;
         }
     }
 
@@ -440,11 +441,10 @@ Gtoken Tokeniser::getNextToken(){
     }
 }
 
-//For each non terminal, this function calculates and stores all possible terminals that can begin it
-//It Assumes for now grammar is syntactically valid, any syntactic errors are picked up by the parser
 void Tokeniser::collectFirstSetInfo(){
     Gtoken token;
 
+    //In this function, we leave error handling to gparser
     token = getNextToken();
     while (token.type != END_OF_GRAMMAR){
         FirstSetInfo info;
@@ -520,9 +520,9 @@ FirstSetInfo Tokeniser::findFirstSetInfo(Gtoken t){
     return f;
 }
 
-//The current vector of terminals may contain non terminals
-//This function will go through this vector, and convert any non terminals to the terminals or tokens that can begin it
 void Tokeniser::refineFirstSetInfo(FirstSetInfo &returnInfo, FirstSetInfo &currentInfo){
+    //A first set may contain non terminals. This function converts these non terminals to their first sets.
+
     auto termPointer = currentInfo.firstTerminals.begin(); //Iterator pointing to set elements
 
     while(termPointer != currentInfo.firstTerminals.end()){

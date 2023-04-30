@@ -8,29 +8,35 @@ using namespace std;
 
 vector<string> validFiles = {"testgs/listofints", "testgs/sentence", "testgs/json", "testgs/jack" };
 
+//Grammar files with errors detected by tokeniser
 vector<string> tokeniser_errorGramFiles = {"tokeniser/redefinedNonterm"};
 
+//Token files with errors detected by tokeniser
 vector<string> tokeniser_errorTokFiles = {"tokeniser/unexpectedEOF-toks1", "tokeniser/unexpectedEOF-toks2",
                                           "tokeniser/unexpectedEOF-toks3", "tokeniser/unexpectedEOF-toks4",
                                           "tokeniser/invalidRegexId", "tokeniser/redefinedToken", 
                                           "tokeniser/expectedEquals"};
 
+//Following represents the errors in each file
 vector<Error> tokeniserErrors = {RedefinedNonTerminal, UnexpectedEOF, UnexpectedEOF, UnexpectedEOF, UnexpectedEOF, InvalidRegexId, RedefinedToken, ExpectedEquals};
 vector<int> tokeniserLineNums = {3, 2, 2, 2, 3, 2, 4, 1};
 vector<int> tokeniserPositions = {1, 2, 5, 8, 15, 1, 14, 7};
 vector<string> tokeniserLexemes = {"ANonTerm", "", "", "", "", "5", "Token", "@"};
 //Type is always error
 
+//Grammar files with errors detected by parser
 vector<string> parser_errorFiles = {"parser/expectedNonTerm", "parser/expectedEquals", "parser/expectedSemiColon",
                                     "parser/expectedCurlyBracket", "parser/expectedNormalBracket", "parser/expectedSquareBracket",
                                     "parser/unknownChar"};
 
+//Following represents the errors in each file
 vector<Error> parserErrors = {ExpectedNonTerminal, ExpectedEquals, ExpectedSemiColon, ExpectedCurlyBracket, ExpectedNormalBracket, ExpectedSquareBracket, UnknownCharacter};
 vector<int> parserLineNums = {2, 2, 2, 1, 1, 2, 2};
 vector<int> parserPositions = {1, 16, 20, 13, 15, 1, 16};
 vector<string> parserLexemes = {"Bob", "here", "", "]", "]", ";", "@"};
 
 
+//Reads in data representing the valid first sets for each file
 void generateTestData(string filename, string &fileInput, vector<FirstSetInfo> &allFirstSetInfo){
     ifstream file(filename+".txt");
     ifstream fileFirstSets(filename+"-firstSets.txt");
@@ -381,6 +387,7 @@ void parserTests(){
 
     int i = 0;
 
+    //Test erroneous files
     for (string filename : parser_errorFiles){
        ifstream file("errortestgs/"+filename+".txt"); 
 

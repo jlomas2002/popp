@@ -9,23 +9,58 @@
 
 using namespace std;
 
+
 GUI::GUI(QWidget *parent) : QMainWindow(parent){
+    grammarHelp = "Define a grammar with an EBNF Syntax.\n";
+    grammarHelp += "Represent terminals by placing them in quotations.\n";
+    grammarHelp += "Use the equals symbol to sepreate the left hand side non terminal from the right hand side rule\n";
+    grammarHelp += "Any symbols not in quotations are either non terminals or tokens\n";
+    grammarHelp += "If you have defined a tokens file, all tokens must be there, and any symbol not defined as a token or non terminal will be invalid\n";
+    grammarHelp += "If you have not defined tokens, any symbol not defined will be treated as a token type\n";
+    grammarHelp += "Use square brackets to denote zero or one occurences of the sequence inside\n";
+    grammarHelp += "Use curly brackets to denote zero or many occurences of the sequence inside\n";
+    grammarHelp += "Use normal brackets to group a sequence with higher precedence\n";
+    grammarHelp += "Use the pipe symbol to denote an alteration\n";
+    grammarHelp += "End each rule with a semi colon\n";
+    grammarHelp += "Ensure there is a newline character at the end of the grammar";
+
+    tokensHelp = "Define a token as follows:\n";
+    tokensHelp += "Name = regex;\n";
+    tokensHelp += "Name is the type of token, e.g letter or digit\n";
+    tokensHelp += "Regex is the regex pattern you wish to use to match the token";
+    
     QHBoxLayout *mainLayout = new QHBoxLayout;
+
+    //Fonts used in GUI
+    QFont titleFont;
+    titleFont.setBold(true);
+    titleFont.setPointSize(14);
+
+    QFont labelFont;
+    labelFont.setBold(true);
+    labelFont.setPointSize(10);
+
+    QFont inputFont("Arial", 10);
 
     //Options sections
     QVBoxLayout *optionsSection = new QVBoxLayout;
 
     optionsLabel = new QLabel();
     optionsLabel->setText("Control Panel");
+    optionsLabel->setFont(titleFont);
 
     //Name options
     QVBoxLayout *projectNameOptions = new QVBoxLayout;
 
     projectLabel = new QLabel();
     projectLabel->setText("Name your project");
+    projectLabel->setFixedHeight(40);
+    projectLabel->setFont(labelFont);
 
     projectNameInput = new QLineEdit();
     projectNameInput->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Preferred);
+    projectNameInput->setStyleSheet("background-color: rgb(125, 118, 100);");
+    projectNameInput->setFont(inputFont);
 
     projectNameOptions->addWidget(projectLabel);
     projectNameOptions->addWidget(projectNameInput);
@@ -35,14 +70,18 @@ GUI::GUI(QWidget *parent) : QMainWindow(parent){
 
     fileUploadLabel = new QLabel();
     fileUploadLabel->setText("Upload files");
+    fileUploadLabel->setFixedHeight(40);
+    fileUploadLabel->setFont(labelFont);
 
     gramFileSelect_button = new QPushButton("Select a grammar file.");
     connect(gramFileSelect_button, &QPushButton::clicked, this, &GUI::selectGrammarFile);
     gramFileSelect_button->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Preferred);
+    gramFileSelect_button->setStyleSheet("background-color: #4C7050; color: white;");
 
     tokFileSelect_button = new QPushButton("Select a token file.");
     connect(tokFileSelect_button, &QPushButton::clicked, this, &GUI::selectTokensFile);
     tokFileSelect_button->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Preferred);
+    tokFileSelect_button->setStyleSheet("background-color: #4C7050; color: white;");
 
     fileSelectOptions->addWidget(fileUploadLabel);
     fileSelectOptions->addWidget(gramFileSelect_button);
@@ -53,17 +92,22 @@ GUI::GUI(QWidget *parent) : QMainWindow(parent){
 
     languageOptionsLabel = new QLabel();
     languageOptionsLabel->setText("Select a target language");
+    languageOptionsLabel->setFixedHeight(40);
+    languageOptionsLabel->setFont(labelFont);
 
     languageOptions = new QButtonGroup();
 
     optionCpp = new QRadioButton("C++");
     optionCpp->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Preferred);
+    optionCpp->setFont(labelFont);
 
     optionPy = new QRadioButton("Python");
     optionPy->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Preferred);
+    optionPy->setFont(labelFont);
 
     optionJava = new QRadioButton("Java");
     optionJava->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Preferred);
+    optionJava->setFont(labelFont);
 
     optionCpp->setChecked(true);
     languageOptions->addButton(optionCpp);
@@ -81,18 +125,21 @@ GUI::GUI(QWidget *parent) : QMainWindow(parent){
     createParser_button = new QPushButton("Generate parser.");
     connect(createParser_button, &QPushButton::clicked, this, &GUI::createParser);
     createParser_button->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Preferred);
+    createParser_button->setStyleSheet("background-color: #4C7050; color: white;");
 
     createParserOptions->addWidget(createParser_button);
 
     //Widget size settings
     //widths
-    optionsLabel->setFixedWidth(75);
-    projectNameInput->setFixedWidth(75);
-    gramFileSelect_button->setFixedWidth(75);
-    tokFileSelect_button->setFixedWidth(75);
-    optionCpp->setFixedWidth(75);
-    optionPy->setFixedWidth(75);
-    createParser_button->setFixedWidth(75);
+    optionsLabel->setFixedWidth(150);
+    projectNameInput->setFixedWidth(100);
+    gramFileSelect_button->setFixedWidth(130);
+    tokFileSelect_button->setFixedWidth(130);
+    languageOptionsLabel->setFixedWidth(150);
+    optionCpp->setFixedWidth(100);
+    optionPy->setFixedWidth(100);
+    optionJava->setFixedWidth(100);
+    createParser_button->setFixedWidth(130);
 
     //heights
     optionsLabel->setFixedHeight(25);
@@ -101,6 +148,7 @@ GUI::GUI(QWidget *parent) : QMainWindow(parent){
     tokFileSelect_button->setFixedHeight(25);
     optionCpp->setFixedHeight(25);
     optionPy->setFixedHeight(25);
+    optionJava->setFixedHeight(25);
     createParser_button->setFixedHeight(25);
 
     //Add subsections to section
@@ -113,19 +161,21 @@ GUI::GUI(QWidget *parent) : QMainWindow(parent){
     //Set colour
     optionsWidget = new QWidget;
     optionsWidget->setLayout(optionsSection);
-    optionsWidget->setStyleSheet("background-color: rgb(77, 70, 87);");
+    optionsWidget->setStyleSheet("background-color: rgb(110, 100, 125);");
     optionsWidget->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Preferred);
-    optionsWidget->setFixedWidth(150);
+    optionsWidget->setFixedWidth(175);
 
     //Input files section
     QVBoxLayout *inputFilesSection = new QVBoxLayout;
 
     inputLabel = new QLabel();
-    inputLabel->setText("Input files");
+    inputLabel->setText("                         Input files");
+    inputLabel->setFont(titleFont);
 
     QHBoxLayout *grammarHeader = new QHBoxLayout;
     grammarLabel = new QLabel();
     grammarLabel->setText("Enter Grammar");
+    grammarLabel->setFont(labelFont);
 
     //Save Grammar button
     saveGrammar_button = new QPushButton;
@@ -155,10 +205,12 @@ GUI::GUI(QWidget *parent) : QMainWindow(parent){
     grammarDisplay = new QTextEdit();
     grammarDisplay->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Expanding);
     grammarDisplay->setStyleSheet("background-color: rgb(125, 118, 100);");
+    grammarDisplay->setFont(inputFont);
 
     QHBoxLayout *tokensHeader = new QHBoxLayout;
     tokensLabel = new QLabel();
     tokensLabel->setText("(optional) Enter Tokens");
+    tokensLabel->setFont(labelFont);
 
     //Save Grammar button
     saveTokens_button = new QPushButton;
@@ -185,14 +237,17 @@ GUI::GUI(QWidget *parent) : QMainWindow(parent){
     //Tokens display
     tokensDisplay = new QTextEdit();
     tokensDisplay->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Expanding);
+    tokensDisplay->setStyleSheet("background-color: rgb(125, 118, 100);");
+    tokensDisplay->setFont(inputFont);
 
     //Error display
     errorDisplay = new QTextBrowser();
     errorDisplay->setPlainText("No errors!");
     errorDisplay->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Expanding);
+    errorDisplay->setFont(inputFont);
 
     //Set sizes of widgets
-    grammarDisplay->setMinimumHeight(400);
+    grammarDisplay->setMinimumHeight(350);
     tokensDisplay->setMinimumHeight(250);
     grammarDisplay->setMinimumWidth(90);
     tokensDisplay->setMinimumWidth(90);
@@ -209,12 +264,14 @@ GUI::GUI(QWidget *parent) : QMainWindow(parent){
     inputWidget = new QWidget;
     inputWidget->setLayout(inputFilesSection);
     inputWidget->setStyleSheet("background-color: rgb(175, 152, 212);");
+    inputWidget->setFixedWidth(400);
 
     //Output files section
     QVBoxLayout *outputFilesSection = new QVBoxLayout;
 
     outputLabel = new QLabel();
-    outputLabel->setText("Output files");
+    outputLabel->setText("                                                                 Output files");
+    outputLabel->setFont(titleFont);
 
     //Header for tabbed section
     QHBoxLayout *outputHeader = new QHBoxLayout();
@@ -236,26 +293,36 @@ GUI::GUI(QWidget *parent) : QMainWindow(parent){
     parserDisplay = new QTextEdit();
     parserDisplay->setPlainText("Your parser will appear here...");
     parserDisplay->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Expanding);
+    parserDisplay->setStyleSheet("background-color: rgb(125, 118, 100);");
+    parserDisplay->setFont(inputFont);
 
     //Lexer display
     lexerDisplay = new QTextEdit();
     lexerDisplay->setPlainText("Your lexer will appear here...");
     lexerDisplay->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Expanding);
+    lexerDisplay->setStyleSheet("background-color: rgb(125, 118, 100);");
+    lexerDisplay->setFont(inputFont);
 
     //Token defintion display
     tokDefDisplay = new QTextEdit();
     tokDefDisplay->setPlainText("Your token definition will appear here...");
-    lexerDisplay->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Expanding);
+    tokDefDisplay->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Expanding);
+    tokDefDisplay->setStyleSheet("background-color: rgb(125, 118, 100);");
+    tokDefDisplay->setFont(inputFont);
 
     //Parser header display
     parserHeaderDisplay = new QTextEdit();
     parserHeaderDisplay->setPlainText("Your parser header will appear here if required...");
     parserHeaderDisplay->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Expanding);
+    parserHeaderDisplay->setStyleSheet("background-color: rgb(125, 118, 100);");
+    parserHeaderDisplay->setFont(inputFont);
 
     //Lexer header display
     lexerHeaderDisplay = new QTextEdit();
     lexerHeaderDisplay->setPlainText("Your parser header will appear here if required...");
     lexerHeaderDisplay->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Expanding);
+    lexerHeaderDisplay->setStyleSheet("background-color: rgb(125, 118, 100);");
+    lexerHeaderDisplay->setFont(inputFont);
 
 
     //Set sizes for displays
@@ -265,10 +332,16 @@ GUI::GUI(QWidget *parent) : QMainWindow(parent){
     parserHeaderDisplay->setMinimumHeight(600);
     lexerHeaderDisplay->setMinimumHeight(600);
 
+    testStringLabel = new QLabel();
+    testStringLabel->setText("Parse some text");
+    testStringLabel->setFont(labelFont);
+
     //Test string input and run button
     QHBoxLayout *stringTestingBit = new QHBoxLayout;
     testString = new QTextEdit();
     testString->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Expanding);
+    testString->setStyleSheet("background-color: rgb(125, 118, 100);");
+    testString->setFont(inputFont);
 
     //Run string test button
     runTestString_button = new QPushButton();
@@ -276,7 +349,7 @@ GUI::GUI(QWidget *parent) : QMainWindow(parent){
     runTestString_button->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Expanding);
 
     //Add icon for run button
-    QIcon playIcon("C:/Users/Jloma/Documents/UniYr3/parcelona/qtIcons/greenPlay.png");
+    QIcon playIcon("C:/Users/Jloma/Documents/UniYr3/popp/qtIcons/greenPlay.png");
     runTestString_button->setIcon(playIcon);
     runTestString_button->setIconSize(QSize(16, 16));
     runTestString_button->setToolTip("Parse this text");
@@ -289,6 +362,8 @@ GUI::GUI(QWidget *parent) : QMainWindow(parent){
     //Test string output
     testStringOutput = new QTextBrowser();
     testStringOutput->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Expanding);
+    testStringOutput->setFixedHeight(40);
+    testStringOutput->setFont(inputFont);
 
     //Make the parser and lexer display a tabbed layout
     outputFilesTabbed = new QTabWidget();
@@ -302,6 +377,7 @@ GUI::GUI(QWidget *parent) : QMainWindow(parent){
 
     outputFilesSection->addLayout(outputHeader);
     outputFilesSection->addWidget(outputFilesTabbed);
+    outputFilesSection->addWidget(testStringLabel);
     outputFilesSection->addLayout(stringTestingBit);
     outputFilesSection->addWidget(testStringOutput);
 
@@ -333,7 +409,7 @@ GUI::GUI(QWidget *parent) : QMainWindow(parent){
     mainLayout->addWidget(outputWidget);
 
     QWidget *centralWidget = new QWidget(this);
-    centralWidget->setStyleSheet("background-color: rgb(110, 100, 125);");
+    centralWidget->setStyleSheet("background-color: rgb(77, 70, 87);");
     centralWidget->setLayout(mainLayout);
     setCentralWidget(centralWidget);
 }
@@ -407,7 +483,7 @@ void GUI::saveTokensFile(){
 void GUI::displayGrammarHelp(){
     QMessageBox info;
     info.setWindowTitle("Grammar help");
-    info.setText("dshskhfkjshkh");
+    info.setText(grammarHelp);
     info.setIcon(QMessageBox::Information);
     info.exec();
 }
@@ -415,7 +491,7 @@ void GUI::displayGrammarHelp(){
 void GUI::displayTokensHelp(){
     QMessageBox info;
     info.setWindowTitle("Tokens help");
-    info.setText("");
+    info.setText(tokensHelp);
     info.setIcon(QMessageBox::Information);
     info.exec();
 }
@@ -428,7 +504,7 @@ void GUI::saveOutputFile(){
         return;
     }
 
-    //Get currently tabbed
+    //Get currently tabbed widget
     QWidget* currentWidget = outputFilesTabbed->currentWidget();
     QTextEdit* display = dynamic_cast<QTextEdit*>(currentWidget);
 
@@ -480,8 +556,7 @@ void GUI::saveOutputFile(){
     file<<display->toPlainText().toStdString();
     file.close();
 
-    //when saved, output message saying file has been saved
-    //(saved, not saved as)
+    //When saved, output message saying file has been saved
     QMessageBox::information(this, "Success.", "File saved.");
     return;
 }
@@ -505,7 +580,7 @@ void GUI::createParser(){
     }
 
     string grammar = (grammarDisplay->toPlainText()).toStdString();
-    grammar.erase(grammar.size() - 1); //remove uneeded terminal char
+    grammar.erase(grammar.size() - 1); //Remove uneeded terminal char
 
     projectName = projectNameInput->text();
 

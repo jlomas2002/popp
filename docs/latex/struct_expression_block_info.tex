@@ -1,5 +1,14 @@
 \hypertarget{struct_expression_block_info}{}\doxysection{Expression\+Block\+Info Struct Reference}
 \label{struct_expression_block_info}\index{ExpressionBlockInfo@{ExpressionBlockInfo}}
+
+
+Stores a new block of code for each expression A new expression is created at the start of a rule or when an opeining bracket is seen. Each block stores the resultant code (the while/if loop onwards) and the elements that can start the expression.  
+
+
+
+
+{\ttfamily \#include $<$file\+Writer.\+hpp$>$}
+
 \doxysubsection*{Public Attributes}
 \begin{DoxyCompactItemize}
 \item 
@@ -9,6 +18,11 @@ std\+::vector$<$ std\+::vector$<$ \mbox{\hyperlink{struct_gtoken}{Gtoken}} $>$ $
 \mbox{\Hypertarget{struct_expression_block_info_af136dcb3307fd8dba214d901996300ca}\label{struct_expression_block_info_af136dcb3307fd8dba214d901996300ca}} 
 std\+::vector$<$ std\+::string $>$ {\bfseries code}
 \end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Stores a new block of code for each expression A new expression is created at the start of a rule or when an opeining bracket is seen. Each block stores the resultant code (the while/if loop onwards) and the elements that can start the expression. 
+
 
 
 The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}

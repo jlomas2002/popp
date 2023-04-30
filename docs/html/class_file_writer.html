@@ -76,40 +76,315 @@ $(function() {
   <div class="headertitle"><div class="title">FileWriter Class Reference</div></div>
 </div><!--header-->
 <div class="contents">
+
+<p>Handles all of the output to generated files.  
+ <a href="class_file_writer.html#details">More...</a></p>
+
+<p><code>#include &lt;<a class="el" href="file_writer_8hpp_source.html">fileWriter.hpp</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a7e355076d6b5c8633ba950cac49c65e1"><td class="memItemLeft" align="right" valign="top"><a id="a7e355076d6b5c8633ba950cac49c65e1" name="a7e355076d6b5c8633ba950cac49c65e1"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>FileWriter</b> (std::string lang)</td></tr>
+<tr class="memitem:a7e355076d6b5c8633ba950cac49c65e1"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_file_writer.html#a7e355076d6b5c8633ba950cac49c65e1">FileWriter</a> (std::string lang)</td></tr>
+<tr class="memdesc:a7e355076d6b5c8633ba950cac49c65e1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor - Sets the pointer to the target language specified by lang.  <br /></td></tr>
 <tr class="separator:a7e355076d6b5c8633ba950cac49c65e1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac1365a6de7b1cb06586e0baff44f2778"><td class="memItemLeft" align="right" valign="top"><a id="ac1365a6de7b1cb06586e0baff44f2778" name="ac1365a6de7b1cb06586e0baff44f2778"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>writeText</b> (std::string text, Mode mode)</td></tr>
+<tr class="memitem:ac1365a6de7b1cb06586e0baff44f2778"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_file_writer.html#ac1365a6de7b1cb06586e0baff44f2778">writeText</a> (std::string text, Mode mode)</td></tr>
+<tr class="memdesc:ac1365a6de7b1cb06586e0baff44f2778"><td class="mdescLeft">&#160;</td><td class="mdescRight">Writes text to parser file depending on the mode.  <br /></td></tr>
 <tr class="separator:ac1365a6de7b1cb06586e0baff44f2778"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a66556f0c56d8113c35a24768105a1eb6"><td class="memItemLeft" align="right" valign="top"><a id="a66556f0c56d8113c35a24768105a1eb6" name="a66556f0c56d8113c35a24768105a1eb6"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>fileSetup</b> (std::vector&lt; <a class="el" href="struct_first_set_info.html">FirstSetInfo</a> &gt; allFirstSetInfo, std::set&lt; std::string &gt; allTokens, std::vector&lt; <a class="el" href="struct_token_regex.html">TokenRegex</a> &gt; tokenRegexes, std::string projectName)</td></tr>
+<tr class="memitem:a66556f0c56d8113c35a24768105a1eb6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_file_writer.html#a66556f0c56d8113c35a24768105a1eb6">fileSetup</a> (std::vector&lt; <a class="el" href="struct_first_set_info.html">FirstSetInfo</a> &gt; allFirstSetInfo, std::set&lt; std::string &gt; allTokens, std::vector&lt; <a class="el" href="struct_token_regex.html">TokenRegex</a> &gt; tokenRegexes, std::string projectName)</td></tr>
+<tr class="memdesc:a66556f0c56d8113c35a24768105a1eb6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generates start of parser and any other files, e.g lexer.  <br /></td></tr>
 <tr class="separator:a66556f0c56d8113c35a24768105a1eb6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a33e73c28dd40354fa75af9a2b88e3525"><td class="memItemLeft" align="right" valign="top"><a id="a33e73c28dd40354fa75af9a2b88e3525" name="a33e73c28dd40354fa75af9a2b88e3525"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>addFirstElement</b> (<a class="el" href="struct_gtoken.html">Gtoken</a> token)</td></tr>
+<tr class="memitem:a33e73c28dd40354fa75af9a2b88e3525"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_file_writer.html#a33e73c28dd40354fa75af9a2b88e3525">addFirstElement</a> (<a class="el" href="struct_gtoken.html">Gtoken</a> token)</td></tr>
+<tr class="memdesc:a33e73c28dd40354fa75af9a2b88e3525"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adds a <a class="el" href="struct_gtoken.html" title="Stores information about a token.">Gtoken</a> to the first set of the current expression.  <br /></td></tr>
 <tr class="separator:a33e73c28dd40354fa75af9a2b88e3525"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad0bab2e983f376de34866dfecab4e99a"><td class="memItemLeft" align="right" valign="top"><a id="ad0bab2e983f376de34866dfecab4e99a" name="ad0bab2e983f376de34866dfecab4e99a"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>createMain</b> (std::string startFunc)</td></tr>
+<tr class="memitem:ad0bab2e983f376de34866dfecab4e99a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_file_writer.html#ad0bab2e983f376de34866dfecab4e99a">createMain</a> (std::string startFunc)</td></tr>
+<tr class="memdesc:ad0bab2e983f376de34866dfecab4e99a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates the main function to be included in the parser.  <br /></td></tr>
 <tr class="separator:ad0bab2e983f376de34866dfecab4e99a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acc388914b20102fedb1196689a754cb4"><td class="memItemLeft" align="right" valign="top"><a id="acc388914b20102fedb1196689a754cb4" name="acc388914b20102fedb1196689a754cb4"></a>
-std::string&#160;</td><td class="memItemRight" valign="bottom"><b>getParserText</b> ()</td></tr>
+<tr class="memitem:acc388914b20102fedb1196689a754cb4"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_file_writer.html#acc388914b20102fedb1196689a754cb4">getParserText</a> ()</td></tr>
+<tr class="memdesc:acc388914b20102fedb1196689a754cb4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the code of the output parser.  <br /></td></tr>
 <tr class="separator:acc388914b20102fedb1196689a754cb4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afffa657aa1f436833d7babf691ec3e3f"><td class="memItemLeft" align="right" valign="top"><a id="afffa657aa1f436833d7babf691ec3e3f" name="afffa657aa1f436833d7babf691ec3e3f"></a>
-std::string&#160;</td><td class="memItemRight" valign="bottom"><b>getLexerText</b> ()</td></tr>
+<tr class="memitem:afffa657aa1f436833d7babf691ec3e3f"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_file_writer.html#afffa657aa1f436833d7babf691ec3e3f">getLexerText</a> ()</td></tr>
+<tr class="memdesc:afffa657aa1f436833d7babf691ec3e3f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the code of the output lexer.  <br /></td></tr>
 <tr class="separator:afffa657aa1f436833d7babf691ec3e3f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7b258ddc569b67c2244820bceabb31e9"><td class="memItemLeft" align="right" valign="top"><a id="a7b258ddc569b67c2244820bceabb31e9" name="a7b258ddc569b67c2244820bceabb31e9"></a>
-std::string&#160;</td><td class="memItemRight" valign="bottom"><b>getTokDefText</b> ()</td></tr>
+<tr class="memitem:a7b258ddc569b67c2244820bceabb31e9"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_file_writer.html#a7b258ddc569b67c2244820bceabb31e9">getTokDefText</a> ()</td></tr>
+<tr class="memdesc:a7b258ddc569b67c2244820bceabb31e9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the code of the output token definition.  <br /></td></tr>
 <tr class="separator:a7b258ddc569b67c2244820bceabb31e9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a77c3a2819b1b468e20ae225f7134c106"><td class="memItemLeft" align="right" valign="top"><a id="a77c3a2819b1b468e20ae225f7134c106" name="a77c3a2819b1b468e20ae225f7134c106"></a>
-std::string&#160;</td><td class="memItemRight" valign="bottom"><b>getParserHeaderText</b> ()</td></tr>
+<tr class="memitem:a77c3a2819b1b468e20ae225f7134c106"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_file_writer.html#a77c3a2819b1b468e20ae225f7134c106">getParserHeaderText</a> ()</td></tr>
+<tr class="memdesc:a77c3a2819b1b468e20ae225f7134c106"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the code of the output parser header.  <br /></td></tr>
 <tr class="separator:a77c3a2819b1b468e20ae225f7134c106"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad76128bb79111fa2084e48aa26cd2801"><td class="memItemLeft" align="right" valign="top"><a id="ad76128bb79111fa2084e48aa26cd2801" name="ad76128bb79111fa2084e48aa26cd2801"></a>
-std::string&#160;</td><td class="memItemRight" valign="bottom"><b>getLexerHeaderText</b> ()</td></tr>
+<tr class="memitem:ad76128bb79111fa2084e48aa26cd2801"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_file_writer.html#ad76128bb79111fa2084e48aa26cd2801">getLexerHeaderText</a> ()</td></tr>
+<tr class="memdesc:ad76128bb79111fa2084e48aa26cd2801"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the code of the output lexer header.  <br /></td></tr>
 <tr class="separator:ad76128bb79111fa2084e48aa26cd2801"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Handles all of the output to generated files. </p>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="a7e355076d6b5c8633ba950cac49c65e1" name="a7e355076d6b5c8633ba950cac49c65e1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7e355076d6b5c8633ba950cac49c65e1">&#9670;&#160;</a></span>FileWriter()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">FileWriter::FileWriter </td>
+          <td>(</td>
+          <td class="paramtype">std::string&#160;</td>
+          <td class="paramname"><em>lang</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Constructor - Sets the pointer to the target language specified by lang. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">lang</td><td>The language output files are written in. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a id="a33e73c28dd40354fa75af9a2b88e3525" name="a33e73c28dd40354fa75af9a2b88e3525"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a33e73c28dd40354fa75af9a2b88e3525">&#9670;&#160;</a></span>addFirstElement()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void FileWriter::addFirstElement </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="struct_gtoken.html">Gtoken</a>&#160;</td>
+          <td class="paramname"><em>token</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Adds a <a class="el" href="struct_gtoken.html" title="Stores information about a token.">Gtoken</a> to the first set of the current expression. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">token</td><td>The token to be added. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="ad0bab2e983f376de34866dfecab4e99a" name="ad0bab2e983f376de34866dfecab4e99a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad0bab2e983f376de34866dfecab4e99a">&#9670;&#160;</a></span>createMain()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void FileWriter::createMain </td>
+          <td>(</td>
+          <td class="paramtype">std::string&#160;</td>
+          <td class="paramname"><em>startFunc</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Creates the main function to be included in the parser. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">startFunc</td><td>The name of the function to be called in main. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a66556f0c56d8113c35a24768105a1eb6" name="a66556f0c56d8113c35a24768105a1eb6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a66556f0c56d8113c35a24768105a1eb6">&#9670;&#160;</a></span>fileSetup()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void FileWriter::fileSetup </td>
+          <td>(</td>
+          <td class="paramtype">std::vector&lt; <a class="el" href="struct_first_set_info.html">FirstSetInfo</a> &gt;&#160;</td>
+          <td class="paramname"><em>allFirstSetInfo</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::set&lt; std::string &gt;&#160;</td>
+          <td class="paramname"><em>allTokens</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::vector&lt; <a class="el" href="struct_token_regex.html">TokenRegex</a> &gt;&#160;</td>
+          <td class="paramname"><em>tokenRegexes</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::string&#160;</td>
+          <td class="paramname"><em>projectName</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Generates start of parser and any other files, e.g lexer. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">allFirstSetInfo</td><td>List of each non terminal and its first set </td></tr>
+    <tr><td class="paramname">allTokens</td><td>Set of token names </td></tr>
+    <tr><td class="paramname">tokenRegexes</td><td>Vector of tokens and their correspondin regexes </td></tr>
+    <tr><td class="paramname">projectName</td><td>Name of project </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="ad76128bb79111fa2084e48aa26cd2801" name="ad76128bb79111fa2084e48aa26cd2801"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad76128bb79111fa2084e48aa26cd2801">&#9670;&#160;</a></span>getLexerHeaderText()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">string FileWriter::getLexerHeaderText </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Returns the code of the output lexer header. </p>
+<dl class="section return"><dt>Returns</dt><dd>std::string </dd></dl>
+
+</div>
+</div>
+<a id="afffa657aa1f436833d7babf691ec3e3f" name="afffa657aa1f436833d7babf691ec3e3f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afffa657aa1f436833d7babf691ec3e3f">&#9670;&#160;</a></span>getLexerText()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">string FileWriter::getLexerText </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Returns the code of the output lexer. </p>
+<dl class="section return"><dt>Returns</dt><dd>std::string </dd></dl>
+
+</div>
+</div>
+<a id="a77c3a2819b1b468e20ae225f7134c106" name="a77c3a2819b1b468e20ae225f7134c106"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a77c3a2819b1b468e20ae225f7134c106">&#9670;&#160;</a></span>getParserHeaderText()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">string FileWriter::getParserHeaderText </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Returns the code of the output parser header. </p>
+<dl class="section return"><dt>Returns</dt><dd>std::string </dd></dl>
+
+</div>
+</div>
+<a id="acc388914b20102fedb1196689a754cb4" name="acc388914b20102fedb1196689a754cb4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acc388914b20102fedb1196689a754cb4">&#9670;&#160;</a></span>getParserText()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">string FileWriter::getParserText </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Returns the code of the output parser. </p>
+<dl class="section return"><dt>Returns</dt><dd>std::string </dd></dl>
+
+</div>
+</div>
+<a id="a7b258ddc569b67c2244820bceabb31e9" name="a7b258ddc569b67c2244820bceabb31e9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7b258ddc569b67c2244820bceabb31e9">&#9670;&#160;</a></span>getTokDefText()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">string FileWriter::getTokDefText </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Returns the code of the output token definition. </p>
+<dl class="section return"><dt>Returns</dt><dd>std::string </dd></dl>
+
+</div>
+</div>
+<a id="ac1365a6de7b1cb06586e0baff44f2778" name="ac1365a6de7b1cb06586e0baff44f2778"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac1365a6de7b1cb06586e0baff44f2778">&#9670;&#160;</a></span>writeText()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void FileWriter::writeText </td>
+          <td>(</td>
+          <td class="paramtype">std::string&#160;</td>
+          <td class="paramname"><em>text</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Mode&#160;</td>
+          <td class="paramname"><em>mode</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Writes text to parser file depending on the mode. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">text</td><td>Normally some variable string used in the output code. </td></tr>
+    <tr><td class="paramname">mode</td><td>Determines the pattern of code generated. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following files:<ul>
 <li><a class="el" href="file_writer_8hpp_source.html">fileWriter.hpp</a></li>
 <li>fileWriter.cpp</li>

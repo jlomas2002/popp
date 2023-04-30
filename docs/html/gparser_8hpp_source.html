@@ -80,20 +80,19 @@ $(function() {
 <div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="preprocessor">#include &quot;tokeniser.hpp&quot;</span></div>
 <div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="preprocessor">#include &quot;fileWriter.hpp&quot;</span></div>
 <div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span> </div>
-<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="comment">//Grammar Parser</span></div>
-<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span> </div>
-<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="comment">//parse functions</span></div>
-<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><a class="code hl_struct" href="struct_gtoken.html">Gtoken</a> parseGrammar(<a class="code hl_class" href="class_tokeniser.html">Tokeniser</a> &amp;tokeniser, <a class="code hl_class" href="class_file_writer.html">FileWriter</a> &amp;writer);</div>
-<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><a class="code hl_struct" href="struct_gtoken.html">Gtoken</a> grammar();</div>
-<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><a class="code hl_struct" href="struct_gtoken.html">Gtoken</a> rule();</div>
-<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><a class="code hl_struct" href="struct_gtoken.html">Gtoken</a> expression();</div>
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><a class="code hl_struct" href="struct_gtoken.html">Gtoken</a> term();</div>
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><a class="code hl_struct" href="struct_gtoken.html">Gtoken</a> factor();</div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span> </div>
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="preprocessor">#endif</span></div>
-<div class="ttc" id="aclass_file_writer_html"><div class="ttname"><a href="class_file_writer.html">FileWriter</a></div><div class="ttdef"><b>Definition:</b> fileWriter.hpp:97</div></div>
-<div class="ttc" id="aclass_tokeniser_html"><div class="ttname"><a href="class_tokeniser.html">Tokeniser</a></div><div class="ttdef"><b>Definition:</b> tokeniser.hpp:14</div></div>
-<div class="ttc" id="astruct_gtoken_html"><div class="ttname"><a href="struct_gtoken.html">Gtoken</a></div><div class="ttdef"><b>Definition:</b> tokenDef.hpp:40</div></div>
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="comment">//These functions perform parsing of the grammar.</span></div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="comment">//They form a recursive descent parser.</span></div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><a class="code hl_struct" href="struct_gtoken.html">Gtoken</a> parseGrammar(<a class="code hl_class" href="class_tokeniser.html">Tokeniser</a> &amp;tokeniser, <a class="code hl_class" href="class_file_writer.html">FileWriter</a> &amp;writer);</div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><a class="code hl_struct" href="struct_gtoken.html">Gtoken</a> grammar();</div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><a class="code hl_struct" href="struct_gtoken.html">Gtoken</a> rule();</div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><a class="code hl_struct" href="struct_gtoken.html">Gtoken</a> expression();</div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><a class="code hl_struct" href="struct_gtoken.html">Gtoken</a> term();</div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><a class="code hl_struct" href="struct_gtoken.html">Gtoken</a> factor();</div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span> </div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="preprocessor">#endif</span></div>
+<div class="ttc" id="aclass_file_writer_html"><div class="ttname"><a href="class_file_writer.html">FileWriter</a></div><div class="ttdoc">Handles all of the output to generated files.</div><div class="ttdef"><b>Definition:</b> fileWriter.hpp:114</div></div>
+<div class="ttc" id="aclass_tokeniser_html"><div class="ttname"><a href="class_tokeniser.html">Tokeniser</a></div><div class="ttdoc">Tokeniser - object handles all lexical analyses of grammars and token inputs.</div><div class="ttdef"><b>Definition:</b> tokeniser.hpp:19</div></div>
+<div class="ttc" id="astruct_gtoken_html"><div class="ttname"><a href="struct_gtoken.html">Gtoken</a></div><div class="ttdoc">Stores information about a token.</div><div class="ttdef"><b>Definition:</b> tokenDef.hpp:51</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

@@ -1,5 +1,14 @@
 \hypertarget{class_g_u_i}{}\doxysection{GUI Class Reference}
 \label{class_g_u_i}\index{GUI@{GUI}}
+
+
+Handles \mbox{\hyperlink{class_g_u_i}{GUI}}.  
+
+
+
+
+{\ttfamily \#include $<$gui.\+hpp$>$}
+
 Inheritance diagram for GUI\+:\begin{figure}[H]
 \begin{center}
 \leavevmode
@@ -9,39 +18,110 @@ Inheritance diagram for GUI\+:\begin{figure}[H]
 \doxysubsection*{Public Slots}
 \begin{DoxyCompactItemize}
 \item 
-\mbox{\Hypertarget{class_g_u_i_a6be60e033f02b21c74fb6bc4fb2063ce}\label{class_g_u_i_a6be60e033f02b21c74fb6bc4fb2063ce}} 
-void {\bfseries select\+Grammar\+File} ()
-\item 
-\mbox{\Hypertarget{class_g_u_i_a8a94c615b461a8fde37f66c0b5c511ea}\label{class_g_u_i_a8a94c615b461a8fde37f66c0b5c511ea}} 
-void {\bfseries select\+Tokens\+File} ()
-\item 
-\mbox{\Hypertarget{class_g_u_i_a65948a958b3235d31fef21c2dcee08ec}\label{class_g_u_i_a65948a958b3235d31fef21c2dcee08ec}} 
-void {\bfseries save\+Grammar\+File} ()
-\item 
+void \mbox{\hyperlink{class_g_u_i_a6be60e033f02b21c74fb6bc4fb2063ce}{select\+Grammar\+File}} ()
+\begin{DoxyCompactList}\small\item\em Allows user to select grammar file from file explorer. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_g_u_i_a8a94c615b461a8fde37f66c0b5c511ea}{select\+Tokens\+File}} ()
+\begin{DoxyCompactList}\small\item\em Allows user to select tokens file from file explorer. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_g_u_i_a65948a958b3235d31fef21c2dcee08ec}{save\+Grammar\+File}} ()
+\begin{DoxyCompactList}\small\item\em Allows user to save the text in the grammar display to a file. \end{DoxyCompactList}\item 
 \mbox{\Hypertarget{class_g_u_i_a19161b33fa4506e988f913b751b1639d}\label{class_g_u_i_a19161b33fa4506e988f913b751b1639d}} 
 void {\bfseries display\+Grammar\+Help} ()
 \item 
-\mbox{\Hypertarget{class_g_u_i_a6f8da868099e969ad20961ce68dcd4b1}\label{class_g_u_i_a6f8da868099e969ad20961ce68dcd4b1}} 
-void {\bfseries save\+Tokens\+File} ()
-\item 
+void \mbox{\hyperlink{class_g_u_i_a6f8da868099e969ad20961ce68dcd4b1}{save\+Tokens\+File}} ()
+\begin{DoxyCompactList}\small\item\em Allows user to save the text in the tokens display to a file. \end{DoxyCompactList}\item 
 \mbox{\Hypertarget{class_g_u_i_a9f2323104dbfadd4338562683ab0923e}\label{class_g_u_i_a9f2323104dbfadd4338562683ab0923e}} 
 void {\bfseries display\+Tokens\+Help} ()
 \item 
-\mbox{\Hypertarget{class_g_u_i_a96b6e829ff888ee3557c937b08c03a6f}\label{class_g_u_i_a96b6e829ff888ee3557c937b08c03a6f}} 
-void {\bfseries save\+Output\+File} ()
-\item 
-\mbox{\Hypertarget{class_g_u_i_aecf7e32011e752585506a5430e17410d}\label{class_g_u_i_aecf7e32011e752585506a5430e17410d}} 
-void {\bfseries create\+Parser} ()
-\item 
-\mbox{\Hypertarget{class_g_u_i_a2c4cd4a08c987b121d865351cb26e23e}\label{class_g_u_i_a2c4cd4a08c987b121d865351cb26e23e}} 
-void {\bfseries run\+Test\+String} ()
-\end{DoxyCompactItemize}
+void \mbox{\hyperlink{class_g_u_i_a96b6e829ff888ee3557c937b08c03a6f}{save\+Output\+File}} ()
+\begin{DoxyCompactList}\small\item\em Allows user to update an ouput file with their changes. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_g_u_i_aecf7e32011e752585506a5430e17410d}{create\+Parser}} ()
+\begin{DoxyCompactList}\small\item\em Generates all output files from grammar. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_g_u_i_a2c4cd4a08c987b121d865351cb26e23e}{run\+Test\+String}} ()
+\begin{DoxyCompactList}\small\item\em Compiles and executes the generated files and passes in the test string to see if it is valid. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \doxysubsection*{Public Member Functions}
 \begin{DoxyCompactItemize}
 \item 
 \mbox{\Hypertarget{class_g_u_i_aeb87cfbd669a2ebbcc46dd640103c25b}\label{class_g_u_i_aeb87cfbd669a2ebbcc46dd640103c25b}} 
 {\bfseries GUI} (QWidget $\ast$parent=nullptr)
 \end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Handles \mbox{\hyperlink{class_g_u_i}{GUI}}. 
+
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_g_u_i_aecf7e32011e752585506a5430e17410d}\label{class_g_u_i_aecf7e32011e752585506a5430e17410d}} 
+\index{GUI@{GUI}!createParser@{createParser}}
+\index{createParser@{createParser}!GUI@{GUI}}
+\doxysubsubsection{\texorpdfstring{createParser}{createParser}}
+{\footnotesize\ttfamily void GUI\+::create\+Parser (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [slot]}}
+
+
+
+Generates all output files from grammar. 
+
+\mbox{\Hypertarget{class_g_u_i_a2c4cd4a08c987b121d865351cb26e23e}\label{class_g_u_i_a2c4cd4a08c987b121d865351cb26e23e}} 
+\index{GUI@{GUI}!runTestString@{runTestString}}
+\index{runTestString@{runTestString}!GUI@{GUI}}
+\doxysubsubsection{\texorpdfstring{runTestString}{runTestString}}
+{\footnotesize\ttfamily void GUI\+::run\+Test\+String (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [slot]}}
+
+
+
+Compiles and executes the generated files and passes in the test string to see if it is valid. 
+
+\mbox{\Hypertarget{class_g_u_i_a65948a958b3235d31fef21c2dcee08ec}\label{class_g_u_i_a65948a958b3235d31fef21c2dcee08ec}} 
+\index{GUI@{GUI}!saveGrammarFile@{saveGrammarFile}}
+\index{saveGrammarFile@{saveGrammarFile}!GUI@{GUI}}
+\doxysubsubsection{\texorpdfstring{saveGrammarFile}{saveGrammarFile}}
+{\footnotesize\ttfamily void GUI\+::save\+Grammar\+File (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [slot]}}
+
+
+
+Allows user to save the text in the grammar display to a file. 
+
+\mbox{\Hypertarget{class_g_u_i_a96b6e829ff888ee3557c937b08c03a6f}\label{class_g_u_i_a96b6e829ff888ee3557c937b08c03a6f}} 
+\index{GUI@{GUI}!saveOutputFile@{saveOutputFile}}
+\index{saveOutputFile@{saveOutputFile}!GUI@{GUI}}
+\doxysubsubsection{\texorpdfstring{saveOutputFile}{saveOutputFile}}
+{\footnotesize\ttfamily void GUI\+::save\+Output\+File (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [slot]}}
+
+
+
+Allows user to update an ouput file with their changes. 
+
+\mbox{\Hypertarget{class_g_u_i_a6f8da868099e969ad20961ce68dcd4b1}\label{class_g_u_i_a6f8da868099e969ad20961ce68dcd4b1}} 
+\index{GUI@{GUI}!saveTokensFile@{saveTokensFile}}
+\index{saveTokensFile@{saveTokensFile}!GUI@{GUI}}
+\doxysubsubsection{\texorpdfstring{saveTokensFile}{saveTokensFile}}
+{\footnotesize\ttfamily void GUI\+::save\+Tokens\+File (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [slot]}}
+
+
+
+Allows user to save the text in the tokens display to a file. 
+
+\mbox{\Hypertarget{class_g_u_i_a6be60e033f02b21c74fb6bc4fb2063ce}\label{class_g_u_i_a6be60e033f02b21c74fb6bc4fb2063ce}} 
+\index{GUI@{GUI}!selectGrammarFile@{selectGrammarFile}}
+\index{selectGrammarFile@{selectGrammarFile}!GUI@{GUI}}
+\doxysubsubsection{\texorpdfstring{selectGrammarFile}{selectGrammarFile}}
+{\footnotesize\ttfamily void GUI\+::select\+Grammar\+File (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [slot]}}
+
+
+
+Allows user to select grammar file from file explorer. 
+
+\mbox{\Hypertarget{class_g_u_i_a8a94c615b461a8fde37f66c0b5c511ea}\label{class_g_u_i_a8a94c615b461a8fde37f66c0b5c511ea}} 
+\index{GUI@{GUI}!selectTokensFile@{selectTokensFile}}
+\index{selectTokensFile@{selectTokensFile}!GUI@{GUI}}
+\doxysubsubsection{\texorpdfstring{selectTokensFile}{selectTokensFile}}
+{\footnotesize\ttfamily void GUI\+::select\+Tokens\+File (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [slot]}}
+
+
+
+Allows user to select tokens file from file explorer. 
+
 
 
 The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
