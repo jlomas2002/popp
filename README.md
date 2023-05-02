@@ -19,12 +19,21 @@ If parsing is successful, the parser prints a success message and terminates.
 The GUI also has a test string feature where a user can input a test string, and the generated parser and lexer will be used to output if the string is syntactically correct.
 
 ## Installation
+Pull the repositry.
+Open the application using the .pro file.
+Build the project using Qt and run
+
+Note some setting s in files may need changing to run the project on different machines and operating systems.
+Also, the path to  icons used in the GUI need to be changed  in GUI.cpp to reflect the correct path the pngs are stored in.
 
 ## Usage
+Run the Qt application. No commands supplied will open the GUI. If you pass comand line arguments of the following form:
 
+projectName targetLanguage pathToGrammarFile pathToTokenDefinitionFile
 
-## Support
+then a parser and lexer named after projectName in written in targetLanguage will be generated.
+Note, targetLanguage can be 'python' 'cpp' or 'java'
+If you do not have a token type definition file, replace the path with 'None'.
 
 ## License
-For open source projects, say how it is licensed.
-
+License to be decided.
