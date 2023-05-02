@@ -1,0 +1,4 @@
+_true = true;
+_false = false;
+null = null;
+_string = \".*?\";

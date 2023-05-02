@@ -430,7 +430,7 @@ public class {0}Parser{
 //--------------------------------------------------
 //Main function for parser file
 string py_parserMain =  R"(
-#Main funtion.
+#Main function.
 #Expects one command line arg - a path to a file containing a string to parse.
 if __name__ == "__main__":
     if len(sys.argv) != 2:
@@ -451,7 +451,7 @@ if __name__ == "__main__":
 
 
 string cpp_parserMain =  R"(
-//Main funtion.
+//Main function.
 //Expects one command line arg - a path to a file containing a string to parse.
 int main(int argc, char* argv[]){
     if (argc != 2){
@@ -473,7 +473,7 @@ int main(int argc, char* argv[]){
 )";
 
 string java_parserMain =  R"(
-    //Main funtion.
+    //Main function.
     //Expects one command line arg - a path to a file containing a string to parse.
     public static void main(String[] args){
         if (args.length != 1){
@@ -1062,7 +1062,7 @@ string FileWriter::createConditionStatement(){
 
         if (info.firstTerminals.size() > 0){
             if (info.firstTokens.size() > 0){
-                statement.append(formatString((*language)[statement_tokenCheck], currentFirstSet[i].lexeme));
+                statement.append(formatString((*language)[statement_nonTerminalCheck_token], currentFirstSet[i].lexeme));
             }
             statement.append(formatString((*language)[statement_nonTerminalCheck_terminal_last], currentFirstSet[i].lexeme));
         }

@@ -160,10 +160,11 @@ Gtoken expression(){
         tok = t->peekNextToken();
     }
 
-    if (!bracketTracker){
-        fw->writeText("", Else_Expr);
-        fw->writeText("", Scope_End);
-    }
+    //Will produce an error in some cases - needs further logic added
+//    if (!bracketTracker){
+//        fw->writeText("", Else_Expr);
+//        fw->writeText("", Scope_End);
+//    }
 
     return tok;
 

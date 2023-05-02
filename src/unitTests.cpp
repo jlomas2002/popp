@@ -6,7 +6,7 @@
 
 using namespace std;
 
-vector<string> validFiles = {"testgs/listofints", "testgs/sentence", "testgs/json", "testgs/jack" };
+vector<string> validFiles = {"testFiles/listofints", "testFiles/sentence", "testFiles/json", "testFiles/jack" };
 
 //Grammar files with errors detected by tokeniser
 vector<string> tokeniser_errorGramFiles = {"tokeniser/redefinedNonterm"};
@@ -182,7 +182,7 @@ void tokeniserTests(){
 
     //Test errors in grammar file alone
     for (string filename : tokeniser_errorGramFiles){
-        ifstream file("errortestgs/"+filename+".txt");
+        ifstream file("errorTestFiles/"+filename+".txt");
 
         string line;
         string fileInput;
@@ -237,8 +237,8 @@ void tokeniserTests(){
 
     //Test errors in token file alone
     for (string filename : tokeniser_errorTokFiles){
-        ifstream tokFile("errortestgs/"+filename+".txt");
-        ifstream gramFile("testgs/listofints.txt"); //Use a valid grammar, as we are testing tokens
+        ifstream tokFile("errorTestFiles/"+filename+".txt");
+        ifstream gramFile("testFiles/listofints.txt"); //Use a valid grammar, as we are testing tokens
 
         string line;
         string fileInput;
@@ -298,8 +298,8 @@ void tokeniserTests(){
     }
 
     //Test redefintition across two files
-    ifstream tokFile("errortestgs/tokeniser/redefinedElement-toks.txt");
-    ifstream gramFile("errortestgs/tokeniser/redefinedElement.txt"); 
+    ifstream tokFile("errorTestFiles/tokeniser/redefinedElement-toks.txt");
+    ifstream gramFile("errorTestFiles/tokeniser/redefinedElement.txt"); 
 
     string line;
     string tokInput;
@@ -389,7 +389,7 @@ void parserTests(){
 
     //Test erroneous files
     for (string filename : parser_errorFiles){
-       ifstream file("errortestgs/"+filename+".txt"); 
+       ifstream file("errorTestFiles/"+filename+".txt"); 
 
        string line;
        string fileInput;
@@ -438,8 +438,8 @@ void parserTests(){
     }
 
     //Special case unknown token - only an issue if a token file was provided
-    ifstream tokFile("errortestgs/tokeniser/redefinedElement-toks.txt");
-    ifstream gramFile("errortestgs/parser/undefinedTok.txt"); 
+    ifstream tokFile("errorTestFiles/tokeniser/redefinedElement-toks.txt");
+    ifstream gramFile("errorTestFiles/parser/undefinedTok.txt"); 
 
     string line;
     string tokInput;

@@ -15,7 +15,7 @@ constructor,function,method,
 
 paramList
 int,char,boolean,
-identifier,empty,
+identifier,
 subroutineBody
 {,
 
@@ -42,25 +42,25 @@ subroutineCall
 identifier,
 expressionList
 -,~,
-empty,
+
 returnStatement
 return,
 
 expression
 -,~,
-empty,
+
 relationalExpression
 -,~,
-empty,
+
 arithmeticExpression
 -,~,
-empty,
+
 term
 -,~,
-empty,
+
 factor
 -,~,
-empty,
+
 operand
 (,true,false,null,this,
 integerConstant,identifier,stringLiteral,

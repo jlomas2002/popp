@@ -1,12 +1,12 @@
 json = object | array;
 object = "{" [ members ] "}";
-members = pair { "," pair };
-pair = string ":" value;
+members = _pair { "," _pair };
+_pair = _string ":" value;
 array = "[" [ elements ] "]";
 elements = value { "," value };
-value = string | number | object | array | "true" | "false" | "null";
-number = int [ frac ] [ exp ];
-int = "0" | digit1_9 { digit };
+value = _string | number | object | array | _true | _false | null;
+number = _int [ frac ] [ exp ];
+_int = "0" | digit1_9 { digit };
 frac = "." digit { digit };
 exp = ("e" | "E") ["+" | "-"] digit { digit };
 digit = "0" | digit1_9;

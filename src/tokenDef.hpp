@@ -28,7 +28,7 @@ enum Error {
     RedefinedToken,
 
     //Dealt with by parser
-    UnexpectedEOF, //Itring suddenly ends when it shouldn't
+    UnexpectedEOF, //String suddenly ends when it shouldn't
     UnknownCharacter,
     UndefinedToken,
     ExpectedNonTerminal,
