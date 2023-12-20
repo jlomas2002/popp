@@ -796,7 +796,8 @@ void GUI::runTestString(){
         return;
     }
     else if (exitCode == 4){
-        QMessageBox::information(this, "Error.", "Incorrect number of args passed to main.");
+        QMessageBox::information(this, "Error.", QString::fromStdString(runCommand));
+        //QMessageBox::information(this, "Error.", "Incorrect number of args passed to main.");
         return;
     }
     else{

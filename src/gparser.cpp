@@ -13,7 +13,7 @@ bool veryFirstElement;
 //Stores the non terminal representing the start symbol.
 string startFunc;
 
-//If not zro, we are inside a bracket.
+//If not zro, we are inside a bracket.vector
 int bracketTracker = 0;
 
 Gtoken parseGrammar(Tokeniser &tokeniser, FileWriter &writer){
@@ -159,9 +159,7 @@ Gtoken expression(){
 
         tok = t->peekNextToken();
     }
-
-    //Will produce an error in some cases - needs further logic added
-//    if (!bracketTracker){
+//    if (bracketTracker ==1){
 //        fw->writeText("", Else_Expr);
 //        fw->writeText("", Scope_End);
 //    }
