@@ -181,7 +181,7 @@ GUI::GUI(QWidget *parent) : QMainWindow(parent){
     saveGrammar_button = new QPushButton;
     connect(saveGrammar_button, &QPushButton::clicked, this, &GUI::saveGrammarFile);
     //Add icon for button
-    QIcon saveAsIcon("C:/Users/Jloma/Documents/UniYr3/popp/qtIcons/saveFileAs.png");
+    QIcon saveAsIcon("qtIcons/saveFileAs.png");
     saveGrammar_button->setIcon(saveAsIcon);
     saveGrammar_button->setIconSize(QSize(16, 16));
     saveGrammar_button->setToolTip("Save grammar as");
