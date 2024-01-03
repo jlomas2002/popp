@@ -181,7 +181,7 @@ GUI::GUI(QWidget *parent) : QMainWindow(parent){
     saveGrammar_button = new QPushButton;
     connect(saveGrammar_button, &QPushButton::clicked, this, &GUI::saveGrammarFile);
     //Add icon for button
-    QIcon saveAsIcon("qtIcons/saveFileAs.png");
+    QIcon saveAsIcon(":/qtIcons/saveFileAs.png");
     saveGrammar_button->setIcon(saveAsIcon);
     saveGrammar_button->setIconSize(QSize(16, 16));
     saveGrammar_button->setToolTip("Save grammar as");
@@ -191,7 +191,7 @@ GUI::GUI(QWidget *parent) : QMainWindow(parent){
     grammarHelp_button = new QPushButton();
     connect(grammarHelp_button, &QPushButton::clicked, this, &GUI::displayGrammarHelp);
     //Add icon for button
-    QIcon helpIcon("C:/Users/Jloma/Documents/UniYr3/popp/qtIcons/help.png");
+    QIcon helpIcon(":/qtIcons/help.png");
     grammarHelp_button->setIcon(helpIcon);
     grammarHelp_button->setIconSize(QSize(16, 16));
     grammarHelp_button->setToolTip("Click me for help!");
@@ -280,7 +280,7 @@ GUI::GUI(QWidget *parent) : QMainWindow(parent){
     saveOutputFile_button = new QPushButton();
     connect(saveOutputFile_button, &QPushButton::clicked, this, &GUI::saveOutputFile);
     //Add icon for button
-    QIcon saveIcon("C:/Users/Jloma/Documents/UniYr3/popp/qtIcons/saveFile.png");
+    QIcon saveIcon(":/qtIcons/saveFile.png");
     saveOutputFile_button->setIcon(saveIcon);
     saveOutputFile_button->setIconSize(QSize(16, 16));
     saveOutputFile_button->setToolTip("Save file");
@@ -349,7 +349,7 @@ GUI::GUI(QWidget *parent) : QMainWindow(parent){
     runTestString_button->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Expanding);
 
     //Add icon for run button
-    QIcon playIcon("C:/Users/Jloma/Documents/UniYr3/popp/qtIcons/greenPlay.png");
+    QIcon playIcon(":/qtIcons/greenPlay.png");
     runTestString_button->setIcon(playIcon);
     runTestString_button->setIconSize(QSize(16, 16));
     runTestString_button->setToolTip("Parse this text");

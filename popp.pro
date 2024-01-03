@@ -9,6 +9,9 @@ INCLUDEPATH += .
 QT += core gui widgets
 CONFIG += c++17
 
+# Set the build directory to a subdirectory named "build"
+#DESTDIR = $$PWD/build
+
 # You can make your code fail to compile if you use deprecated APIs.
 # In order to do so, uncomment the following line.
 # Please consult the documentation of the deprecated API in order to know
@@ -19,6 +22,7 @@ CONFIG += c++17
 # Input
 HEADERS += src/fileWriter.hpp src/gparser.hpp src/tokenDef.hpp src/tokeniser.hpp src/gui.hpp
 SOURCES += src/fileWriter.cpp src/gparser.cpp src/main.cpp src/tokeniser.cpp src/gui.cpp
+RESOURCES += poppResources.qrc
 
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin

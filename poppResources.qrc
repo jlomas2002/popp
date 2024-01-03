@@ -1,0 +1,15 @@
+<!DOCTYPE RCC>
+<RCC version="1.0">
+    <qresource>
+        <file>qtIcons/greenPlay.png</file>
+    </qresource>
+    <qresource>
+        <file>qtIcons/help.png</file>
+    </qresource>
+    <qresource>
+        <file>qtIcons/saveFile.png</file>
+    </qresource>
+    <qresource>
+        <file>qtIcons/saveFileAs.png</file>
+    </qresource>
+</RCC>
