@@ -5,10 +5,10 @@ specifies the regexes of any lexical tokens. For example, a digit token would be
 
 digit = \\d;
 
-The app offers lexers and parser in 3 languages: c++, java and python.
-The generated lexer will skip any whitespace and return the next character in the input unless the input is matched to a regex from a tokens file.
-The generated parser includes a main function that expects a file containing a string to parse as a command line argument. The string is then passed to the lexer and the parser calls functions from the lexer to get or peek tokens during parsing.
-If the string is syntactically incorrect according to the grammar, the parser prints a precise error message and terminates.
+The app offers lexers and parser in 3 languages: c++, java and python.\
+The generated lexer will skip any whitespace and return the next character in the input unless the input is matched to a regex from a tokens file.\
+The generated parser includes a main function that expects a file containing a string to parse as a command line argument. The string is then passed to the lexer and the parser calls functions from the lexer to get or peek tokens during parsing.\
+If the string is syntactically incorrect according to the grammar, the parser prints a precise error message and terminates.\
 If parsing is successful, the parser prints a success message and terminates.
 
 The GUI also has a test string feature where a user can input a test string, and the generated parser and lexer will be used to output if the string is syntactically correct.
@@ -31,7 +31,7 @@ Open a terminal at the same level as popp.pro.
 Run the command **qmake**
 Run the command **make**
 (These commands may need adding to the Path environment variable).
-The following link may help: [Building via the command line](https://wiki.qt.io/Getting_Started_on_the_Commandline)
+The following link may help: [Building via the command line](https://wiki.qt.io/Getting_Started_on_the_Commandline).
 To run the command, locate the executable popp.exe and double click or run via the command line.
 
 The executable and build files may be created outside of the main project folder depending on if the Shadow Build option is selected in Qt Creator. 
