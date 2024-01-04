@@ -1,9 +1,6 @@
-# Popp
-
 ## Popp
-Popp stands for Popp Originates Predictive Parsers. The name illustrates the function of the app, generating predictive parsers
-(specifically Recursive Descent), and plays on the Recursive Descent output by being a recursive acronym.
-The app can be run via a GUI or the command line. A parser and a lexer is generated from a EBNF grammar and an optional 'tokens' file which
+Popp (Popp Originates Predictive Parsers) is a parser generator that generates human-readable recursive descent parsers from EBNF grammars.
+The app can be run via a GUI or the command line. A parser and a lexer is generated from an EBNF grammar and an optional 'tokens' file which
 specifies the regexes of any lexical tokens. For example, a digit token would be specified as:
 
 digit = \\d;
@@ -16,22 +13,41 @@ If parsing is successful, the parser prints a success message and terminates.
 
 The GUI also has a test string feature where a user can input a test string, and the generated parser and lexer will be used to output if the string is syntactically correct.
 
-## Installation
-Pull the repositry.
-Open the application using the .pro file.
-Build the project using Qt and run.
+## Build Instructions 
+To build the application you will need the following prerequesites installed: Qt and a compatible C++ compiler (I used MinGW's g++ for windows, but Qt has others available).
 
-Note some setting s in files may need changing to run the project on different machines and operating systems.
-Also, the path to  icons used in the GUI need to be changed  in GUI.cpp to reflect the correct path the pngs are stored in.
+First, pull this repositry.
+The popp.pro file is used to build the application - you can either build via the command line or with Qt Creator.
+The original development was done on a Windows 11 machine, but using the .pro file should work on any Qt compatible system.
+
+###Building with Qt creator
+Double clicking popp.pro should open up the project in Qt creator. 
+From here, assuming you have a compatible C++ compiler installed, you should be able to select a Qt kit to use to build the application.
+Once this is set up you should be able to press the green arrow in the bottom left to build and run the application. 
+You can select whether to build and run in release or debug mode. 
+
+###Building via the command line
+Open a terminal at the same level as popp.pro.
+Run the command **qmake**
+Run the command **make**
+(These commands may need adding to the Path environment variable).
+The following link may help: [link text](https://wiki.qt.io/Getting_Started_on_the_Commandline)
+To run the command, locate the executable popp.exe and double click or run via the command line.
+
+The executable and build files may be created outside of the main project folder depending on if the Shadow Build option is selected in Qt Creator. 
+If you wish to have the executable and build files be created inside of the project folder, you can uncheck this box by clicking on Projects in the side panel and selecting build under the Build and Run section. Here you can find the Shadow Build setting and turn it off/on in release or debug mode.
 
 ## Usage
-Run the Qt application. No arguments supplied will open the GUI. If you pass 4 command line arguments of the following form:
+Double clicking the executable will open up the GUI. Alternatively, you can run via the command line.
+If you pass 4 command line arguments of the following form:
 
 projectName targetLanguage pathToGrammarFile pathToTokenDefinitionFile
 
 Then a parser and lexer named after projectName in written in targetLanguage will be generated.
 Note, targetLanguage can be 'python' 'cpp' or 'java'
 If you do not have a token type definition file, replace the path with 'None'.
+
+If you run the exectuable in the command line with no arguments, it opens up the GUI.
 
 ## License
 License to be decided.
