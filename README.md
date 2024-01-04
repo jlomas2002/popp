@@ -31,7 +31,7 @@ Open a terminal at the same level as popp.pro.
 Run the command **qmake**
 Run the command **make**
 (These commands may need adding to the Path environment variable).
-The following link may help: [link text](https://wiki.qt.io/Getting_Started_on_the_Commandline)
+The following link may help: [Building via the command line](https://wiki.qt.io/Getting_Started_on_the_Commandline)
 To run the command, locate the executable popp.exe and double click or run via the command line.
 
 The executable and build files may be created outside of the main project folder depending on if the Shadow Build option is selected in Qt Creator. 
