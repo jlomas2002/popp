@@ -13,6 +13,8 @@ If parsing is successful, the parser prints a success message and terminates.
 
 The GUI also has a test string feature where a user can input a test string, and the generated parser and lexer will be used to output if the string is syntactically correct.
 
+[View Doxygen Documentation](https://jlomas2002.github.io/popp)
+
 ## Build Instructions 
 To build the application you will need the following prerequesites installed: Qt and a compatible C++ compiler (I used MinGW's g++ for windows, but Qt has others available).
 
